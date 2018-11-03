@@ -20,3 +20,5 @@ Authors
 
 Acknowledgements
 ------
+
+Thank you so much to Refinitiv for sponsoring the project

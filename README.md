@@ -7,6 +7,8 @@ Getting Started
 
 Built With 
 ------
+C++
+Wt TOOL KIT
 
 Authors
 ------

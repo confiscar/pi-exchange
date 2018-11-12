@@ -6,11 +6,11 @@ int main( int argc, char **argv )
 {
     QApplication a( argc, argv );
 
-    QPushButton hello( "Hello world!", 0 );
-    hello.resize( 100, 30 );
+    QPushButton hello( "Hello world!", 0 ); /*create button that says hello */
+    hello.resize( 100, 30 ); /*size of button*/
 
     
-    hello.show();
-    return a.exec();
+    hello.show(); /*show the window */
+    return a.exec(); 
 }
 

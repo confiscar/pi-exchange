@@ -1,8 +1,8 @@
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
-class MyApp: public wxApp
+class MyApp: public wxApp /* ONLY FOR TESTING */
 {
 public:
     virtual bool OnInit();

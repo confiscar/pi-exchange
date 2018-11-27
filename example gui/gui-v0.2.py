@@ -20,7 +20,7 @@ RELIEF = tkinter.SUNKEN
 
 #Create window
 root = tkinter.Tk()
-root.title("FOREX MARKET GUI PROTOTYPE")
+root.title("Stock Exchange")
 root.geometry(str(W)+"x"+str(H)+"+80+40")
 
 #Create canvas and add to window - for the graph

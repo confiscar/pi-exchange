@@ -1,6 +1,6 @@
 import tkinter
 import random
-
+import feedparser
 #CONSTANTS
 
 #Order form constraints
@@ -190,4 +190,6 @@ confirmButton.config(command=placeOrder)
 root.after(1,plot)
 root.mainloop()
 
+#rss feed
+#d=feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews');
 

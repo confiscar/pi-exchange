@@ -27,6 +27,18 @@ root.geometry(str(W)+"x"+str(H)+"+80+40")
 canvas = tkinter.Canvas(root,width=CW,height=CH,bg='#000000')
 canvas.grid(row=0,column=0,rowspan=100)
 
+#rss feed
+feed = feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews')
+newsFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
+newsFrame.grid(row=2,column=1)
+
+feedstr = "example string |"*50
+news = tkinter.Label(newsFrame,text=feedstr,width=50,height=1,fg="#444444")
+news.grid(row=0,column=0,padx=4,pady=4)
+#IM STUCK HERE NOW THNX <3 
+
+
+
 #Buy/Sell Form
 orderFrame = tkinter.Frame(root, relief=RELIEF,bd=3)
 orderFrame.grid(row=1,column=1)
@@ -44,11 +56,11 @@ sellButton.grid(row=0,column=1)
 #Set default state to buy
 buyButton.select()
 
-#Price Input (£)
+#Price Input
 priceFrame = tkinter.Frame(orderFrame)
 priceFrame.grid(row=1,column=0,pady=10,padx=10)
 
-priceLabel = tkinter.Label(priceFrame,width=10,text="Price (£): ")
+priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
 priceLabel.grid(row=0,column=0)
 priceInput = tkinter.Spinbox(priceFrame,from_=PRICE_LOWER_RANGE,to=PRICE_UPPER_RANGE,increment=PRICE_ACCURACY)
 priceInput.insert(0,0)
@@ -177,6 +189,17 @@ def plot():
     #Call in next mainloop
     root.after(10,plot)
 
+#Scroll through the feed
+scrollAmount = 0
+feedstr = feedstr + " "*50
+def scrollFeed():
+    global scrollAmount
+    global feedstr
+    news.config(text="News: "+feedstr[scrollAmount:scrollAmount+50])
+    scrollAmount += 1
+    if scrollAmount+50 > len(feedstr):
+        scrollAmount = 0
+    root.after(100,scrollFeed)
 
 #Form has been submitted
 def placeOrder():
@@ -186,10 +209,12 @@ def placeOrder():
 #Configure confirm button to this function after the function has been defined
 confirmButton.config(command=placeOrder)
 
+def backgroundTasks():
+    plot()
+    scrollFeed()
+
 #Add plot to mainloop and hand over control to gui
-root.after(1,plot)
+root.after(1,backgroundTasks)
 root.mainloop()
 
-#rss feed
-#d=feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews');
 

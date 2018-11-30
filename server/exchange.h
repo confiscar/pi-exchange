@@ -8,7 +8,7 @@
 #ifndef EXCHANGE_H_
 #define EXCHANGE_H_
 
-#include "orderBook.h";
+#include "orderBook.h"
 
 /**
  * generate a buy order and try to match with sells

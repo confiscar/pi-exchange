@@ -29,9 +29,8 @@ order * placeSellOrder(float price, int amount, int orderId){
     order * temp = matchOrder(currentOrder, &buyBook);
     if(temp == NULL){
         addToBook(currentOrder, &sellBook);
-    } else{
-        return currentOrder;
     }
+    return currentOrder;
 }
 
 order * matchOrder(order * curOrder, book ** curBook){

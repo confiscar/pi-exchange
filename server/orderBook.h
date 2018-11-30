@@ -10,6 +10,7 @@
 
 #include "uthash.h"
 #include "order.h"
+#include <stdio.h>
 
 typedef struct priceBucket{
 	 int exchangeId;

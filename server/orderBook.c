@@ -52,7 +52,6 @@ void deleteFromBook(order * curOrder, book ** curBook){
         tempBook -> pb = tempPb;
         free(orderPb);
     }
-    free(curOrder);
-
+    //free(curOrder);
 }
 

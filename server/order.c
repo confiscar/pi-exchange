@@ -17,6 +17,7 @@ order * generateOrder(float price, int amount, int orderId){
 	temp -> amount = amount;
 	temp -> orderId = orderId;
 	temp -> exchangeId = exchangeId;
+	temp -> status = 0;
 	exchangeId++;
 	return temp;
 }

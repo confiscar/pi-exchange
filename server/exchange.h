@@ -10,36 +10,36 @@
 
 #include "orderBook.h";
 
-/*
+/**
  * generate a buy order and try to match with sells
  * if matched return order with status 1
  * else add it to buy book and return order with status 0
  */
-order placeBuyOrder(double price, int amount, int OrderId);
+order * placeBuyOrder(float price, int amount, int orderId);
 
-/*
+/**
  * generate a sell order and try to match with buys
  * if matched return order with status 1
  * else add it to buy book and return order with status 0
  */
-order placeSellOrder(double price, int amount, int OrderId);
+order * placeSellOrder(float price, int amount, int orderId);
 
-/*
+/**
  * remove order from buy book and return order with status 2
  */
-order cancelBuyOrder(double price, int exchangeId);
+order * cancelBuyOrder(float price, int exchangeId);
 
-/*
+/**
  * remove order from buy book and return order with status 2
  */
-order cancelSellOrder(double price, int exchangeId);
+order * cancelSellOrder(float price, int exchangeId);
 
 
-/*
- * return the matched order if matched, else NULL
+/**
+ * return the matched order with status 1 if matched, else a null pointer
  * delete the matched order from book
  */
-order matchOrder(order * curOrder, book * curBook);
+order * matchOrder(order * curOrder, book ** curBook);
 
 
 #endif /* EXCHANGE_H_ */

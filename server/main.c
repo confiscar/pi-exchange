@@ -4,26 +4,22 @@
  *  Created on: 2018/11/29
  *      Author: Ke CHEN
  */
-
-#include "orderBook.h"
-//#include "order.h"
+#include "exchange.h"
 #include <stdio.h>
+
+extern book * buyBook;
+extern book * sellBook;
 
 // mainly for test the functions
 int main(){
-	book * bookTest = NULL;
-	struct order * o1 = generateOrder(1.1, 10, 1);
-	struct order * o2 = generateOrder(1.1, 12, 2);
-	struct order * o3 = generateOrder(1.2, 20, 3);
-	addToBook(o1, &bookTest);
-	addToBook(o2, &bookTest);
-	addToBook(o3, &bookTest);
-	//deleteFromBook(o1, &bookTest);
-	//deleteFromBook(o2, &bookTest);
-	//deleteFromBook(o3, &bookTest);
+    printf("%d \n",placeBuyOrder(1.1,10,1) ->status);
+    printf("%d \n",placeBuyOrder(1.1,11,1) ->status);
+    printf("%d \n",placeBuyOrder(1.2,20,1) ->status);
+    printf("%d \n",placeSellOrder(1.1,10,2) ->status);
+
 	book * temp = NULL;
-	float price = 1.2;
-	HASH_FIND(hh, bookTest, &price, sizeof(float), temp);
+	float price = 1.1;
+	HASH_FIND(hh, buyBook, &price, sizeof(float), temp);
 	if(temp == NULL){
             printf("no order for price %f exists\n", price);
         exit(0);

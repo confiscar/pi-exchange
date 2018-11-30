@@ -19,6 +19,10 @@ typedef struct order
 	int status;
 } order;
 
+/**
+* generate order with a generated key exchangeId and a initial status 0
+* status: 0 not matched; 1 matched; 2 canceled
+*/
 order * generateOrder(float price, int amount, int orderId);
 
 #endif /* ORDER_H_ */

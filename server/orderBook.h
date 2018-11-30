@@ -23,10 +23,14 @@ typedef struct book {
     UT_hash_handle hh;
 } book;
 
-// temporary set return type to void, to be decided further
+/**
+* temporary set return type to void, to be decided further
+*/
 void addToBook(order * curOrder, book ** curBook);
 
-// temporary set return type to void, to be decided further
+/**
+* temporary set return type to void, to be decided further
+*/
 void deleteFromBook(order * curOrder, book ** curBook);
 
 

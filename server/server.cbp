@@ -31,9 +31,20 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="exchange.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="order.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="order.h" />
+		<Unit filename="orderBook.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="orderBook.h" />
+		<Unit filename="server.cbp" />
+		<Unit filename="uthash.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

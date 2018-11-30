@@ -12,13 +12,13 @@
 // order's status: 0 in book; 1 matched; 2 cancel; 3 NACH
 typedef struct order
 {
-	int price;
+	float price;
 	int amount;
 	int orderId;
 	int exchangeId;
 	int status;
 } order;
 
-order * generateOrder(int price, int amount, int orderId);
+order * generateOrder(float price, int amount, int orderId);
 
 #endif /* ORDER_H_ */

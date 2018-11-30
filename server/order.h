@@ -10,16 +10,15 @@
 
 
 // order's status: 0 in book; 1 matched; 2 cancel; 3 NACH
-struct order
+typedef struct order
 {
-	double price;
+	int price;
 	int amount;
 	int orderId;
 	int exchangeId;
 	int status;
 } order;
 
-struct order generateBuyOrder(double price, int amount, int orderId);
-struct order generateSellOrder(double price, int amount, int orderId);
+order * generateOrder(int price, int amount, int orderId);
 
 #endif /* ORDER_H_ */

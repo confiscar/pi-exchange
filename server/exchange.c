@@ -6,6 +6,7 @@
  */
 
 #include "exchange.h"
+#include <stdio.h>
 
 book * buyBook = NULL;
 book * sellBook = NULL;
@@ -24,6 +25,26 @@ order * placeBuyOrder(float price, int amount, int orderId){
     return currentOrder;
 }
 
+order * cancelBuyOrder(float price, int exchangeId){
+    book * tempBook = NULL;
+    priceBucket * tempPriceBucket = NULL;
+    priceBucket * orderPriceBucket = NULL;
+    order * tempOrder = NULL;
+    HASH_FIND(hh, buyBook, &price, 4, tempBook);
+    if(tempBook == NULL){
+        return tempOrder;
+    }
+    tempPriceBucket = tempBook -> pb;
+    HASH_FIND_INT(tempPriceBucket, &exchangeId, orderPriceBucket);
+    if(orderPriceBucket == NULL){
+        return tempOrder;
+    }
+    tempOrder = orderPriceBucket -> curOrder;
+    deleteFromBook(tempOrder, &buyBook);
+    tempOrder -> status = 2;
+    return tempOrder;
+}
+
 order * placeSellOrder(float price, int amount, int orderId){
     order * currentOrder = generateOrder(price, amount, orderId);
     order * temp = matchOrder(currentOrder, &buyBook);
@@ -31,6 +52,26 @@ order * placeSellOrder(float price, int amount, int orderId){
         addToBook(currentOrder, &sellBook);
     }
     return currentOrder;
+}
+
+order * cancelSellOrder(float price, int exchangeId){
+    book * tempBook = NULL;
+    priceBucket * tempPriceBucket = NULL;
+    priceBucket * orderPriceBucket = NULL;
+    order * tempOrder = NULL;
+    HASH_FIND(hh, sellBook, &price, 4, tempBook);
+    if(tempBook == NULL){
+        return tempOrder;
+    }
+    tempPriceBucket = tempBook -> pb;
+    HASH_FIND_INT(tempPriceBucket, &exchangeId, orderPriceBucket);
+    if(orderPriceBucket == NULL){
+        return tempOrder;
+    }
+    tempOrder = orderPriceBucket -> curOrder;
+    deleteFromBook(tempOrder, &sellBook);
+    tempOrder -> status = 2;
+    return tempOrder;
 }
 
 order * matchOrder(order * curOrder, book ** curBook){

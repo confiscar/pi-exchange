@@ -12,56 +12,11 @@
 
 #include "exchange.h"
 #include "order.h"
+#include "requestHandlr.h"
 
 #define PORT  8890
 #define QUEUE_SIZE   10
-#define BUFFER_SIZE 1024
 
-void handleRequest(int sockfd)
-{
-    char buffer[BUFFER_SIZE];
-    pid_t pid = getpid();
-    while(1)
-    {
-        memset(buffer,0,sizeof(buffer));
-        int len = recv(sockfd, buffer, sizeof(buffer),0);
-        if(strcmp(buffer,"exit\n")==0)
-        {
-            printf("child process: %d exited.\n",pid);
-            break;
-        }
-        printf("pid:%d receive:\n",pid);
-
-        // split the string parameter
-        char * delim = ",";
-        char * pOc = strtok(buffer, delim);
-        char * bOs = strtok( NULL, delim);
-        float price = atof(strtok( NULL, delim));
-        int amount = atoi(strtok( NULL, delim));
-        int orderId = atoi(strtok( NULL, delim));
-        printf("%s %s %f %d %d\n", pOc, bOs, price, amount, orderId);
-        order * temp = NULL;
-
-        // decide what kind of request
-        if(strcmp(pOc, "p") == 0){
-            if(strcmp(bOs, "b") == 0){
-                printf("place buy order\n");
-                temp = placeBuyOrder(price, amount, orderId);
-            } else {
-                printf("place sell order\n");
-                temp = placeSellOrder(price, amount, orderId);
-            }
-        }
-
-        if(temp -> status == 0){
-            send(sockfd, "not matched - held in book\n", 30, 0);
-        } else if(temp -> status == 1) {
-            send(sockfd, "matched \n", 30, 0);
-        }
-
-    }
-    close(sockfd);
-}
 
 int main(int argc, char **argv)
 {

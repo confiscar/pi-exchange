@@ -26,11 +26,13 @@ order * placeSellOrder(float price, int amount, int orderId);
 
 /**
  * remove order from buy book and return order with status 2
+ * NULL if order with certain exchangeId is not in book
  */
 order * cancelBuyOrder(float price, int exchangeId);
 
 /**
  * remove order from buy book and return order with status 2
+ * NULL if order with certain exchangeId is not in book
  */
 order * cancelSellOrder(float price, int exchangeId);
 

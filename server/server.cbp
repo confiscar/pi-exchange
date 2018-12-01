@@ -31,10 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="exchange.h" />
-		<Unit filename="main.c">
+		<Unit filename="client.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="exchange.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="exchange.h" />
 		<Unit filename="order.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -44,6 +47,9 @@
 		</Unit>
 		<Unit filename="orderBook.h" />
 		<Unit filename="server.cbp" />
+		<Unit filename="tcp_server.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="uthash.h" />
 		<Extensions>
 			<code_completion />

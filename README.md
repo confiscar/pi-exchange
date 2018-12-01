@@ -29,12 +29,12 @@ Acknowledgements
 
 Server
 ------
-#### 	compile: gcc tcp_server.c exchange.c orderBook.c order.c -o server
-#### 	run: ./server
-#### 	connect to server using ip and port 8890
-note: the ip depends on whether server run local or remote, local: 127.0.0.1, remote: find the ip of device where server runs on
+#### 	Compile: gcc tcp_server.c exchange.c orderBook.c order.c -o server
+#### 	Run: ./server
+#### 	Connect to server using ip and port 8890
+*note: the ip depends on whether server run local or remote, local: 127.0.0.1, remote: find the ip of device where server runs on*
 	
-#### 	place or cancel order with 5 paramter divided by as single character ",". Sequence of parameters are as below:
+#### 	Place or cancel order with 5 paramter divided by as single character ",". Sequence of parameters are as below:
 * p stands for place order, c stands for cancel order
 * b stands for buy, s stands for sell
 * price

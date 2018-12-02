@@ -14,4 +14,4 @@
 /**
 * handle request with different parameters
 */
-void handleRequest(int sockfd);
+void handleRequest(int * sockfd);

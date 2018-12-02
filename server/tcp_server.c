@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/shm.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 #include "exchange.h"
 #include "order.h"
@@ -17,6 +19,7 @@
 #define PORT  8890
 #define QUEUE_SIZE   10
 
+extern sem_t synchronize;
 
 int main(int argc, char **argv)
 {
@@ -45,6 +48,8 @@ int main(int argc, char **argv)
     }
     printf("listen success.\n");
 
+    sem_init(&synchronize, 0, 1);
+
     for(;;)
     {
         struct sockaddr_in client_addr;
@@ -58,13 +63,13 @@ int main(int argc, char **argv)
     	}
         printf("new client accepted.\n");
 
-        pid_t childid;
-        if(childid=fork()==0)//child process
+        pthread_t tid;
+        if(pthread_create(&tid, NULL, (void *)&handleRequest,&conn)==0)//child process
         {
-            printf("child process: %d created.\n", getpid());
-            close(server_sockfd);//close listening in child process
-            handleRequest(conn);//handle listened connection
-            exit(0);
+            printf("thread %d created.\n", tid);
+            //close(server_sockfd);//close listening in child process
+            //handleRequest(conn);//handle listened connection
+            //exit(0);
         }
     }
 

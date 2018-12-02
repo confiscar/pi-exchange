@@ -38,6 +38,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="exchange.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="order.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -46,6 +49,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="orderBook.h" />
+		<Unit filename="requestHandlr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="requestHandlr.h" />
 		<Unit filename="server.cbp" />
 		<Unit filename="tcp_server.c">
 			<Option compilerVar="CC" />

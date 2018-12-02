@@ -1,21 +1,26 @@
 #include "requestHandlr.h"
+#include <pthread.h>
+#include <semaphore.h>
 #define BUFFER_SIZE 1024
 
+sem_t synchronize;
 
-void handleRequest(int sockfd)
+void handleRequest(int * conn)
 {
+    sem_wait(&synchronize);
+    int sockfd = * conn;
+    sem_post(&synchronize);
     char buffer[BUFFER_SIZE];
-    pid_t pid = getpid();
     while(1)
     {
         memset(buffer,0,sizeof(buffer));
         int len = recv(sockfd, buffer, sizeof(buffer),0);
         if(strcmp(buffer,"exit\n")==0)
         {
-            printf("child process: %d exited.\n",pid);
+            printf("client %d exited.\n",sockfd);
             break;
         }
-        printf("pid:%d receive:\n",pid);
+        printf("client %d send:\n",sockfd);
 
         // split the string parameter
         char * delim = ",";

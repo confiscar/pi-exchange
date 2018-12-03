@@ -35,7 +35,7 @@ newsFrame.grid(row=2,column=1)
 feedstr = "example string |"*50
 news = tkinter.Label(newsFrame,text=feedstr,width=50,height=1,fg="#444444")
 news.grid(row=0,column=0,padx=4,pady=4)
-#IM STUCK HERE NOW THNX <3 
+
 
 
 
@@ -83,6 +83,24 @@ confirmFrame.grid(row=3,column=0,pady=10,padx=5)
 confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
 #Confirm button is bound to placeOrder() later on (it must first be defined)
+
+#MADE A TABLE BUT ITS OPENING A NEW WINDOW
+from tkinter import *
+
+tableFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
+tableFrame.grid(row=3,column=1)
+
+root = tableFrame
+#need to add 2 labels on top of the table for buy and sell
+
+height = 5 #rows
+width = 2 #colums
+for i in range(height): #Rows
+    for j in range(width): #Columns
+        b = Entry(root, text="")
+        b.grid(row=i, column=j)
+
+#Stuck here (vasili)
 
 class Graph():
     """Class to plot data to a canvas"""

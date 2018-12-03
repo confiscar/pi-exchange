@@ -1,6 +1,7 @@
 #include "requestHandlr.h"
 #include <pthread.h>
 #include <semaphore.h>
+
 #define BUFFER_SIZE 1024
 
 sem_t synchronize;
@@ -9,9 +10,7 @@ extern float sellPrice;
 
 void handleRequest(int * conn)
 {
-    sem_wait(&synchronize);
     int sockfd = * conn;
-    sem_post(&synchronize);
     char buffer[BUFFER_SIZE];
     while(1)
     {
@@ -69,13 +68,9 @@ void handleRequest(int * conn)
             }
         }
 
-        if(temp -> status == 0){
-            send(sockfd, "not matched - held in book\n", 30, 0);
-        } else if(temp -> status == 1) {
-            send(sockfd, "matched \n", 30, 0);
-        } else{
-            send(sockfd, "canceled \n", 30, 0);
-        }
+        // send specific information to server
+        sprintf(buffer, "------------------\norder ID: %d\nexchange ID: %d\nprice: %f\namount: %d\nstatus: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
+        send(sockfd, buffer, sizeof(buffer), 0);
 
     }
     close(sockfd);

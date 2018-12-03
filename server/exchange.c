@@ -21,6 +21,15 @@ order * placeBuyOrder(float price, int amount, int orderId){
     order * temp = matchOrder(currentOrder, &sellBook);
     if(temp == NULL){
         addToBook(currentOrder, &buyBook);
+        if(sellPrice < currentOrder -> price){
+            sellPrice = currentOrder -> price;
+        }
+    }
+    book * tempBook;
+    for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+        if(buyPrice > tempBook -> price){
+            buyPrice = tempBook -> price;
+        }
     }
     return currentOrder;
 }
@@ -50,6 +59,15 @@ order * placeSellOrder(float price, int amount, int orderId){
     order * temp = matchOrder(currentOrder, &buyBook);
     if(temp == NULL){
         addToBook(currentOrder, &sellBook);
+        if(buyPrice > currentOrder -> price || buyPrice == 0){
+            buyPrice = currentOrder -> price;
+        }
+    }
+    book * tempBook;
+    for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+        if(sellPrice < tempBook -> price || sellPrice == 0){
+            sellPrice = tempBook -> price;
+        }
     }
     return currentOrder;
 }

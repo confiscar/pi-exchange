@@ -4,6 +4,8 @@
 #define BUFFER_SIZE 1024
 
 sem_t synchronize;
+extern float buyPrice;
+extern float sellPrice;
 
 void handleRequest(int * conn)
 {
@@ -36,12 +38,12 @@ void handleRequest(int * conn)
             int orderId = atoi(strtok( NULL, delim));
             if(strcmp(bOs, "b") == 0){
                 temp = placeBuyOrder(price, amount, orderId);
-                printf("------------------\nplace buy order with \nexchange ID %d \n", temp -> exchangeId);
-                printf("price:%f \namount: %d \norder ID:%d \n------------------\n", price, amount, orderId);
+                printf("------------------\nplace buy order with \nexchange ID: %d \n", temp -> exchangeId);
+                printf("price: %f \namount: %d \norder ID: %d \n\nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
             } else {
                 temp = placeSellOrder(price, amount, orderId);
-                printf("------------------\nplace sell order with \nexchange ID %d \n", temp -> exchangeId);
-                printf("price:%f \namount: %d \norder ID:%d \n------------------\n", price, amount, orderId);
+                printf("------------------\nplace sell order with \nexchange ID: %d \n", temp -> exchangeId);
+                printf("price: %f \namount: %d \norder ID: %d \n\nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
             }
         } else{
             float price = atof(strtok( NULL, delim));

@@ -64,13 +64,13 @@ int main(int argc, char **argv)
         printf("new client accepted.\n");
 
         pthread_t tid;
-        if(pthread_create(&tid, NULL, (void *)&handleRequest,&conn)==0)//child process
+        if(pthread_create(&tid, NULL, (void *)&handleRequest,&conn)!=0)//child process
         {
-            printf("thread %d created.\n", tid);
             //close(server_sockfd);//close listening in child process
             //handleRequest(conn);//handle listened connection
-            //exit(0);
+            exit(0);
         }
+        printf("thread %d created.\n", tid);
     }
 
     printf("closed.\n");

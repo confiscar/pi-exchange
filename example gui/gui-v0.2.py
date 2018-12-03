@@ -14,6 +14,7 @@ QUANTITY_UPPER_RANGE = 10000
 #Width and heights of the screen and canvas
 W,H = 1080,640
 CW,CH = 640,640
+FEEDWIDTH = 30
 
 #Style Options
 RELIEF = tkinter.SUNKEN
@@ -32,8 +33,9 @@ feed = feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews'
 newsFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
 newsFrame.grid(row=2,column=1)
 
-feedstr = "example string |"*50
-news = tkinter.Label(newsFrame,text=feedstr,width=50,height=1,fg="#444444")
+
+feedstr = "Example Feed"
+news = tkinter.Label(newsFrame,text=feedstr,width=FEEDWIDTH,height=1,fg="#444444",font=("Courier"))
 news.grid(row=0,column=0,padx=4,pady=4)
 #IM STUCK HERE NOW THNX <3 
 
@@ -47,7 +49,7 @@ orderFrame.grid(row=1,column=1)
 bsFrame = tkinter.Frame(orderFrame,relief=RELIEF)
 bsFrame.grid(row=0,column=0,pady=10,padx=10)
 
-buyOrSell = "buy"
+buyOrSell = tkinter.StringVar()
 buyButton = tkinter.Radiobutton(bsFrame,text="Buy",indicatoron=False,value="buy",variable=buyOrSell,width=10,pady=4)
 buyButton.grid(row=0,column=0)
 sellButton = tkinter.Radiobutton(bsFrame,text="Sell",indicatoron=False,value="sell",variable=buyOrSell,width=10,pady=4)
@@ -191,19 +193,18 @@ def plot():
 
 #Scroll through the feed
 scrollAmount = 0
-feedstr = feedstr + " "*50
 def scrollFeed():
     global scrollAmount
     global feedstr
-    news.config(text="News: "+feedstr[scrollAmount:scrollAmount+50])
+    news.config(text=(" "*FEEDWIDTH + feedstr + " "*FEEDWIDTH)[scrollAmount:scrollAmount+FEEDWIDTH])
     scrollAmount += 1
-    if scrollAmount+50 > len(feedstr):
+    if scrollAmount+FEEDWIDTH > len(feedstr) + FEEDWIDTH*2:
         scrollAmount = 0
     root.after(100,scrollFeed)
 
 #Form has been submitted
 def placeOrder():
-    order = {"orderType":buyOrSell,"price":priceInput.get(),"quantity":quantityInput.get()}
+    order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
     print(order)
 
 #Configure confirm button to this function after the function has been defined

@@ -29,13 +29,14 @@ order * placeBuyOrder(float price, int amount, int orderId){
         }
     } else {
         book * tempBook;
-        buyPrice = 0;
+        int tempBuyPrice = 0;
         // loop through the sell book to find the lowest price (best buy price)
         for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-            if(buyPrice > tempBook -> price || buyPrice == 0){
-                buyPrice = tempBook -> price;
+            if(tempBuyPrice > tempBook -> price || buyPrice == 0){
+                tempBuyPrice = tempBook -> price;
             }
         }
+        buyPrice = tempBuyPrice;
     }
 
     return currentOrder;
@@ -76,13 +77,14 @@ order * placeSellOrder(float price, int amount, int orderId){
         }
     } else {
         book * tempBook;
-        sellPrice = 0;
+        int tempSellPrice = 0;
         // loop through the buy book to find the highest price (best sell price)
         for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-            if(sellPrice < tempBook -> price){
-                sellPrice = tempBook -> price;
+            if(tempSellPrice < tempBook -> price){
+                tempSellPrice = tempBook -> price;
             }
         }
+        sellPrice = tempSellPrice;
     }
 
     return currentOrder;

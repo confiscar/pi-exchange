@@ -6,12 +6,12 @@ This project will consist of software developed for the Rasberry Pi 3 model B. T
 
 Getting Started
 ------
-QT/GTK/FLTK libraries 
+python libraries
+java libraries
 
 Built With 
 ------
-C++
-Qt/GTK/FLTK
+C/C++/Python/java/
 
 
 Authors

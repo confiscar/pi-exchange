@@ -24,13 +24,16 @@ order * placeBuyOrder(float price, int amount, int orderId){
         if(sellPrice < currentOrder -> price){
             sellPrice = currentOrder -> price;
         }
-    }
-    book * tempBook;
-    for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-        if(buyPrice > tempBook -> price){
-            buyPrice = tempBook -> price;
+    } else {
+        book * tempBook;
+        buyPrice = 0;
+        for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+            if(buyPrice > tempBook -> price || buyPrice == 0){
+                buyPrice = tempBook -> price;
+            }
         }
     }
+
     return currentOrder;
 }
 
@@ -56,19 +59,23 @@ order * cancelBuyOrder(float price, int exchangeId){
 
 order * placeSellOrder(float price, int amount, int orderId){
     order * currentOrder = generateOrder(price, amount, orderId);
+
     order * temp = matchOrder(currentOrder, &buyBook);
     if(temp == NULL){
         addToBook(currentOrder, &sellBook);
         if(buyPrice > currentOrder -> price || buyPrice == 0){
             buyPrice = currentOrder -> price;
         }
-    }
-    book * tempBook;
-    for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-        if(sellPrice < tempBook -> price || sellPrice == 0){
-            sellPrice = tempBook -> price;
+    } else {
+        book * tempBook;
+        sellPrice = 0;
+        for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+            if(sellPrice < tempBook -> price){
+                sellPrice = tempBook -> price;
+            }
         }
     }
+
     return currentOrder;
 }
 

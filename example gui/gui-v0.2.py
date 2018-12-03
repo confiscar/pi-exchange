@@ -12,9 +12,11 @@ QUANTITY_LOWER_RANGE = 0
 QUANTITY_UPPER_RANGE = 10000
 
 #Width and heights of the screen and canvas
-W,H = 1080,640
+W,H = 1080,720
 CW,CH = 640,640
-FEEDWIDTH = 30
+FEEDWIDTH = 50
+TABLE_WIDTH = 2
+TABLE_HEIGHT = 5
 
 #Style Options
 RELIEF = tkinter.SUNKEN
@@ -22,27 +24,26 @@ RELIEF = tkinter.SUNKEN
 #Create window
 root = tkinter.Tk()
 root.title("Stock Exchange")
-root.geometry(str(W)+"x"+str(H)+"+80+40")
+root.geometry(str(W)+"x"+str(H)+"+0+0")
+root.attributes("-fullscreen",True)
 
 #Create canvas and add to window - for the graph
 canvas = tkinter.Canvas(root,width=CW,height=CH,bg='#000000')
-canvas.grid(row=0,column=0,rowspan=100)
+canvas.grid(row=0,column=0,rowspan=10)
 
 #rss feed
 feed = feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews')
 newsFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
-newsFrame.grid(row=2,column=1)
+newsFrame.grid(row=11,column=0)
 
-
-feedstr = "Example Feed"
+feedstr = ""
+for entry in feed['entries']:
+    feedstr = feedstr + entry['summary_detail']['value'].split("<")[0] + "  ---  "
 news = tkinter.Label(newsFrame,text=feedstr,width=FEEDWIDTH,height=1,fg="#444444",font=("Courier"))
 news.grid(row=0,column=0,padx=4,pady=4)
 
-
-
-
 #Buy/Sell Form
-orderFrame = tkinter.Frame(root, relief=RELIEF,bd=3)
+orderFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=100)
 orderFrame.grid(row=1,column=1)
 
 #Buy/Sell Radiobuttons (only one can be active at a time)
@@ -86,23 +87,50 @@ confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
 #Confirm button is bound to placeOrder() later on (it must first be defined)
 
-#MADE A TABLE BUT ITS OPENING A NEW WINDOW
-from tkinter import *
+#Book display
+tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=20)
+tableFrame.grid(row=2,column=1)
 
-tableFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
-tableFrame.grid(row=3,column=1)
+class Table():
+    """Class to act as a table widget"""
 
-root = tableFrame
-#need to add 2 labels on top of the table for buy and sell
+    def __init__(self,width,height,frame,headers):
+        """Initialise object and place Text widgets into the frame"""
+        self.width,self.height,self.frame = width,height,frame
+        self.headerTitles = headers
+        self.headers = []
+        self.rows = []
 
-height = 5 #rows
-width = 2 #colums
-for i in range(height): #Rows
-    for j in range(width): #Columns
-        b = Entry(root, text="")
-        b.grid(row=i, column=j)
+        #Create the headers of the columns
+        for x in range(self.width):
+            self.headers.append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
+            self.headers[-1].grid(row=0,column=x)
+            self.headers[-1].insert(tkinter.END,self.headerTitles[x])
+            self.headers[-1].config(state=tkinter.DISABLED)
 
-#Stuck here (vasili)
+        #Create the cells of the table
+        for y in range(1,self.height+1):
+            self.rows.append([])
+            for x in range(self.width):
+                self.rows[-1].append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
+                self.rows[-1][-1].grid(row=y,column=x)
+
+    #Clear the value in a cell
+    def clear(self,column,row):
+        self.rows[row][column].delete(1.0,tkinter.END)
+
+    #Insert a value into a cell
+    def insert(self,column,row,text):
+        self.clear(column,row)
+        self.rows[row][column].insert(tkinter.END,text)
+
+table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["Price","Quantity"])
+
+examplePrice = 4 + random.random()*10
+for y in range(TABLE_HEIGHT):
+    table.insert(0,y,str(examplePrice))
+    table.insert(1,y,random.randint(1,6)*100)
+    examplePrice = examplePrice+random.random()*2
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -194,7 +222,6 @@ for x in range(100):
 
 
 
-
 #Plot function is called repeatedly in mainloop
 def plot():
     global x
@@ -218,7 +245,7 @@ def scrollFeed():
     scrollAmount += 1
     if scrollAmount+FEEDWIDTH > len(feedstr) + FEEDWIDTH*2:
         scrollAmount = 0
-    root.after(100,scrollFeed)
+    root.after(70,scrollFeed)
 
 #Form has been submitted
 def placeOrder():

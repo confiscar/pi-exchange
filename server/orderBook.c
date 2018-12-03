@@ -11,6 +11,11 @@ void addToBook(order * curOrder, book ** curBook){
 	book * tempBook = NULL;
 	priceBucket * tempPb = NULL;
 	float tempPrice = curOrder -> price;
+	/*
+	* check if the price is already in the book
+	* if not, create a new price bucket and add it to book
+	* else, add the order to corresponding price bucket retrieval from book
+	*/
 	HASH_FIND(hh, *curBook, &tempPrice, sizeof(float), tempBook);
 	if(tempBook == NULL){
 		tempBook = malloc(sizeof(book));
@@ -33,13 +38,19 @@ void deleteFromBook(order * curOrder, book ** curBook){
     book * tempBook = NULL;
     priceBucket * tempPb = NULL;
     float tempPrice = curOrder -> price;
+    // check if the price of order exists in book
     HASH_FIND(hh, *curBook, &tempPrice, sizeof(float), tempBook);
     if(tempBook == NULL){
         printf("not found in book \n");
         return;
     }
     tempPb = tempBook -> pb;
-    if(tempPb ->hh.next == NULL){
+    /*
+    * check if the price bucket only contained one element
+    *if yes, delete both order from price bucket and price bucket from book
+    *else, only delete order from book
+    */
+    if(tempPb -> hh.next == NULL){
         HASH_DEL(tempPb, tempPb);
         HASH_DEL(*curBook, tempBook);
         free(tempPb);
@@ -52,6 +63,5 @@ void deleteFromBook(order * curOrder, book ** curBook){
         tempBook -> pb = tempPb;
         free(orderPb);
     }
-    //free(curOrder);
 }
 

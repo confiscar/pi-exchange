@@ -11,6 +11,8 @@ extern book * buyBook;
 extern book * sellBook;
 
 // mainly for test the functions
+// no need to look at this file
+
 int main(){
     printf("%d \n",placeBuyOrder(1.1,10,1) ->status);
     printf("%d \n",placeBuyOrder(1.1,11,1) ->status);

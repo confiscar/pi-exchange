@@ -24,14 +24,14 @@ void handleRequest(int * conn)
         }
         printf("client %d send:\n",sockfd);
 
-        // split the string parameter
+        // split the string parameter by comma (see readme for more specific definition of parameter)
         char * delim = ",";
-        char * pOc = strtok(buffer, delim);
-        char * bOs = strtok( NULL, delim);
+        char * pOc = strtok(buffer, delim); // first parameter, stands for place or cancel
+        char * bOs = strtok( NULL, delim); // second parameter, stands for buy or sell
 
         order * temp = NULL;
 
-        // decide what kind of request
+        // decide what kind of request by compare 1st and 2nd parameter
         if(strcmp(pOc, "p") == 0){
             float price = atof(strtok( NULL, delim));
             int amount = atoi(strtok( NULL, delim));

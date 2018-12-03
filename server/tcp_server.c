@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     {
         struct sockaddr_in client_addr;
         socklen_t length = sizeof(client_addr);
-        //进程阻塞在accept上，成功返回非负描述字，出错返回-1
+        //block at accept, once success, it will return a non-negative socket_fd, else -1
         int conn = accept(server_sockfd, (struct sockaddr*)&client_addr,&length);
     	if(conn<0)
     	{

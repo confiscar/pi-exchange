@@ -7,6 +7,7 @@
 
 #include "exchange.h"
 #include <stdio.h>
+#include "notification.h"
 
 book * buyBook = NULL;
 book * sellBook = NULL;
@@ -17,8 +18,8 @@ float sellPrice = 0;
 // decide when to free once the way to inform client is decided
 /// status of order: 0 not matched, 1 matched, 2 canceled
 
-order * placeBuyOrder(float price, int amount, int orderId){
-    order * currentOrder = generateOrder(price, amount, orderId);
+order * placeBuyOrder(float price, int amount, int orderId, int userId){
+    order * currentOrder = generateOrder(price, amount, orderId, userId);
     order * temp = matchOrder(currentOrder, &sellBook);
     // if the order is not matched, add it to buy book and update the best sell price
     // else update the best buy price
@@ -37,6 +38,7 @@ order * placeBuyOrder(float price, int amount, int orderId){
             }
         }
         buyPrice = tempBuyPrice;
+        sendToUser(temp);
     }
 
     return currentOrder;
@@ -65,8 +67,8 @@ order * cancelBuyOrder(float price, int exchangeId){
     return tempOrder;
 }
 
-order * placeSellOrder(float price, int amount, int orderId){
-    order * currentOrder = generateOrder(price, amount, orderId);
+order * placeSellOrder(float price, int amount, int orderId, int userId){
+    order * currentOrder = generateOrder(price, amount, orderId, userId);
     order * temp = matchOrder(currentOrder, &buyBook);
     // if the order is not matched, add it to sell book and update the best buy price
     // else update the best sell price
@@ -85,6 +87,7 @@ order * placeSellOrder(float price, int amount, int orderId){
             }
         }
         sellPrice = tempSellPrice;
+        sendToUser(temp);
     }
 
     return currentOrder;

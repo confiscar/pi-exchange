@@ -4,13 +4,13 @@
 
 #define BUFFER_SIZE 1024
 
-sem_t synchronize;
 extern float buyPrice;
 extern float sellPrice;
 
-void handleRequest(int * conn)
+void handleRequest(user_client * pair)
 {
-    int sockfd = * conn;
+    int sockfd = pair -> sockfd;
+    int userid = pair -> userId;
     char buffer[BUFFER_SIZE];
     while(1)
     {
@@ -36,13 +36,13 @@ void handleRequest(int * conn)
             int amount = atoi(strtok( NULL, delim));
             int orderId = atoi(strtok( NULL, delim));
             if(strcmp(bOs, "b") == 0){
-                temp = placeBuyOrder(price, amount, orderId);
+                temp = placeBuyOrder(price, amount, orderId, userid);
                 printf("------------------\nplace buy order with \nexchange ID: %d \n", temp -> exchangeId);
-                printf("price: %f \namount: %d \norder ID: %d \n\nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
+                printf("price: %f \namount: %d \norder ID: %d \nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
             } else {
-                temp = placeSellOrder(price, amount, orderId);
+                temp = placeSellOrder(price, amount, orderId, userid);
                 printf("------------------\nplace sell order with \nexchange ID: %d \n", temp -> exchangeId);
-                printf("price: %f \namount: %d \norder ID: %d \n\nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
+                printf("price: %f \namount: %d \norder ID: %d \nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
             }
         } else{
             float price = atof(strtok( NULL, delim));

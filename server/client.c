@@ -20,7 +20,11 @@ void receiver(int * sock_client_noti){
     char recvbuf[BUFFER_SIZE];
     while(1){
         recv(sock_fd, recvbuf, 1024, 0);
-        printf("current %s \n", recvbuf);
+        if(recvbuf[0] == 'b'){
+            printf("// %s", recvbuf);
+        } else {
+            printf("%s", recvbuf);
+        }
         memset(recvbuf,0,sizeof(recvbuf));
     }
 }

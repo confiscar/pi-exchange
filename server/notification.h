@@ -5,6 +5,7 @@
  *      Author: Ke CHEN
  */
 #include "uthash.h"
+#include "order.h"
 
  typedef struct notificationPoll{
 	 int user_id;
@@ -14,3 +15,4 @@
 
 void notify();
 void sendToAll(char * sendBuffer);
+void sendToUser(order * orderTobeInform);

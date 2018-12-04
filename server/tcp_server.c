@@ -20,7 +20,6 @@
 #define PORT  8890
 #define QUEUE_SIZE   10
 
-extern sem_t synchronize;
 extern notificationPoll *  nPoll;
 int user_id = 0;
 
@@ -64,8 +63,6 @@ int main(int argc, char **argv)
     }
     printf("listen success.\n");
 
-    sem_init(&synchronize, 0, 1);
-
     pthread_t noti;
     if(pthread_create(&noti, NULL, (void *)&notify,NULL)!=0)//child process
     {
@@ -94,15 +91,16 @@ int main(int argc, char **argv)
         if(atoi(recvBuf) < 0 ){
             sprintf(sendBuf, "%d", user_id);
             send(conn, sendBuf, 1024, 0);
-            user_id ++;
             pthread_t tid;
-            int * connCopy = malloc(sizeof(int));
-            *connCopy = conn;
-            if(pthread_create(&tid, NULL, (void *)&handleRequest, connCopy)!=0)//create process
+            user_client * pair = malloc(sizeof(user_client));
+            pair -> sockfd = conn;
+            pair -> userId = user_id;
+            if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
             {
                 exit(0);
             }
             printf("thread %d created.\n", tid);
+            user_id ++;
         } else {
             addToNotificationPoll(atoi(recvBuf), conn);
             printf("notification socket added to notification poll \n");

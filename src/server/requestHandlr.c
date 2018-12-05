@@ -11,7 +11,6 @@ void handleRequest(user_client * pair)
 {
     int sockfd = pair -> sockfd;
     int userid = pair -> userId;
-    printf("%d %d \n", sockfd, userid);
     char buffer[BUFFER_SIZE];
     while(1)
     {

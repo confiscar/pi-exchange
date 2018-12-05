@@ -58,16 +58,8 @@ int main(int argc, char **argv)
     char sendbuf[BUFFER_SIZE];
     char recvbuf[BUFFER_SIZE];
 
-    sprintf(sendbuf, "%d\n", user_id);
-
     // send a negative user_id to server and receive a user_id assigned by server
     // once a user_id is assigned, send a response to server
-    send(sock_cli, sendbuf, sizeof(sendbuf),0);
-    recv(sock_cli, recvbuf, sizeof(recvbuf),0);
-    user_id = atoi(recvbuf);
-    printf("user_id assigned: %d \n", user_id);
-    sprintf(sendbuf, "%d", user_id);
-    send(sock_cli, sendbuf, sizeof(sendbuf),0);
     recv(sock_cli, recvbuf, sizeof(recvbuf),0);
     printf("%s", recvbuf);
 

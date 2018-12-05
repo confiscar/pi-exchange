@@ -83,35 +83,27 @@ int main(int argc, char **argv)
             perror("connect");
             exit(1);
     	}
-        printf("new client accepted.\n");
+        printf("new client accepted.\nUser ID: %d \n", user_id);
         char sendBuf[1024];
         char recvBuf[1024];
 
-        recv(conn, recvBuf, 1024, 0);
-        // assign a user_id to client if its negative (we set it to negative as initial)
+        // assign a user_id to client
         // else add it to notification poll
-        if(atoi(recvBuf) < 0 ){
-            sprintf(sendBuf, "%d", user_id);
-            send(conn, sendBuf, 1024, 0);
-            recv(conn, recvBuf, 1024, 0);
-            if(atoi(recvBuf) >= 0){
-                sprintf(sendBuf, "sell price: %f, buy price: %f\n", sellPrice, buyPrice);
-                send(conn, sendBuf, 1024, 0);
-                pthread_t tid;
-                user_client * pair = malloc(sizeof(user_client));
-                pair -> sockfd = conn;
-                pair -> userId = user_id;
-                if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
-                {
-                    exit(0);
-                }
-                printf("thread %d created.\n", tid);
-                addToNotificationPoll(atoi(recvBuf), conn);
-                printf("socket added to notification poll \n");
-            }
-
-            user_id ++;
+        sprintf(sendBuf, "sell price: %f, buy price: %f\n", sellPrice, buyPrice);
+        send(conn, sendBuf, 1024, 0);
+        pthread_t tid;
+        user_client * pair = malloc(sizeof(user_client));
+        pair -> sockfd = conn;
+        pair -> userId = user_id;
+        if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
+        {
+            exit(0);
         }
+        printf("thread %d created.\n", tid);
+        addToNotificationPoll(user_id, conn);
+        printf("socket added to notification poll \n");
+
+        user_id ++;
 
     }
 

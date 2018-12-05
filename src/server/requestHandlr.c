@@ -11,6 +11,7 @@ void handleRequest(user_client * pair)
 {
     int sockfd = pair -> sockfd;
     int userid = pair -> userId;
+    printf("%d %d \n", sockfd, userid);
     char buffer[BUFFER_SIZE];
     while(1)
     {
@@ -69,7 +70,7 @@ void handleRequest(user_client * pair)
         }
 
         // send specific information to server
-        sprintf(buffer, "------------------\norder ID: %d\nexchange ID: %d\nprice: %f\namount: %d\nstatus: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
+        sprintf(buffer, "------------------\n|order ID: %d\n|exchange ID: %d\n|price: %f\n|amount: %d\n|status: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
         send(sockfd, buffer, sizeof(buffer), 0);
 
     }

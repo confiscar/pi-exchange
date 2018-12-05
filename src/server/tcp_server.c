@@ -22,6 +22,8 @@
 
 extern notificationPoll *  nPoll;
 int user_id = 0;
+extern float buyPrice;
+extern float sellPrice;
 
 void addToNotificationPoll(int user_id, int conn){
     notificationPoll * temp = NULL;
@@ -91,19 +93,24 @@ int main(int argc, char **argv)
         if(atoi(recvBuf) < 0 ){
             sprintf(sendBuf, "%d", user_id);
             send(conn, sendBuf, 1024, 0);
-            pthread_t tid;
-            user_client * pair = malloc(sizeof(user_client));
-            pair -> sockfd = conn;
-            pair -> userId = user_id;
-            if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
-            {
-                exit(0);
+            recv(conn, recvBuf, 1024, 0);
+            if(atoi(recvBuf) >= 0){
+                sprintf(sendBuf, "sell price: %f, buy price: %f\n", sellPrice, buyPrice);
+                send(conn, sendBuf, 1024, 0);
+                pthread_t tid;
+                user_client * pair = malloc(sizeof(user_client));
+                pair -> sockfd = conn;
+                pair -> userId = user_id;
+                if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
+                {
+                    exit(0);
+                }
+                printf("thread %d created.\n", tid);
+                addToNotificationPoll(atoi(recvBuf), conn);
+                printf("socket added to notification poll \n");
             }
-            printf("thread %d created.\n", tid);
+
             user_id ++;
-        } else {
-            addToNotificationPoll(atoi(recvBuf), conn);
-            printf("notification socket added to notification poll \n");
         }
 
     }

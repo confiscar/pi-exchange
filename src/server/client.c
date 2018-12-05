@@ -14,17 +14,17 @@
 #define BUFFER_SIZE 1024
 
 int user_id = -1;
+int request_status = 0;
 
-void receiver(int * sock_client_noti){
-    int sock_fd = *sock_client_noti;
+void receiver(int * sock_cli){
+    int sock_fd = *sock_cli;
     char recvbuf[BUFFER_SIZE];
     while(1){
         recv(sock_fd, recvbuf, 1024, 0);
-        if(recvbuf[0] == 'b'){
-            printf("// %s", recvbuf);
-        } else {
-            printf("%s", recvbuf);
+        if(recvbuf[0] == '-'){
+            request_status = 1;
         }
+        printf("%s", recvbuf);
         memset(recvbuf,0,sizeof(recvbuf));
     }
 }
@@ -60,45 +60,38 @@ int main(int argc, char **argv)
 
     sprintf(sendbuf, "%d\n", user_id);
 
-    // send a negative user_id to server for indicating it is the first socket of a client, which is used to send request and get response
+    // send a negative user_id to server and receive a user_id assigned by server
+    // once a user_id is assigned, send a response to server
     send(sock_cli, sendbuf, sizeof(sendbuf),0);
     recv(sock_cli, recvbuf, sizeof(recvbuf),0);
     user_id = atoi(recvbuf);
     printf("user_id assigned: %d \n", user_id);
+    sprintf(sendbuf, "%d", user_id);
+    send(sock_cli, sendbuf, sizeof(sendbuf),0);
+    recv(sock_cli, recvbuf, sizeof(recvbuf),0);
+    printf("%s", recvbuf);
 
-    // if server assigned a i=user_id to client, create second socket for receive notification
-    // also sent user_id to help server identify it is a socket for notification
-    if(user_id >= 0){
-        if (connect(sock_cli_noti, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0){
-            perror("connect");
-            exit(1);
-        }
-        printf("notification socket connected \n");
-        sprintf(sendbuf, "%d", user_id);
-        send(sock_cli_noti, sendbuf, sizeof(sendbuf),0);
-        pthread_t tid;
-        // create a thread for handle notification
-        if(pthread_create(&tid, NULL, (void *)&receiver,&sock_cli_noti)!=0){
-            exit(0);
-        }
-        printf("receiver thread created \n");
+    pthread_t tid;
+    // create a thread for handle notification
+    if(pthread_create(&tid, NULL, (void *)&receiver,&sock_cli)!=0){
+        exit(0);
     }
 
     // client send the message input in terminal to server and receive a response
     while (fgets(sendbuf, sizeof(sendbuf), stdin) != NULL)
     {
         send(sock_cli, sendbuf, strlen(sendbuf),0); //send
+        request_status = 0;
         if(strcmp(sendbuf,"exit\n")==0)
         {
 	    printf("client exited.\n");
             break;
         }
-        printf("client receive:\n");
-        recv(sock_cli, recvbuf, sizeof(recvbuf),0); //receive
-        fputs(recvbuf, stdout);
+        while(request_status == 0){
+
+        }
 
         memset(sendbuf, 0, sizeof(sendbuf));
-        memset(recvbuf, 0, sizeof(recvbuf));
     }
 
     close(sock_cli);

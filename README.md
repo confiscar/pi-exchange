@@ -6,13 +6,12 @@ This project will consist of software developed for the Rasberry Pi 3 model B. T
 
 Getting Started
 ------
-QT/GTK/FLTK libraries 
+Python
+feedparser
 
 Built With 
 ------
-C++
-Qt/GTK/FLTK
-
+Python
 
 Authors
 ------

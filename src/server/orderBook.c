@@ -1,10 +1,3 @@
-/*
- * orderBook.c
- *
- *  Created on: 2018/11/29
- *      Author: Ke CHEN
- */
-
 #include "orderBook.h"
 
 void addToBook(order * curOrder, book ** curBook){

@@ -1,11 +1,3 @@
-/*
- * order.c
- *
- *  Created on: 2018Äê11ÔÂ29ÈÕ
- *      Author: 13245
- */
-
-
 #include "order.h"
 #include <stdlib.h>
 

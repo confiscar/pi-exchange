@@ -1,9 +1,3 @@
-/*
- * notification.h
- *
- *  Created on: 2018/12/3
- *      Author: Ke CHEN
- */
 #include "uthash.h"
 #include "order.h"
 

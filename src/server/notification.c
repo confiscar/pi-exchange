@@ -1,5 +1,3 @@
-//#include "exchange.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "notification.h"

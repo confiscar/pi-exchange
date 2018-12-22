@@ -6,8 +6,8 @@ This project will consist of software developed for the Rasberry Pi 3 model B. T
 
 Getting Started
 ------
-Python
-feedparser
+*Do chmod 777 install.sh
+*Run GUI with python gui.***.py
 
 Built With 
 ------

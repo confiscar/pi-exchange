@@ -21,6 +21,7 @@ void handleRequest(user_client * pair)
             printf("client %d exited.\n",sockfd);
             break;
         }
+        printf("client received: %s", buffer);
         printf("client %d send:\n",sockfd);
 
         // split the string parameter by comma (see readme for more specific definition of parameter)
@@ -35,37 +36,61 @@ void handleRequest(user_client * pair)
             float price = atof(strtok( NULL, delim));
             int amount = atoi(strtok( NULL, delim));
             int orderId = atoi(strtok( NULL, delim));
+
+            if(price == 0 || amount == 0 || orderId == 0) {
+                printf("invalid input\n");
+                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                continue;
+            }
+
             if(strcmp(bOs, "b") == 0){
                 temp = placeBuyOrder(price, amount, orderId, userid);
                 printf("------------------\nplace buy order with \nexchange ID: %d \n", temp -> exchangeId);
                 printf("price: %f \namount: %d \norder ID: %d \nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
-            } else {
+            } else if(strcmp(bOs, "s") == 0){
                 temp = placeSellOrder(price, amount, orderId, userid);
                 printf("------------------\nplace sell order with \nexchange ID: %d \n", temp -> exchangeId);
                 printf("price: %f \namount: %d \norder ID: %d \nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
+            } else {
+                printf("invalid input\n");
+                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                continue;
             }
-        } else{
+        } else if(strcmp(pOc, "c") == 0){
             float price = atof(strtok( NULL, delim));
             int exchangeId = atoi(strtok( NULL, delim));
+            if(price == 0 || exchangeId == 0){
+                printf("invalid input\n");
+                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                continue;
+            }
             if(strcmp(bOs, "b") == 0){
                 temp = cancelBuyOrder(price, exchangeId);
                 if(temp == NULL){
                     printf("------------------\norder not exist, please check again\n------------------\n");
-                    send(sockfd, "order not exist, please check\n", 30, 0);
+                    send(sockfd, "------------------\norder not exist, please check\n------------------\n", 100, 0);
                     continue;
                 }
                 printf("------------------\ncancel buy order with \nexchange ID %d \n", temp -> exchangeId);
                 printf("price:%f \namount: %d \norder ID:%d \n------------------\n", temp -> price, temp -> amount, temp -> orderId);
-            } else {
+            } else if(strcmp(bOs, "s") == 0){
                 temp = cancelSellOrder(price, exchangeId);
                 if(temp == NULL){
                     printf("------------------\norder not exist, please check again\n------------------\n");
-                    send(sockfd, "order not exist, please check\n", 30, 0);
+                    send(sockfd, "------------------\norder not exist, please check\n------------------\n", 100, 0);
                     continue;
                 }
                 printf("------------------\ncancel sell order with \nexchange ID %d \n", temp -> exchangeId);
                 printf("price:%f \namount: %d \norder ID:%d \n------------------\n", temp -> price, temp -> amount, temp -> orderId);
+            } else {
+                printf("invalid input\n");
+                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                continue;
             }
+        } else {
+            printf("invalid input\n");
+            send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+            continue;
         }
 
         // send specific information to server

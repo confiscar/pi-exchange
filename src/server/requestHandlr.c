@@ -12,6 +12,9 @@ void handleRequest(user_client * pair)
     int sockfd = pair -> sockfd;
     int userid = pair -> userId;
     char buffer[BUFFER_SIZE];
+    char invalid_msg[100];
+    memset(invalid_msg,0,sizeof(invalid_msg));
+    sprintf(invalid_msg, "------------------\ninvalid input\n------------------\n");
     while(1)
     {
         memset(buffer,0,sizeof(buffer));
@@ -39,7 +42,7 @@ void handleRequest(user_client * pair)
 
             if(price == 0 || amount == 0 || orderId == 0) {
                 printf("invalid input\n");
-                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
                 continue;
             }
 
@@ -53,7 +56,7 @@ void handleRequest(user_client * pair)
                 printf("price: %f \namount: %d \norder ID: %d \nbest buy price: %f, best sell price: %f\n------------------\n", price, amount, orderId, buyPrice, sellPrice);
             } else {
                 printf("invalid input\n");
-                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
                 continue;
             }
         } else if(strcmp(pOc, "c") == 0){
@@ -61,7 +64,7 @@ void handleRequest(user_client * pair)
             int exchangeId = atoi(strtok( NULL, delim));
             if(price == 0 || exchangeId == 0){
                 printf("invalid input\n");
-                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
                 continue;
             }
             if(strcmp(bOs, "b") == 0){
@@ -84,16 +87,17 @@ void handleRequest(user_client * pair)
                 printf("price:%f \namount: %d \norder ID:%d \n------------------\n", temp -> price, temp -> amount, temp -> orderId);
             } else {
                 printf("invalid input\n");
-                send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+                send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
                 continue;
             }
         } else {
             printf("invalid input\n");
-            send(sockfd, "------------------\ninvalid input\n------------------\n", 100, 0);
+            send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
             continue;
         }
 
         // send specific information to server
+        memset(buffer,0,sizeof(buffer));
         sprintf(buffer, "------------------\n|order ID: %d\n|exchange ID: %d\n|price: %f\n|amount: %d\n|status: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
         send(sockfd, buffer, sizeof(buffer), 0);
 

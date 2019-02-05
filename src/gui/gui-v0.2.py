@@ -1,6 +1,10 @@
 import tkinter
 import random
 import feedparser
+import socket
+import threading
+import platform
+
 #CONSTANTS
 
 #Order form constraints
@@ -11,15 +15,15 @@ PRICE_ACCURACY = 0.00001
 QUANTITY_LOWER_RANGE = 0
 QUANTITY_UPPER_RANGE = 10000
 
-#Width and heights of the screen and canvas
+#Width and heights of the screen and canvas and Feed
 W,H = 1080,720
 CW,CH = 640,640
-FEEDWIDTH = 50
+FEEDWIDTH = 62
 TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
 
 #Style Options
-RELIEF = tkinter.SUNKEN
+RELIEF = tkinter.RIDGE
 
 #Create window
 root = tkinter.Tk()
@@ -268,7 +272,7 @@ def plot():
     g.plot()
 
     #Call in next mainloop
-    root.after(10,plot)
+    root.after(0,plot)
 
 #Scroll through the feed
 scrollAmount = 0

@@ -35,6 +35,8 @@ root.attributes("-fullscreen",True)
 canvas = tkinter.Canvas(root,width=CW,height=CH,bg='#000000')
 canvas.grid(row=0,column=0,rowspan=10)
 
+
+
 #rss feed
 feed = feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews')
 newsFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
@@ -169,6 +171,13 @@ for y in range(TABLE_HEIGHT):
     table2.insert(1,y,random.randint(1,6)*100)
     examplePrice = examplePrice+random.random()*2
 
+#EXTRA STUFF
+#CPU LABEL POWER
+statsFrame = tkinter.Frame(root)
+statsFrame.grid(row=3,column=1)
+cputext = tkinter.Label(statsFrame, text="CPU Usage : {}".format(0))
+cputext.grid(row=0,column=0)
+#FIGURE THIS OUT LATER
 
 class Graph():
     """Class to plot data to a canvas"""

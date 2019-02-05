@@ -44,24 +44,27 @@ news.grid(row=0,column=0,padx=4,pady=4)
 
 #Buy/Sell Form
 orderFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=100)
-orderFrame.grid(row=1,column=1)
+orderFrame.grid(row=1,column=1,columnspan=2)
+
+orderLabel = tkinter.Label(orderFrame, text="Order Form", font=("",12))
+orderLabel.grid(row=0,column=0)
 
 #Buy/Sell Radiobuttons (only one can be active at a time)
 bsFrame = tkinter.Frame(orderFrame,relief=RELIEF)
-bsFrame.grid(row=0,column=0,pady=10,padx=10)
+bsFrame.grid(row=1,column=0,pady=10,padx=10)
 
 buyOrSell = tkinter.StringVar()
 buyButton = tkinter.Radiobutton(bsFrame,text="Buy",indicatoron=False,value="buy",variable=buyOrSell,width=10,pady=4)
-buyButton.grid(row=0,column=0)
+buyButton.grid(row=1,column=0)
 sellButton = tkinter.Radiobutton(bsFrame,text="Sell",indicatoron=False,value="sell",variable=buyOrSell,width=10,pady=4)
-sellButton.grid(row=0,column=1)
+sellButton.grid(row=1,column=1)
 
 #Set default state to buy
 buyButton.select()
 
 #Price Input
 priceFrame = tkinter.Frame(orderFrame)
-priceFrame.grid(row=1,column=0,pady=10,padx=10)
+priceFrame.grid(row=2,column=0,pady=10,padx=10)
 
 priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
 priceLabel.grid(row=0,column=0)
@@ -79,7 +82,7 @@ priceInput.grid(row=0,column=1)
 
 #Quantity
 quantityFrame = tkinter.Frame(orderFrame)
-quantityFrame.grid(row=2,column=0,pady=10,padx=10)
+quantityFrame.grid(row=3,column=0,pady=10,padx=10)
 
 quantityLabel = tkinter.Label(quantityFrame,width=10,text="Quantity: ")
 quantityLabel.grid(row=0,column=0)
@@ -89,17 +92,17 @@ quantityInput.grid(row=0,column=1)
 
 #Place Order Button
 confirmFrame = tkinter.Frame(orderFrame)
-confirmFrame.grid(row=3,column=0,pady=10,padx=5)
+confirmFrame.grid(row=4,column=0,pady=10,padx=5)
 
 confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
 #Confirm button is bound to placeOrder() later on (it must first be defined)
 
 #Book display
-tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=20)
+tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
 tableFrame.grid(row=3,column=1)
-buyTableLabel = tkinter.Label(tableFrame, text="Buy", pady=4)
-buyTableLabel.grid(row=0,column=0)
+buyTableLabel = tkinter.Label(tableFrame, text="Buy", pady=4, font=("",12))
+buyTableLabel.grid(row=0,column=0, columnspan=2)
 
 class Table():
     """Class to act as a table widget"""
@@ -148,10 +151,10 @@ for y in range(TABLE_HEIGHT):
     examplePrice = examplePrice+random.random()*2
 
 #created second frame with class
-tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=20)
+tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
 tableFrame2.grid(row=3,column=2)
-buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4)
-buyTableLabel.grid(row=0,column=0)
+buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4, font=("",12))
+buyTableLabel.grid(row=0, column=0, columnspan=2)
 
 
 table2 = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame2, ["Price","Quantity"])

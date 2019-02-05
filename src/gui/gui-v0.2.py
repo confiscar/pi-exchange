@@ -65,7 +65,15 @@ priceFrame.grid(row=1,column=0,pady=10,padx=10)
 
 priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
 priceLabel.grid(row=0,column=0)
-priceInput = tkinter.Spinbox(priceFrame,from_=PRICE_LOWER_RANGE,to=PRICE_UPPER_RANGE,increment=PRICE_ACCURACY)
+priceInput = tkinter.Spinbox(priceFrame,from_=PRICE_LOWER_RANGE,to=PRICE_UPPER_RANGE,increment=PRICE_ACCURACY)  
+
+def ValidateIfNum(self, s, S):
+        # disallow anything but numbers
+        valid = S.isdigit()
+        if not valid:
+            self.root.bell()
+        return valid
+        
 priceInput.insert(0,0)
 priceInput.grid(row=0,column=1)
 
@@ -100,6 +108,9 @@ class Table():
         self.headerTitles = headers
         self.headers = []
         self.rows = []
+       
+       # w = Label(self, text="Hello, world!")
+        #w.pack()
 
         #Create the headers of the columns
         for x in range(self.width):
@@ -309,5 +320,3 @@ def backgroundTasks():
 #Add plot to mainloop and hand over control to gui
 root.after(1,backgroundTasks)
 root.mainloop()
-
-

@@ -97,7 +97,9 @@ confirmButton.pack()
 
 #Book display
 tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=20)
-tableFrame.grid(row=2,column=1)
+tableFrame.grid(row=3,column=1)
+buyTableLabel = tkinter.Label(tableFrame, text="Buy", pady=4)
+buyTableLabel.grid(row=0,column=0)
 
 class Table():
     """Class to act as a table widget"""
@@ -108,14 +110,11 @@ class Table():
         self.headerTitles = headers
         self.headers = []
         self.rows = []
-       
-       # w = Label(self, text="Hello, world!")
-        #w.pack()
 
         #Create the headers of the columns
         for x in range(self.width):
             self.headers.append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
-            self.headers[-1].grid(row=0,column=x)
+            self.headers[-1].grid(row=1,column=x)
             self.headers[-1].insert(tkinter.END,self.headerTitles[x])
             self.headers[-1].config(state=tkinter.DISABLED)
 
@@ -124,16 +123,21 @@ class Table():
             self.rows.append([])
             for x in range(self.width):
                 self.rows[-1].append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
-                self.rows[-1][-1].grid(row=y,column=x)
+                self.rows[-1][-1].grid(row=y+1,column=x)
+                self.rows[-1][-1].config(state=tkinter.DISABLED)
 
     #Clear the value in a cell
     def clear(self,column,row):
+        self.rows[row][column].config(state=tkinter.NORMAL)
         self.rows[row][column].delete(1.0,tkinter.END)
-
+        self.rows[row][column].config(state=tkinter.DISABLED)
+        
     #Insert a value into a cell
     def insert(self,column,row,text):
         self.clear(column,row)
+        self.rows[row][column].config(state=tkinter.NORMAL)
         self.rows[row][column].insert(tkinter.END,text)
+        self.rows[row][column].config(state=tkinter.DISABLED)
 
 table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["Price","Quantity"])
 
@@ -144,49 +148,18 @@ for y in range(TABLE_HEIGHT):
     examplePrice = examplePrice+random.random()*2
 
 #created second frame with class
-
 tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=20)
-tableFrame2.grid(row=2,column=2)
+tableFrame2.grid(row=3,column=2)
+buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4)
+buyTableLabel.grid(row=0,column=0)
 
-class Table2():
-    """Class to act as a table widget"""
 
-    def __init__(self,width,height,frame,headers):
-        """Initialise object and place Text widgets into the frame"""
-        self.width,self.height,self.frame = width,height,frame
-        self.headerTitles = headers
-        self.headers = []
-        self.rows = []
-
-        #Create the headers of the columns
-        for x in range(self.width):
-            self.headers.append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
-            self.headers[-1].grid(row=0,column=x)
-            self.headers[-1].insert(tkinter.END,self.headerTitles[x])
-            self.headers[-1].config(state=tkinter.DISABLED)
-
-        #Create the cells of the table
-        for y in range(1,self.height+1):
-            self.rows.append([])
-            for x in range(self.width):
-                self.rows[-1].append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
-                self.rows[-1][-1].grid(row=y,column=x)
-
-    #Clear the value in a cell
-    def clear(self,column,row):
-        self.rows[row][column].delete(1.0,tkinter.END)
-
-    #Insert a value into a cell
-    def insert(self,column,row,text):
-        self.clear(column,row)
-        self.rows[row][column].insert(tkinter.END,text)
-
-table = Table2(TABLE_WIDTH, TABLE_HEIGHT, tableFrame2, ["Price","Quantity"])
+table2 = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame2, ["Price","Quantity"])
 
 examplePrice = 4 + random.random()*10
 for y in range(TABLE_HEIGHT):
-    table.insert(0,y,str(examplePrice))
-    table.insert(1,y,random.randint(1,6)*100)
+    table2.insert(0,y,str(examplePrice))
+    table2.insert(1,y,random.randint(1,6)*100)
     examplePrice = examplePrice+random.random()*2
 
 

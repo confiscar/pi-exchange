@@ -11,6 +11,7 @@ public class socket {
 	public static void main(String[] args) throws IOException {
 		String str = null;
 		byte[] readResult=new byte[1024];
+		double bPrice,sPrice;
 		
 		//客户端请求与本机在8890端口建立TCP连接 
 		Socket client = new Socket("192.168.137.8", 8890);
@@ -22,7 +23,13 @@ public class socket {
 		
 		client.getInputStream().read(readResult);
 		String price = new String(readResult);
-		System.out.println(price);
+		//System.out.println(price);
+		
+		// split and parse the price
+		Parse s = new Parse(price);
+		bPrice = s.getBP();
+		sPrice = s.getSP();
+		
 		
 		
 		

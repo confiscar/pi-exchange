@@ -4,7 +4,7 @@ import feedparser
 import socket
 import threading
 import platform
-
+import psutil
 #CONSTANTS
 
 #Order form constraints
@@ -173,9 +173,9 @@ for y in range(TABLE_HEIGHT):
 
 #EXTRA STUFF
 #CPU LABEL POWER
-statsFrame = tkinter.Frame(root)
-statsFrame.grid(row=3,column=1)
-cputext = tkinter.Label(statsFrame, text="CPU Usage : {}".format(0))
+statsFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=200)
+statsFrame.grid(row=4,column=1,columnspan=2)
+cputext = tkinter.Label(statsFrame, text= "")
 cputext.grid(row=0,column=0)
 #FIGURE THIS OUT LATER
 
@@ -299,12 +299,18 @@ def placeOrder():
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
     print(order)
 
+def updateStats():
+    cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%\nTemp: {2}°C".format(psutil.cpu_percent(),psutil.virtual_memory().percent,psutil.sensors_temperatures()))
+    root.after(500,updateStats)
+
+
 #Configure confirm button to this function after the function has been defined
 confirmButton.config(command=placeOrder)
 
 def backgroundTasks():
     plot()
     scrollFeed()
+    updateStats()
 
 #Add plot to mainloop and hand over control to gui
 root.after(1,backgroundTasks)

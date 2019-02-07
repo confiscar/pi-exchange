@@ -6,9 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
- 
+
 public class socket {
 	public static void main(String[] args) throws IOException {
+		int Gnumber = 100;
 		String str = null;
 		byte[] readResult=new byte[1024];
 		double bPrice,sPrice;
@@ -30,7 +31,26 @@ public class socket {
 		bPrice = s.getBP();
 		sPrice = s.getSP();
 		
-		
+		// generate
+		if ((bPrice == 0) && (sPrice == 0)) {
+			Initialization Gb = new Initialization("b"); 
+			for (int i=0;i <= Gnumber; i++) {
+				str=Gb.buy();
+				str=str + "," + String.valueOf(i);
+				out.print(str);
+				out.flush();
+				str=null;
+			}
+			
+			Initialization Gs = new Initialization("s"); 
+			for (int i=Gnumber+1 ;i <= Gnumber*2; i++) {
+				str=Gs.sell();
+				str=str + "," + String.valueOf(i);
+				out.print(str);
+				out.flush();
+				str=null;
+			}	
+		}
 		
 		
 		

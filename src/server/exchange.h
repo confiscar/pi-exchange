@@ -1,10 +1,3 @@
-/*
- * exchange.h
- *
- *  Created on: 2018/11/26
- *      Author: Ke CHEN
- */
-
 #ifndef EXCHANGE_H_
 #define EXCHANGE_H_
 

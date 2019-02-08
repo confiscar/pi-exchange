@@ -34,6 +34,9 @@
 		<Unit filename="client.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="clientTest.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="exchange.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -41,6 +44,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="notification.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="notification.h" />
 		<Unit filename="order.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -54,6 +61,8 @@
 		</Unit>
 		<Unit filename="requestHandlr.h" />
 		<Unit filename="server.cbp" />
+		<Unit filename="server.depend" />
+		<Unit filename="server.layout" />
 		<Unit filename="tcp_server.c">
 			<Option compilerVar="CC" />
 		</Unit>

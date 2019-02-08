@@ -1,4 +1,3 @@
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -22,6 +21,8 @@
 
 extern notificationPoll *  nPoll;
 int user_id = 0;
+extern float buyPrice;
+extern float sellPrice;
 
 void addToNotificationPoll(int user_id, int conn){
     notificationPoll * temp = NULL;
@@ -81,30 +82,28 @@ int main(int argc, char **argv)
             perror("connect");
             exit(1);
     	}
-        printf("new client accepted.\n");
+        printf("new client accepted.\nUser ID: %d \n", user_id);
         char sendBuf[1024];
         char recvBuf[1024];
 
-        recv(conn, recvBuf, 1024, 0);
-        // assign a user_id to client if its negative (we set it to negative as initial)
+        // assign a user_id to client
         // else add it to notification poll
-        if(atoi(recvBuf) < 0 ){
-            sprintf(sendBuf, "%d", user_id);
-            send(conn, sendBuf, 1024, 0);
-            pthread_t tid;
-            user_client * pair = malloc(sizeof(user_client));
-            pair -> sockfd = conn;
-            pair -> userId = user_id;
-            if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
-            {
-                exit(0);
-            }
-            printf("thread %d created.\n", tid);
-            user_id ++;
-        } else {
-            addToNotificationPoll(atoi(recvBuf), conn);
-            printf("notification socket added to notification poll \n");
+        memset(sendBuf,0,sizeof(sendBuf));
+        sprintf(sendBuf, "sell price: %f, buy price: %f\n", sellPrice, buyPrice);
+        send(conn, sendBuf, sizeof(sendBuf), 0);
+        pthread_t tid;
+        user_client * pair = malloc(sizeof(user_client));
+        pair -> sockfd = conn;
+        pair -> userId = user_id;
+        if(pthread_create(&tid, NULL, (void *)&handleRequest, pair)!=0)//create process
+        {
+            exit(0);
         }
+        printf("thread %d created.\n", tid);
+        addToNotificationPoll(user_id, conn);
+        printf("socket added to notification poll \n");
+
+        user_id ++;
 
     }
 

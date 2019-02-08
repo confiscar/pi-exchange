@@ -1,10 +1,3 @@
-/*
- * exchange.c
- *
- *  Created on: 2018/11/30
- *      Author: Ke CHEN
- */
-
 #include "exchange.h"
 #include <stdio.h>
 #include "notification.h"

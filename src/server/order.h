@@ -1,10 +1,3 @@
-/*
- * order.h
- *
- *  Created on: 2018/11/26
- *      Author: Ke CHEN
- */
-
 #ifndef ORDER_H_
 #define ORDER_H_
 

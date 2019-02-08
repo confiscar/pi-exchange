@@ -1,10 +1,3 @@
-/*
- * orderBook.h
- *
- *  Created on: 2018/11/26
- *      Author: Ke CHEN
- */
-
 #ifndef ORDERBOOK_H_
 #define ORDERBOOK_H_
 

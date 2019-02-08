@@ -12,9 +12,15 @@ void handleRequest(user_client * pair)
     int sockfd = pair -> sockfd;
     int userid = pair -> userId;
     char buffer[BUFFER_SIZE];
-    char invalid_msg[100];
+
+    char invalid_msg[1024];
     memset(invalid_msg,0,sizeof(invalid_msg));
     sprintf(invalid_msg, "------------------\ninvalid input\n------------------\n");
+
+    char not_exist_msg[1024];
+    memset(not_exist_msg,0, sizeof(not_exist_msg));
+    sprintf(not_exist_msg,"------------------\norder not exist, please check\n------------------\n");
+
     while(1)
     {
         memset(buffer,0,sizeof(buffer));
@@ -71,7 +77,7 @@ void handleRequest(user_client * pair)
                 temp = cancelBuyOrder(price, exchangeId);
                 if(temp == NULL){
                     printf("------------------\norder not exist, please check again\n------------------\n");
-                    send(sockfd, "------------------\norder not exist, please check\n------------------\n", 100, 0);
+                    send(sockfd, not_exist_msg, sizeof(not_exist_msg), 0);
                     continue;
                 }
                 printf("------------------\ncancel buy order with \nexchange ID %d \n", temp -> exchangeId);
@@ -80,7 +86,7 @@ void handleRequest(user_client * pair)
                 temp = cancelSellOrder(price, exchangeId);
                 if(temp == NULL){
                     printf("------------------\norder not exist, please check again\n------------------\n");
-                    send(sockfd, "------------------\norder not exist, please check\n------------------\n", 100, 0);
+                    send(sockfd, not_exist_msg, sizeof(not_exist_msg), 0);
                     continue;
                 }
                 printf("------------------\ncancel sell order with \nexchange ID %d \n", temp -> exchangeId);

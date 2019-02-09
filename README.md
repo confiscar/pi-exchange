@@ -6,12 +6,12 @@ This project will consist of software developed for the Rasberry Pi 3 model B. T
 
 Getting Started
 ------
-python libraries
-java libraries
+*Do chmod 777 install.sh
+*Run GUI with python gui.***.py
 
 Built With 
 ------
-C/C++/Python/java/
+Python
 
 
 Authors

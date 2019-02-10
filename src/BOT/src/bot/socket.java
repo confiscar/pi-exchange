@@ -54,10 +54,13 @@ public class socket {
 		
 		
 		
+		
+		
+		
 		while(flag){
 			//发送数据到服务端  
-			out.print(str);
-			out.flush();
+			//out.print(str);
+			//out.flush();
 			if("exit".equals(str)){
 				flag = false;
 			}else{
@@ -70,13 +73,15 @@ public class socket {
 					String echo = new String(readResult);
 					System.out.println(echo);
 					
-					client.getInputStream().read(readResult);
+					
+					
+				/*	client.getInputStream().read(readResult);
 					echo = new String(readResult);
 					System.out.println(echo);
 					
 					client.getInputStream().read(readResult);
 					echo = new String(readResult);
-					System.out.println(echo);
+					System.out.println(echo); */
 				}catch(SocketTimeoutException e){
 					System.out.println("Time out, No response");
 				}

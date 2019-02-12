@@ -40,6 +40,13 @@ public class socket {
 				out.print(str);
 				out.flush();
 				str=null;
+				
+				client.getInputStream().read(readResult);
+				String echo = new String(readResult);
+				
+				if(echo.indexOf("Status: 1") == -1) {
+					i--;
+				}
 			}
 			
 			Initialization Gs = new Initialization("s"); 

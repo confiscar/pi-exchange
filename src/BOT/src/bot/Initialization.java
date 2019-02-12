@@ -3,7 +3,7 @@ package bot;
 public class Initialization {
 	String s;
 	String bos;
-	int Gprice=100,Ggap=2,number=100;
+	int Gprice=100,Ggap=2,number=10;
 	public Initialization(String bop) {
 		bop=this.bos;
 		

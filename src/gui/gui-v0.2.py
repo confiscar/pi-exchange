@@ -301,7 +301,7 @@ def placeOrder():
     print(order)
 
 def updateStats():
-    cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%\nTemp: {2}°C".format(psutil.cpu_percent(),psutil.virtual_memory().percent,psutil.sensors_temperatures()))
+    cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))
     root.after(500,updateStats)
 
 

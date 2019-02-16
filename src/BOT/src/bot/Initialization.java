@@ -4,13 +4,13 @@ public class Initialization {
 	String s;
 	String bos;
 	int Gprice=100,Ggap=2,number=10;
-	public Initialization(String bop) {
-		bop=this.bos;
+	public Initialization(String bos) {
+		this.bos = bos;
 		
-		if (bop=="b") {
+		if (bos=="b") {
 			buy();
 		}
-		else 
+		else
 		{
 			sell();
 		}

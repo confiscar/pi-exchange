@@ -23,31 +23,27 @@ public class receiver extends Thread{
 			try {
 				client.getInputStream().read(readResult);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String echo = new String(readResult);
-			
-			System.out.println(echo);
-			
-			
-			if(echo.contains(initialInfo) || echo.contains("-") || echo.contains("~"))  {
-				sender.status = 1;
+			//System.out.println(echo);
+			if(echo.contains(initialInfo) || (echo.contains("-") && (sender.initialize)))  {
+				//sender.status = 1;
 				synchronized(main.lock){
 					main.lock.notify();
-					System.out.println("notify");
+					//System.out.println("notify");
 				}
 			}
 			
-			System.out.println("status: " + sender.status);
 			
 			
-//			if (echo.equals("")) {
-//				price = 0;
-//				bs = "";
-//				sender.status = 2;
-//				
-//			}
+			
+			
+			
+			
+			
+			//System.out.println("status: " + sender.status);
+			
 			
 		
 		}

@@ -35,8 +35,8 @@ public class sender extends Thread {
 			e.printStackTrace();
 		}
 		
-		Initialization Gb = new Initialization("b"); 
-		Initialization Gs = new Initialization("s"); 
+		Initialization a = new Initialization(100,2); 
+		
 		
 		while(true) {
 			synchronized(main.lock){
@@ -49,56 +49,20 @@ public class sender extends Thread {
 			}
 			
 			if (initialize) {
-				if(buyCount < 100) {
-					str=Gb.buy();
-					str=str + "," + String.valueOf(++orderId) + "\n";
-					System.out.println("send: " + str);
+					a.initial();
+					str=a.send();
+					//System.out.println("send: " + str);
 					out.print(str);
 					out.flush();
-					str=null;
-					buyCount ++;
-				}
-				else {
-					str=Gs.sell();
-					str=str + "," + String.valueOf(++orderId) + "\n";
-					System.out.println("send: " + str);
-					out.print(str);
-					out.flush();
-					str=null;
-					sellCount ++;
-				}
-				if (sellCount == Gnumber) {
-					initialize = false;
-				}
-				
 			}
-				
+			else {
+				a.ID(receiver.matchID);
+				str = a.send();
+				out.print(str);
+				out.flush();
+			}
 			
-			
-			
-			
-
-			
-//			if (status == 2) {
-//				str = "p,"+receiver.bs+",";
-//				if (receiver.bs == "b") {
-//					buy b = new buy(receiver.price,Gnumber);
-//					newPrice = b.getPrice(); 
-//				}
-//				else {
-//					sell s = new sell(receiver.price,Gnumber);
-//					newPrice = s.getPrice();
-//				}
-//				str = str + String.valueOf(newPrice) + "," + String.valueOf(amount) + "," + String.valueOf(id);
-//				out.print(str);
-//				out.flush();
-//				status = 0;
-//			}
-			
-				
-		}
-			
-			
+		}		
 			
 	}
 		

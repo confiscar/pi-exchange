@@ -7,9 +7,10 @@ public class receiver extends Thread{
 	Socket client = null;
 	Object lock;
 	sender s = null;
-	public static double price = 0;
-	public static String bs = "o";
+	public static int matchID = 0;
+	int index;
 	String initialInfo = "sell price: 0.000000, buy price: 0.000000\n";
+	
 	
 	public receiver(Socket client, Object lock) {
 		this.client = client;
@@ -35,17 +36,16 @@ public class receiver extends Thread{
 				}
 			}
 			
-			
-			
-			
-			
-			
-			
-			
+			if (echo.contains("~")) {
+				index = echo.indexOf("~order ID");
+				matchID = Integer.valueOf(echo.substring(index+1, index+12));
+				synchronized(main.lock){
+					main.lock.notify();
+					//System.out.println("notify");
+				}		
+			}
 			//System.out.println("status: " + sender.status);
-			
-			
-		
+	
 		}
 		
 		

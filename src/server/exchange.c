@@ -84,7 +84,7 @@ order * placeSellOrder(float price, int amount, int orderId, int userId){
                 int tempSellPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
                 for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-                    if(tempSellPrice > tempBook -> price){
+                    if(tempSellPrice < tempBook -> price){
                         tempSellPrice = tempBook -> price;
                     }
                 }

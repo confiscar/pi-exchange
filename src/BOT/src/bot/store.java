@@ -14,13 +14,13 @@ public class store {
 	public void addb(int id,double price,int amount,int index) {
 		datab[0][index]=id;
 		datab[1][index]=price;
-		datab[2][index]=index;
+		datab[2][index]=amount;
 	}
 	
 	public void adds(int id,double price,int amount,int index) {
 		datas[0][index]=id;
 		datas[1][index]=price;
-		datas[2][index]=index;
+		datas[2][index]=amount;
 	}
 	
 	public String matchid(int id){

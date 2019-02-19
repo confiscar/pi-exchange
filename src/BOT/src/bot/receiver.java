@@ -37,8 +37,10 @@ public class receiver extends Thread{
 			}
 			
 			if (echo.contains("~")) {
-				index = echo.indexOf("~order ID");
-				matchID = Integer.valueOf(echo.substring(index+1, index+12));
+				
+				parse p = new parse(echo);
+				matchID = p.getid();
+				
 				synchronized(main.lock){
 					main.lock.notify();
 					//System.out.println("notify");

@@ -35,16 +35,14 @@ public class Initialization {
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		data.addb(orderId, price, amount, buyCount);
 		buyCount++;
-		orderId++;
 	}
 	
 	public void sell() {
 		double price=Gprice+Math.random()-Ggap;
-		s="p,"+bos + "," + String.valueOf(price);
+		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		data.adds(orderId, price, amount, sellCount);
 		sellCount++;
-		orderId++;
 	}
 	
 	public String send() {

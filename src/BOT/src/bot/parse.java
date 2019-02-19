@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class parse {
 	String str;
 	String id;
-	int []x = new int[5];
+	int []x = new int[10];
 	int i = 0;
 	public parse(String str) {
 		this.str = str;
@@ -30,7 +30,8 @@ public class parse {
 	}
 	
 	public int getid() {
-		return x[0];
+		System.out.println(x[2]);
+		return x[2];
 	}
 	
 	

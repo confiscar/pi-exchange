@@ -37,7 +37,6 @@ public class sender extends Thread {
 		
 		Initialization a = new Initialization(100,2); 
 		
-		
 		while(true) {
 			synchronized(main.lock){
 				try {

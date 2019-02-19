@@ -1,7 +1,7 @@
 package bot;
 
 public class store {
-	int number=100;	
+	int number=10000;	
 	double[][] datab = new double[3][number];// id,price,amount;
 	double[][] datas = new double[3][number];	
 	double matchPrice;

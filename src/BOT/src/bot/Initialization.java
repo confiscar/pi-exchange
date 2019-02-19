@@ -1,13 +1,14 @@
 package bot;
 
-import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Initialization {
 	String s;
 	String bos;
 	double Gprice=0,Ggap=0;
-	int amount=10;
-	int Gnumber = 100; 
+	int amount=10000;
+	int Gnumber = 10; 
 	int buyCount = 0;
 	int sellCount = 0;
 	int orderId = 0;
@@ -24,8 +25,14 @@ public class Initialization {
 			buy();
 		else 
 			sell();
-		if (sellCount == Gnumber) 
+		if (sellCount == Gnumber) {
 			sender.initialize = false;
+			
+			// show time when initialisation finish
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			System.out.println(df.format(new Date()));
+		}
+			
 	}
 	
 

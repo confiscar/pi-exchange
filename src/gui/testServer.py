@@ -36,7 +36,7 @@ class Server():
                 break
             if data == "generateExampleData":
                 for i in range(1000):
-                    self.send(conn,"{0},{1}|".format(round(time.clock(),4),math.sin(i/100)*100))
+                    self.send(conn,"{0},{1}|".format(round(time.time(),4),math.sin(i/100)*100))
                     time.sleep(0.01)
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""

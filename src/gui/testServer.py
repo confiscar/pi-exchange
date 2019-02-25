@@ -7,6 +7,7 @@ import socket
 import threading
 import time
 import math
+import random
 
 
 
@@ -35,9 +36,14 @@ class Server():
                 print("Connection with {0}:{1} closed".format(addr[0],addr[1]))
                 break
             if data == "generateExampleData":
-                for i in range(1000):
-                    self.send(conn,"{0},{1}|".format(round(time.time(),4),math.sin(i/100)*100))
-                    time.sleep(0.01)
+                i = 0
+                while True:
+                    i += 1
+                    try:
+                        self.send(conn,"{0},{1}|".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20))
+                    except BaseException as e:
+                        break
+                    time.sleep(0.1)
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""
         self.s.listen(self.max_conns)

@@ -130,7 +130,7 @@ root.title("Live Graph")
 canvas = tkinter.Canvas(master=root,width=CW,height=CH,bg="#000000")
 canvas.grid(row=0,column=0)
 
-g = Graph(canvas,1000,CW,CH)
+g = Graph(canvas,100,CW,CH)
 for x in range(100):
     g.addCoords((0,0))
 

@@ -203,18 +203,6 @@ class Graph():
         if len(self.values) < 1:
             return
 
-        #Logic to make sure that not all y values are the same
-        #Avoids /0 error later when scaling the data
-        v = 0
-        ok = False
-        while v < len(self.values):
-            if self.values[v][1] != self.values[0][1]:
-                ok = True
-                break
-            v += 1
-        if not ok:
-            return
-
         #Establish minimums and maximums for the data
         minx = self.values[0][0]
         maxx = self.values[-1][0]
@@ -225,6 +213,12 @@ class Graph():
                 miny = c[1]
             elif c[1] > maxy:
                 maxy = c[1]
+
+        #Prevent the scale from being 0
+        miny = miny-0.5
+        maxy = maxy+0.5
+        minx = minx-0.5
+        maxx = maxx+0.5
 
         #Calculate the scale
         scalex = maxx-minx
@@ -264,19 +258,20 @@ class Graph():
 
 
 #Create a graph
-g = Graph(canvas,200,CW,CH)
-for x in range(100):
-    g.addCoords((x,random.random()*100))
+g = Graph(canvas,100,CW,CH)
 
 
-
+x = 0
 #Plot function is called repeatedly in mainloop
 def plot():
     global x
 
     #Generate example data
     x += 1
-    g.addCoords((x,g.values[-1][1]+(random.random()-.5)*10))
+    if x != 1:
+        g.addCoords((x,g.values[-1][1]+(random.random()-.5)*10))
+    else:
+        g.addCoords((x,0))
 
     #Draw to canvas
     g.plot()

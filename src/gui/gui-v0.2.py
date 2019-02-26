@@ -1,12 +1,7 @@
-import tkinter
-import random
-import feedparser
-import socket
-import threading
-import platform
-import psutil
-
 #CONSTANTS
+
+#Socket Options
+HOST_IP = "10.154.156.77:80"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -22,6 +17,14 @@ CW,CH = 640,640
 FEEDWIDTH = 62
 TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
+
+import tkinter
+import random
+import feedparser
+import socket
+import threading
+import platform
+import psutil
 
 #Style Options
 RELIEF = tkinter.RIDGE
@@ -180,6 +183,36 @@ cputext = tkinter.Label(statsFrame, text= "")
 cputext.grid(row=0,column=0)
 #FIGURE THIS OUT LATER
 
+graphLock = threading.Lock()
+
+class Client():
+    """A class to encapsulate client funcitonality"""
+    def __init__(self,hostIP):
+        self.hostIP = hostIP
+        self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.host,self.port = self.hostIP.split(':')
+        self.port = int(self.port)
+        try:
+            self.s.connect((self.host,self.port))
+        except BaseException as e:
+            print(e)
+    def send(self,data):
+        """Send string data to server"""
+        self.s.sendall(data.encode())
+    def receiveLoop(self):
+        """Listen to the server"""
+        while True:
+            msg = self.s.recv(2**16)
+            msg = msg.decode()
+            msg = msg.split("|")
+            for m in msg:
+                if m != '':
+                    m = m.split(",")
+                    graphLock.acquire()
+                    g.addCoords((float(m[0]),float(m[1])))
+                    graphLock.release()
+
+
 class Graph():
     """Class to plot data to a canvas"""
     def __init__(self,canvasRef,maxCoords,CW,CH,padding=200):
@@ -260,23 +293,20 @@ class Graph():
 
 
 #Create a graph
-g = Graph(canvas,100,CW,CH)
-
+g = Graph(canvas,1000,CW,CH)
+c = Client(HOST_IP)
+threading.Thread(target=c.receiveLoop).start()
+c.send("generateExampleData")
 
 x = 0
 #Plot function is called repeatedly in mainloop
 def plot():
     global x
 
-    #Generate example data
-    x += 1
-    if x != 1:
-        g.addCoords((x,g.values[-1][1]+(random.random()-.5)*10))
-    else:
-        g.addCoords((x,0))
-
     #Draw to canvas
+    graphLock.acquire()
     g.plot()
+    graphLock.release()
 
     #Call in next mainloop
     root.after(0,plot)

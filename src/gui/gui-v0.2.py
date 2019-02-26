@@ -214,11 +214,13 @@ class Graph():
             elif c[1] > maxy:
                 maxy = c[1]
 
-        #Prevent the scale from being 0
-        miny = miny-0.5
-        maxy = maxy+0.5
-        minx = minx-0.5
-        maxx = maxx+0.5
+        #Prevent the scales from being 0, but favour using only the necessary graph space
+        if maxx-minx == 0:
+            maxx+=0.5
+            minx-=0.5
+        if maxy-miny == 0:
+            maxy+=0.5
+            miny-=0.5
 
         #Calculate the scale
         scalex = maxx-minx

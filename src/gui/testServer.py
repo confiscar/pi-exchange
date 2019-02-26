@@ -43,7 +43,7 @@ class Server():
                         self.send(conn,"{0},{1}|".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20))
                     except BaseException as e:
                         break
-                    time.sleep(0.1)
+                    time.sleep(0.01)
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""
         self.s.listen(self.max_conns)

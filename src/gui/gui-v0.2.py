@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.154.156.77:80"
+HOST_IP = "127.0.1.1:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0

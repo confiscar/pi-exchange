@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "127.0.1.1:43242"
+HOST_IP = "10.154.157.85:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -11,10 +11,8 @@ PRICE_ACCURACY = 0.00001
 QUANTITY_LOWER_RANGE = 0
 QUANTITY_UPPER_RANGE = 10000
 
-#Width and heights of the screen and canvas and Feed
-W,H = 1080,720
-CW,CH = 640,640
-FEEDWIDTH = 62
+#Width and heights of the window/screen
+FEEDWIDTH = 100
 TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
 
@@ -29,22 +27,35 @@ import psutil
 #Style Options
 RELIEF = tkinter.RIDGE
 
+
+
 #Create window
 root = tkinter.Tk()
-root.title("Stock Exchange")
-root.geometry(str(W)+"x"+str(H)+"+0+0")
+win_width = root.winfo_screenwidth()
+win_height = root.winfo_screenheight()
+
+root.title("Stock Exchange GUI")
+root.geometry(str(win_width)+"x"+str(win_height)+"+0+0")
 root.attributes("-fullscreen",True)
 
-#Create canvas and add to window - for the graph
-canvas = tkinter.Canvas(root,width=CW,height=CH,bg='#000000')
-canvas.grid(row=0,column=0,rowspan=10)
 
+#Create canvas frame
+canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-50))
+canvasFrame.grid(row=0,column=0,rowspan=10)
+
+#Create canvas for graph
+canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#001100')
+canvas.grid(row=0,column=0)
+
+#Create a canvas for the other graph
+canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#110000')
+canvas2.grid(row=1,column=0)
 
 
 #rss feed
 feed = feedparser.parse('http://feeds.reuters.com/reuters/UKPersonalFinanceNews')
-newsFrame = tkinter.Frame(root, relief=tkinter.RIDGE,bd=3)
-newsFrame.grid(row=11,column=0)
+newsFrame = tkinter.Frame(canvasFrame, relief=tkinter.RIDGE,bd=3)
+newsFrame.grid(row=2,column=0)
 
 feedstr = ""
 for entry in feed['entries']:
@@ -162,7 +173,7 @@ for y in range(TABLE_HEIGHT):
 
 #created second frame with class
 tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
-tableFrame2.grid(row=3,column=2)
+tableFrame2.grid(row=4,column=1)
 buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4, font=("",12))
 buyTableLabel.grid(row=0, column=0, columnspan=2)
 
@@ -178,7 +189,7 @@ for y in range(TABLE_HEIGHT):
 #EXTRA STUFF
 #CPU LABEL POWER
 statsFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=200)
-statsFrame.grid(row=4,column=1,columnspan=2)
+statsFrame.grid(row=5,column=1,columnspan=2)
 cputext = tkinter.Label(statsFrame, text= "")
 cputext.grid(row=0,column=0)
 #FIGURE THIS OUT LATER
@@ -210,17 +221,18 @@ class Client():
                     m = m.split(",")
                     graphLock.acquire()
                     g.addCoords((float(m[0]),float(m[1])))
+                    g2.addCoords((float(m[0]),float(m[1])))
                     graphLock.release()
 
 
 class Graph():
     """Class to plot data to a canvas"""
-    def __init__(self,canvasRef,maxCoords,CW,CH,padding=200):
+    def __init__(self,canvasRef,maxCoords,padding=200):
         """Reference to a canvas object, max points of data shown simultaneously, canvas dimensions and padding for axis"""
         self.canvas = canvasRef
         self.values = []
         self.maxCoords = maxCoords
-        self.CW, self.CH = CW-padding, CH-padding
+        self.CW, self.CH = self.canvas.winfo_reqwidth()-padding, self.canvas.winfo_reqheight()-padding
         self.padding = padding
     def addCoords(self,coords):
         """Add (x,y) to the list of coordinates, old values are removed according to maxCoords attribute"""
@@ -284,16 +296,19 @@ class Graph():
 
         #Label axis with coordinates
         self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=str(int(minx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
-        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
         self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=str(int(maxx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        #Y Axis
         self.canvas.create_text(self.padding//4,self.padding//2,text=str(int(maxy)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
 
         #Update canvas
         self.canvas.update()
 
 
-#Create a graph
-g = Graph(canvas,1000,CW,CH)
+#Create graphs
+g = Graph(canvas,600)
+g2 = Graph(canvas2,600)
+
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
 c.send("generateExampleData")
@@ -306,6 +321,7 @@ def plot():
     #Draw to canvas
     graphLock.acquire()
     g.plot()
+    g2.plot()
     graphLock.release()
 
     #Call in next mainloop

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "notification.h"
 #include <sys/socket.h>
+#include <sys/time.h>
 
 #define BUFFER_SIZE 1024
 
@@ -15,18 +16,20 @@ void notify(){
     float tempBuyPrice = 0;
     float tempSellPrice = 0;
     char sendBuffer[BUFFER_SIZE];
+    struct timeval time;
     // do endless loop to check if best price changes
     // once changed, send info to all connect client
     while(1){
         memset(sendBuffer,0, sizeof(sendBuffer));
+        gettimeofday(&time, NULL);
         if(tempBuyPrice != buyPrice){
             tempBuyPrice = buyPrice;
-            sprintf(sendBuffer, "best buy: %f \n", tempBuyPrice);
+            sprintf(sendBuffer, "best buy: %f, time: %ld \n", tempBuyPrice, time.tv_sec);
             sendToAll(sendBuffer);
         }
         if(tempSellPrice != sellPrice){
             tempSellPrice = sellPrice;
-            sprintf(sendBuffer, "best sell: %f \n", tempSellPrice);
+            sprintf(sendBuffer, "best sell: %f, time: %ld \n", tempSellPrice, time.tv_sec);
             sendToAll(sendBuffer);
         }
 

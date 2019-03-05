@@ -102,7 +102,7 @@ void handleRequest(user_client * pair)
             continue;
         }
 
-        // send specific information to server
+        // send specific information to client
         memset(buffer,0,sizeof(buffer));
         sprintf(buffer, "------------------\n|order ID: %d\n|exchange ID: %d\n|price: %f\n|amount: %d\n|status: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
         send(sockfd, buffer, sizeof(buffer), 0);

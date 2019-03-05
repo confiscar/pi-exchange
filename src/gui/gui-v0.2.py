@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.154.157.85:43242"
+HOST_IP = "10.154.156.61:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -36,7 +36,7 @@ win_height = root.winfo_screenheight()
 
 root.title("Stock Exchange GUI")
 root.geometry(str(win_width)+"x"+str(win_height)+"+0+0")
-root.attributes("-fullscreen",True)
+root.attributes("-fullscreen",False)
 
 
 #Create canvas frame
@@ -215,15 +215,20 @@ class Client():
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
-            msg = msg.split("|")
+            msg = msg.split("\n")
             for m in msg:
                 if m != '':
-                    m = m.split(",")
-                    graphLock.acquire()
-                    g.addCoords((float(m[0]),float(m[1])))
-                    g2.addCoords((float(m[0]),float(m[1])))
-                    graphLock.release()
-
+                    #Data received in this format:
+                    #best sell: <float>, time: <int>
+                    if m.rfind("best sell") > -1:
+                        #Split into 2 items, crop the text from the data
+                        m = m.split(",")
+                        m[0] = m[0][11:]
+                        m[1] = m[1][7:]
+                        graphLock.acquire()
+                        g.addCoords((float(m[1]),float(m[0])))
+                        g2.addCoords((float(m[1]),float(m[0])))
+                        graphLock.release()
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -311,7 +316,6 @@ g2 = Graph(canvas2,600)
 
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
-c.send("generateExampleData")
 
 x = 0
 #Plot function is called repeatedly in mainloop
@@ -325,7 +329,7 @@ def plot():
     graphLock.release()
 
     #Call in next mainloop
-    root.after(0,plot)
+    root.after(10,plot)
 
 #Scroll through the feed
 scrollAmount = 0

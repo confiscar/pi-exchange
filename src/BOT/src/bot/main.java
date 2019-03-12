@@ -10,7 +10,7 @@ public class main {
 	
 	 public static void main(String[] args) throws UnknownHostException, IOException{  
 		 
-		Socket client = new Socket("192.168.137.170", 8890);
+		Socket client = new Socket("127.0.0.1", 8890);
 		
 		client.setSoTimeout(0);
 		

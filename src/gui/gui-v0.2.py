@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.154.157.44:43242"
+HOST_IP = "192.168.137.186:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -72,6 +72,7 @@ def parseToDict(data):
 
                     #Separate key and value then save in dataDict
                     pair = pair.split(": ")
+                    print(pair)
                     dataDict[pair[0]] = inferDataType(pair[1])
 
     #Return created dictionary object
@@ -267,8 +268,21 @@ class Client():
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
+            print(msg)
             data = parseToDict(msg)
-            if "best sell" in data.keys():
+            if "sell price" in data.keys():
+                x = data["time"]
+                y = data["sell price"]
+                graphLock.acquire()
+                g.addCoords((x,y))
+                graphLock.release()
+            elif "buy price" in data.keys():
+                x = data["time"]
+                y = data["buy price"]
+                graphLock2.acquire()
+                g2.addCoords((x,y))
+                graphLock2.release()
+            elif "best sell" in data.keys():
                 #Plot on best sell graph
                 x = data["time"]
                 y = data["best sell"]

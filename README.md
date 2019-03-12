@@ -1,4 +1,4 @@
-		![alt text](https://i.imgur.com/k2kruGl.png "Logo Title Text 1")
+![alt text](https://i.imgur.com/k2kruGl.png "Logo Title Text 1")
 
 # Pi Exchange 
 

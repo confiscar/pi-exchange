@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "192.168.137.186:8890"
+HOST_IP = "10.154.157.44:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -24,6 +24,7 @@ import threading
 import platform
 import psutil
 import time
+import datetime
 
 #Style Options
 RELIEF = tkinter.RIDGE
@@ -269,33 +270,18 @@ class Client():
             msg = self.s.recv(2**16)
             msg = msg.decode()
             data = parseToDict(msg)
-            print(msg)
-            if "sell price" in data.keys():
-                x = data["time"]
-                y = data["sell price"]
-                graphLock.acquire()
-                g.addCoords((x,y))
-                graphLock.release()
-            elif "buy price" in data.keys():
-                x = data["time"]
-                y = data["buy price"]
-                graphLock2.acquire()
-                g2.addCoords((x,y))
-                graphLock2.release()
-            elif "best sell" in data.keys():
-                #Plot on best sell graph
+            if "best sell" in data.keys():
                 x = data["time"]
                 y = data["best sell"]
                 graphLock.acquire()
                 g.addCoords((x,y))
                 graphLock.release()
-            elif "best buy" in data.keys():
+            if "best buy" in data.keys():
                 x = data["time"]
                 y = data["best buy"]
                 graphLock2.acquire()
                 g2.addCoords((x,y))
                 graphLock2.release()
-
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -311,6 +297,10 @@ class Graph():
         self.values.append(coords)
         while len(self.values) > self.maxCoords:
             self.values.pop(0)
+    def autoScroll(self):
+        if len(self.values) > 1:
+            if time.time() - self.values[-1][0] < 200000000000:
+                self.addCoords((time.time(),self.values[-1][1]))
     def plot(self):
         """Plot stored coordinates to the canvas"""
 
@@ -367,6 +357,11 @@ class Graph():
         self.canvas.create_line(self.padding//2,self.CH+self.padding//2,self.CW+self.padding//2,self.CH+self.padding//2,fill="#ffffff",width=2)
 
         #Label axis with coordinates
+        #X Axis
+##        minx = datetime.datetime.now() + datetime.timedelta(microseconds = minx/10)
+##        minx = minx.strftime("%H:%M:%S")
+##        maxx = datetime.datetime.now() + datetime.timedelta(microseconds = maxx/10)
+##        maxx = maxx.strftime("%H:%M:%S")
         self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=str(int(minx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
         self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=str(int(maxx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
         #Y Axis
@@ -378,8 +373,8 @@ class Graph():
 
 
 #Create graphs
-g = Graph(canvas,600)
-g2 = Graph(canvas2,600)
+g = Graph(canvas,300)
+g2 = Graph(canvas2,300)
 
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
@@ -391,10 +386,12 @@ def plot():
 
     #Draw to canvas
     graphLock.acquire()
+    g.autoScroll()
     g.plot()
     graphLock.release()
 
     graphLock2.acquire()
+    g2.autoScroll()
     g2.plot()
     graphLock2.release()
 

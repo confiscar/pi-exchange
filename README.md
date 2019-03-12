@@ -63,37 +63,37 @@ Server
 
 #### 	Response from server
 
-1. Status of current order<br> 
+1. Status of current order
+
+* order ID: %d
   
-  * order ID: %d
+* exchange ID: %d
+  
+* price: %f
+  
+* amount: %d
+  
+* status: %d
 
-  * exchange ID: %d
+2. Status of previous order
 
-  * price: %f
+* user ID: %d
 
-  * amount: %d
+* order ID : %d 
 
-  * status: %d
+* exchange ID: %d
 
-2. Status of previous order <br>
+* price : %f 
 
-   * user ID: %d
+* amount: %d 
 
-   * order ID : %d 
-
-   * exchange ID: %d
-
-   * price : %f 
-
-   * amount: %d 
-
-   * status: %d 
+* status: %d 
 
 3. Best price
 
-   * Sell price : %f
+* Sell price : %f
 
-   * Buy price: %f
+* Buy price: %f
 
    
 #### 	Note:

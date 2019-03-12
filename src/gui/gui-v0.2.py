@@ -72,8 +72,8 @@ def parseToDict(data):
 
                     #Separate key and value then save in dataDict
                     pair = pair.split(": ")
-                    print(pair)
-                    dataDict[pair[0]] = inferDataType(pair[1])
+                    if len(pair) == 2:
+                        dataDict[pair[0]] = inferDataType(pair[1])
 
     #Return created dictionary object
     return dataDict
@@ -268,8 +268,8 @@ class Client():
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
-            print(msg)
             data = parseToDict(msg)
+            print(msg)
             if "sell price" in data.keys():
                 x = data["time"]
                 y = data["sell price"]

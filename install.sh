@@ -14,8 +14,8 @@ sudo apt-get upgrade -y
 echo -e $TEXT_YELLOW
 echo 'APT upgrade finished...'
 echo -e $TEXT_RESET
-
-sudo apt-add-repository ppa:webupd8team/java
+ 
+sudo add-apt-repository ppa:linuxuprising/java
 echo -e $TEXT_YELLOW
 echo 'Added Repository...'
 echo -e $TEXT_RESET
@@ -23,9 +23,9 @@ sudo apt-get update -y
 echo -e $TEXT_YELLOW
 echo 'APT update finished...'
 echo -e $TEXT_RESET
-sudo apt-get install oracle-java8-installer
+sudo apt-get install oracle-java10-installer
 echo -e $TEXT_YELLOW
-echo 'finished installing Java 8'
+echo 'finished installing Java 10'
 echo -e $TEXT_RESET
 
 sudo apt install python3-pip

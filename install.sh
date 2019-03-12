@@ -34,6 +34,12 @@ echo 'finished installing Python3'
 echo -e $TEXT_RESET
 
 
+sudo pip install psutil
+echo -e $TEXT_YELLOW
+echo 'finished installing psutil'
+echo -e $TEXT_RESET
+
+
 sudo pip install feedparser
 echo -e $TEXT_YELLOW
 echo 'finished installing Feedparser'

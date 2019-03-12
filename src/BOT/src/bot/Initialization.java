@@ -1,18 +1,17 @@
 package bot;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Initialization {
 	String s;
-	String bos;
 	double Gprice=0,Ggap=0;
-	int amount=10000;
-	int Gnumber = 10; 
-	int buyCount = 0;
-	int sellCount = 0;
+	int amount=10;
+	int number_stored = 10000; 
 	int orderId = 0;
-	store data = new store();
+	final List<store> buylist = new ArrayList<>();
+	final List<store> selllist = new ArrayList<>();
 
 	public Initialization(double price, double gap) {
 		Gprice=price;
@@ -21,54 +20,66 @@ public class Initialization {
 
 
 	public void initial() {
-		if (buyCount<Gnumber)
-			buy();
+		if (orderId<number_stored)
+			initial_buy();
 		else 
-			sell();
-		if (sellCount == Gnumber) {
+			initial_sell();
+		if (orderId-number_stored == number_stored) 
 			sender.initialize = false;
-			
-			// show time when initialisation finish
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			System.out.println(df.format(new Date()));
-		}
-			
 	}
 	
 
-	public void buy() {
-		double price=Gprice+Math.random();
+	public void initial_buy() {
+		double price=Gprice+Math.random()-Ggap;
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		data.addb(orderId, price, amount, buyCount);
-		buyCount++;
+		buylist.add(new store(orderId,price,amount));
+		Collections.sort(buylist);
 	}
 	
-	public void sell() {
-		double price=Gprice+Math.random()-Ggap;
+	public void initial_sell() {
+		double price=Gprice+Math.random();
 		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		data.adds(orderId, price, amount, sellCount);
-		sellCount++;
+		selllist.add(new store(orderId,price,amount));
+		Collections.sort(selllist);
 	}
 	
 	public String send() {
 		return s;
 	}
 	
-	public void ID(int id) {
-		String type;
-		type = data.matchid(id);
-		Gprice = data.getprice();
-		if (type == "buy") {
-			buyCount = data.getindex();
+	public void response() {
+		 if (receiver.matchID == buylist.get(number_stored-1).id) {
+			Gprice = buylist.get(number_stored-1).price;
 			buy();
-		}
-		else {
-			sellCount = data.getindex();
-			sell();
-		}
+		 }
+		 else {
+			 Gprice = selllist.get(0).price;
+			 sell();
+		 }
 	}
+	
+	public void buy() {
+		double price=Gprice-Math.random()/2;
+		s="p,b," + String.valueOf(price);
+		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
+		buylist.remove(number_stored-1);
+		buylist.add(new store(orderId,price,amount));
+		Collections.sort(buylist);
+	}
+	
+	public void sell() {
+		double price=Gprice+Math.random()/2;
+		s="p,b," + String.valueOf(price);
+		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
+		selllist.remove(0);
+		selllist.add(new store(orderId,price,amount));
+		Collections.sort(selllist);
+	}
+	
+
+	
 	
 	
 }

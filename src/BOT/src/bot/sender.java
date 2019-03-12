@@ -17,7 +17,7 @@ public class sender extends Thread {
 	int buyCount = 0;
 	int sellCount = 0;
 	int orderId = 0;
-	store data = new store();
+
 	
 	public sender(Socket client, Object lock) {
 		this.client = client;
@@ -37,6 +37,7 @@ public class sender extends Thread {
 		
 		Initialization a = new Initialization(100,2); 
 		
+		
 		while(true) {
 			synchronized(main.lock){
 				try {
@@ -55,10 +56,11 @@ public class sender extends Thread {
 					out.flush();
 			}
 			else {
-				a.ID(receiver.matchID);
+				a.response();
 				str = a.send();
 				out.print(str);
 				out.flush();
+				
 			}
 			
 		}		

@@ -42,6 +42,9 @@ class Server():
                 dataToSend = "best sell: {1}, time: {0}\n".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20)
                 print(dataToSend)
                 self.send(conn,dataToSend)
+                dataToSend = "best buy: {1}, time: {0}\n".format(round(time.time(),4),math.cos(i/100)*100+math.cos(i/33)*20)
+                print(dataToSend)
+                self.send(conn,dataToSend)
             except Exception as e:
                 print(e)
                 print("Disconnected with {0}:{1}\n".format(addr[0],addr[1]))

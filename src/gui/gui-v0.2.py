@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "192.168.1.10:43242"
+HOST_IP = "10.154.157.44:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -23,10 +23,59 @@ import socket
 import threading
 import platform
 import psutil
+import time
 
 #Style Options
 RELIEF = tkinter.RIDGE
 
+import time
+
+#Code to parse data from socket
+#Possible Formats:
+
+#-----------------
+#<key>: <value>
+#<key2>: <value2>
+#<key3>: <value3>, time: <int>
+#-----------------
+
+def inferDataType(string):
+    """Converts data type to best matching and returns"""
+    if string.isalpha():
+        return string
+    elif '.' in string:
+        return float(string)
+    else:
+        return int(string)
+
+def parseToDict(data):
+    """Convert data from socket into a dictionary object for easier manipulation"""
+
+    #If a time value is supplied it will be overwritten later
+    dataDict = {"time":time.time()}
+
+    #Split into lines
+    data = data.split("\n")
+
+    #For each line in the received data
+    for d in data:
+
+        #Ignore blank lines
+        if d != '':
+
+            #If not a separator line
+            if d[0] != '-':
+
+                #If multiple key/value pairs on one line, split
+                d = d.split(", ")
+                for pair in d:
+
+                    #Separate key and value then save in dataDict
+                    pair = pair.split(": ")
+                    dataDict[pair[0]] = inferDataType(pair[1])
+
+    #Return created dictionary object
+    return dataDict
 
 
 #Create window
@@ -196,6 +245,9 @@ cputext.grid(row=0,column=0)
 
 graphLock = threading.Lock()
 
+#Secondary lock for second graph
+graphLock2 = threading.Lock()
+
 class Client():
     """A class to encapsulate client funcitonality"""
     def __init__(self,hostIP):
@@ -215,20 +267,21 @@ class Client():
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
-            msg = msg.split("\n")
-            for m in msg:
-                if m != '':
-                    #Data received in this format:
-                    #best sell: <float>, time: <int>
-                    if m.rfind("best sell") > -1:
-                        #Split into 2 items, crop the text from the data
-                        m = m.split(",")
-                        m[0] = m[0][11:]
-                        m[1] = m[1][7:]
-                        graphLock.acquire()
-                        g.addCoords((float(m[1]),float(m[0])))
-                        g2.addCoords((float(m[1]),float(m[0])))
-                        graphLock.release()
+            data = parseToDict(msg)
+            if "best sell" in data.keys():
+                #Plot on best sell graph
+                x = data["time"]
+                y = data["best sell"]
+                graphLock.acquire()
+                g.addCoords((x,y))
+                graphLock.release()
+            elif "best buy" in data.keys():
+                x = data["time"]
+                y = data["best buy"]
+                graphLock2.acquire()
+                g2.addCoords((x,y))
+                graphLock2.release()
+
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -325,8 +378,11 @@ def plot():
     #Draw to canvas
     graphLock.acquire()
     g.plot()
-    g2.plot()
     graphLock.release()
+
+    graphLock2.acquire()
+    g2.plot()
+    graphLock2.release()
 
     #Call in next mainloop
     root.after(10,plot)

@@ -50,7 +50,7 @@ while True:
     plotDataLock.release()
     for d in data:
        line = plt.scatter(d[0],d[1],color='blue')
-       line.set_antiliased(False)
+       line(False)
     plt.pause(0.00000001)
 
 plt.show()

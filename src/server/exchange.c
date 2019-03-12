@@ -22,15 +22,21 @@ order * placeBuyOrder(float price, int amount, int orderId, int userId){
             sellPrice = currentOrder -> price;
         }
     } else {
-        book * tempBook;
-        int tempBuyPrice = 0;
-        // loop through the sell book to find the lowest price (best buy price)
-        for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-            if(tempBuyPrice > tempBook -> price || buyPrice == 0){
-                tempBuyPrice = tempBook -> price;
+        if(buyPrice == price){
+            book * tempBook = NULL;
+            HASH_FIND(hh, sellBook, &price, 4, tempBook);
+            if(tempBook == NULL){
+                int tempBuyPrice = 0;
+                // loop through the sell book to find the lowest price (best buy price)
+                for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+                    if(tempBuyPrice > tempBook -> price || buyPrice == 0){
+                        tempBuyPrice = tempBook -> price;
+                    }
+                }
+                buyPrice = tempBuyPrice;
             }
         }
-        buyPrice = tempBuyPrice;
+
         sendToUser(temp);
     }
 
@@ -71,15 +77,21 @@ order * placeSellOrder(float price, int amount, int orderId, int userId){
             buyPrice = currentOrder -> price;
         }
     } else {
-        book * tempBook;
-        int tempSellPrice = 0;
-        // loop through the buy book to find the highest price (best sell price)
-        for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-            if(tempSellPrice < tempBook -> price){
-                tempSellPrice = tempBook -> price;
+        if(sellPrice == price){
+            book * tempBook = NULL;
+            HASH_FIND(hh, buyBook, &price, 4, tempBook);
+            if(tempBook == NULL){
+                int tempSellPrice = 0;
+                // loop through the sell book to find the lowest price (best buy price)
+                for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
+                    if(tempSellPrice < tempBook -> price){
+                        tempSellPrice = tempBook -> price;
+                    }
+                }
+                sellPrice = tempSellPrice;
             }
         }
-        sellPrice = tempSellPrice;
+
         sendToUser(temp);
     }
 

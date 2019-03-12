@@ -18,7 +18,9 @@ Then **run the run.sh script** to run all the bits of the project together. Take
 
 ***Windows***: 
 
-A PowerShell script is currently in the works, but it shouldn't be to hard to install the python dependencies using `pip install feedparser` and `pip install psutil`. 
+A **powershell** script is availible to install the python dependencies. Open powershell as admin and use `Set-ExecutionPolicy Unrestricted` to be able to run the script. **Alternatively** use `pip install feedparser` and `pip install psutil`. *(Note that this will only work if you have a pip already or a version of Python that comes with it.)*
+
+The bot will need Java 10 JDK to be able to run on the machine you want. The server needs to be run on the Raspberry Pi using GCC.
 
 Then just compile and run the bot, server and GUI. Take into account that you have to edit the port numbers and IP configurations manually.
 

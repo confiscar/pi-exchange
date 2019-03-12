@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.154.157.44:43242"
+HOST_IP = "100.65.205.149:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -15,6 +15,9 @@ QUANTITY_UPPER_RANGE = 10000
 FEEDWIDTH = 100
 TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
+
+#Graph Settings
+DELAY_BEFORE_AUTO_DRAW = 20000000
 
 import tkinter
 import random
@@ -51,9 +54,7 @@ def inferDataType(string):
 
 def parseToDict(data):
     """Convert data from socket into a dictionary object for easier manipulation"""
-
-    #If a time value is supplied it will be overwritten later
-    dataDict = {"time":time.time()}
+    dataDict = {}
 
     #Split into lines
     data = data.split("\n")
@@ -75,6 +76,9 @@ def parseToDict(data):
                     pair = pair.split(": ")
                     if len(pair) == 2:
                         dataDict[pair[0]] = inferDataType(pair[1])
+
+    #Add a timestamp
+    dataDict["time"] = time.time()
 
     #Return created dictionary object
     return dataDict
@@ -299,7 +303,7 @@ class Graph():
             self.values.pop(0)
     def autoScroll(self):
         if len(self.values) > 1:
-            if time.time() - self.values[-1][0] < 200000000000:
+            if time.time() - self.values[-1][0] < DELAY_BEFORE_AUTO_DRAW:
                 self.addCoords((time.time(),self.values[-1][1]))
     def plot(self):
         """Plot stored coordinates to the canvas"""

@@ -17,7 +17,7 @@ TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
 
 #Graph Settings
-DELAY_BEFORE_AUTO_DRAW = 20000000
+DELAY_BEFORE_AUTO_DRAW = 20000
 
 import tkinter
 import random

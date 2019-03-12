@@ -1,4 +1,4 @@
-PORT = 80
+PORT = 43242
 MAX_CONNS = 5
 
 
@@ -28,22 +28,25 @@ class Server():
         conn.sendall(data.encode())
     def connection(self,conn,addr):
         """Call as thread, sets up one connection"""
+##        while True:
+##            try:
+##                data = conn.recv(2**16).decode()
+##                print("[{0}:{1}]<{2}>: {3}".format(addr[0],addr[1],time.time(),data))
+##            except BaseException as e:
+##                print("Connection with {0}:{1} closed".format(addr[0],addr[1]))
+##                break
+        i=0
         while True:
+            i += 1
             try:
-                data = conn.recv(2**16).decode()
-                print("[{0}:{1}]<{2}>: {3}".format(addr[0],addr[1],time.time(),data))
-            except BaseException as e:
-                print("Connection with {0}:{1} closed".format(addr[0],addr[1]))
+                dataToSend = "best sell: {1}, time: {0}\n".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20)
+                print(dataToSend)
+                self.send(conn,dataToSend)
+            except Exception as e:
+                print(e)
+                print("Disconnected with {0}:{1}\n".format(addr[0],addr[1]))
                 break
-            if data == "generateExampleData":
-                i = 0
-                while True:
-                    i += 1
-                    try:
-                        self.send(conn,"{0},{1}|".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20))
-                    except BaseException as e:
-                        break
-                    time.sleep(0.1)
+            time.sleep(0.01)
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""
         self.s.listen(self.max_conns)

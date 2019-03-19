@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.42.0.28:43242"
+HOST_IP = "169.254.36.229:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -17,7 +17,8 @@ TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
 
 #Graph Settings
-DELAY_BEFORE_AUTO_DRAW = 20000
+DELAY_BEFORE_AUTO_DRAW = 2000000
+GRAPH_MAX_COORDS = 100
 
 import tkinter
 import random
@@ -376,8 +377,8 @@ class Graph():
 
 
 #Create graphs
-g = Graph(canvas,300)
-g2 = Graph(canvas2,300)
+g = Graph(canvas,GRAPH_MAX_COORDS)
+g2 = Graph(canvas2,GRAPH_MAX_COORDS)
 
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()

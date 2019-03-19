@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "100.65.205.149:43242"
+HOST_IP = "169.254.36.229:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -413,10 +413,21 @@ def scrollFeed():
         scrollAmount = 0
     root.after(70,scrollFeed)
 
+#For generating client order IDs
+class OrderID():
+    currentID = 0
+    def getNextOrderID():
+        OrderID.currentID += 1
+        return OrderID.currentID
+
 #Form has been submitted
 def placeOrder():
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
-    print(order)
+    #Format for the server
+    data = "p," + order["orderType"][0] + "," + str(order["price"]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
+    print(data)
+    #Send through socket
+    c.send(data)
 
 def updateStats():
     cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))

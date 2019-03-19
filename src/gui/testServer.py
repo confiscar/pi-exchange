@@ -52,6 +52,9 @@ class Server():
                 print("Disconnected with {0}:{1}\n".format(addr[0],addr[1]))
                 break
             time.sleep(random.random()/4)
+        while True:
+            data = self.s.recv(1024)
+            print(data.decode())
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""
         self.s.listen(self.max_conns)

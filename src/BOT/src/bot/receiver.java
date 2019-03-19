@@ -27,8 +27,8 @@ public class receiver extends Thread{
 				e.printStackTrace();
 			}
 			String echo = new String(readResult);
-			//System.out.println(echo);
-			if(echo.contains(initialInfo) || (echo.contains("-") && (sender.initialize)))  {
+			System.out.println(echo);
+			if(echo.contains(initialInfo) || (echo.contains("current order") && (sender.initialize)))  {
 				//sender.status = 1;
 				synchronized(main.lock){
 					main.lock.notify();
@@ -36,7 +36,7 @@ public class receiver extends Thread{
 				}
 			}
 			
-			if (echo.contains("~")) {
+			if (echo.contains("previous order")) {
 				
 				parse p = new parse(echo);
 				matchID = p.getid();

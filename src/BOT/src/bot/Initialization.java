@@ -14,6 +14,7 @@ public class Initialization {
 	int orderId = 0;
 	store data = new store();
 
+	boolean buy = true;
 	public Initialization(double price, double gap) {
 		Gprice=price;
 		Ggap=gap;
@@ -21,10 +22,15 @@ public class Initialization {
 
 
 	public void initial() {
-		if (buyCount<Gnumber)
+		if (buy){
 			buy();
-		else 
+			buy= false;
+		}	
+		else {
 			sell();
+			buy = true;
+		}
+			
 		if (sellCount == Gnumber) {
 			sender.initialize = false;
 			

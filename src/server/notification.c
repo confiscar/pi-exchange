@@ -51,7 +51,7 @@ void sendToUser(order * orderTobeInform){
     if(user_notify != NULL){
         char buffer[1024];
         memset(buffer,0,sizeof(buffer));
-        sprintf(buffer, "~~~~~~~~~~~~~~~~~~\n~user ID: %d\n~order ID: %d\n~exchange ID: %d\n~price: %f\n~amount: %d\n~status: %d\n~~~~~~~~~~~~~~~~~~\n",orderTobeInform ->userId, orderTobeInform->orderId, orderTobeInform->exchangeId, orderTobeInform->price, orderTobeInform->amount, orderTobeInform->status);
+        sprintf(buffer, "previous order\norder ID: %d\nexchange ID: %d\nprice: %f\namount: %d\nstatus: %d\n",orderTobeInform ->userId, orderTobeInform->orderId, orderTobeInform->exchangeId, orderTobeInform->price, orderTobeInform->amount, orderTobeInform->status);
         printf("print for test: \n%s", buffer);
         send(user_notify -> noti_sockfd, buffer, sizeof(buffer), 0);
     }

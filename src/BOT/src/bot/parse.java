@@ -30,8 +30,8 @@ public class parse {
 	}
 	
 	public int getid() {
-		System.out.println(x[2]);
-		return x[2];
+		System.out.println(x[0]);
+		return x[0];
 	}
 	
 	

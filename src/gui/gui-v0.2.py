@@ -95,11 +95,11 @@ root.attributes("-fullscreen",False)
 
 
 #Create canvas frame
-canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-50))
+canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-200))
 canvasFrame.grid(row=0,column=0,rowspan=10)
 
 #Create canvas for graph
-canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#001100')
+canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-200)/2,bg='#001100')
 canvas.grid(row=0,column=0)
 
 #Create a canvas for the other graph

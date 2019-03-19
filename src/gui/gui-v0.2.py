@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "169.254.36.229:8890"
+HOST_IP = "10.42.0.28:43242"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -27,7 +27,6 @@ import threading
 import platform
 import psutil
 import time
-import datetime
 
 #Style Options
 RELIEF = tkinter.RIDGE
@@ -95,15 +94,15 @@ root.attributes("-fullscreen",False)
 
 
 #Create canvas frame
-canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-200))
+canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-100))
 canvasFrame.grid(row=0,column=0,rowspan=10)
 
 #Create canvas for graph
-canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-200)/2,bg='#001100')
+canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#001100')
 canvas.grid(row=0,column=0)
 
 #Create a canvas for the other graph
-canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#110000')
+canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#110000')
 canvas2.grid(row=1,column=0)
 
 
@@ -362,15 +361,15 @@ class Graph():
 
         #Label axis with coordinates
         #X Axis
-##        minx = datetime.datetime.now() + datetime.timedelta(microseconds = minx/10)
-##        minx = minx.strftime("%H:%M:%S")
-##        maxx = datetime.datetime.now() + datetime.timedelta(microseconds = maxx/10)
-##        maxx = maxx.strftime("%H:%M:%S")
-        self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=str(int(minx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
-        self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=str(int(maxx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        #Convert time to string
+        minx = time.ctime(minx)
+        maxx = time.ctime(maxx)
+        #Place text on canvas
+        self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=minx,fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
+        self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=maxx,fill="#ffffff",font=("fixedsys",7),anchor=tkinter.E)
         #Y Axis
-        self.canvas.create_text(self.padding//4,self.padding//2,text=str(int(maxy)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
-        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        self.canvas.create_text(self.padding//4,self.padding//2,text=str(int(maxy)),fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
+        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
 
         #Update canvas
         self.canvas.update()

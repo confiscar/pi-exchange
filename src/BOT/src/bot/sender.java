@@ -5,18 +5,11 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class sender extends Thread {
-	public static boolean initialize = true;
+	public static boolean initialize = false;
 	
-	//public static int status = 0;
 	Object lock;
-	int Gnumber = 100;
 	String str = null;
 	Socket client = null;
-	double newPrice = 0; 
-	int amount = 10; 
-	int buyCount = 0;
-	int sellCount = 0;
-	int orderId = 0;
 
 	
 	public sender(Socket client, Object lock) {
@@ -35,7 +28,7 @@ public class sender extends Thread {
 			e.printStackTrace();
 		}
 		
-		Initialization a = new Initialization(100,2); 
+		Initialization a = new Initialization(100,1); 
 		
 		
 		while(true) {
@@ -55,13 +48,30 @@ public class sender extends Thread {
 					out.print(str);
 					out.flush();
 			}
-			else {
+			
+			
+			if ((!initialize) &&(!Initialization.gap)) {
 				a.response();
 				str = a.send();
 				out.print(str);
 				out.flush();
 				
 			}
+			
+			if (Initialization.gap) {
+				a.gap();
+				
+				str = a.sendcancle();
+				out.print(str);
+				out.flush();
+				
+				str = a.send();
+				out.print(str);
+				out.flush();
+			}
+			
+			
+
 			
 		}		
 			

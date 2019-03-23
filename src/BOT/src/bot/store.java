@@ -4,6 +4,7 @@ public class store implements Comparable <store> {
 	 final int id;
 	 final double price;
 	 final int amount;
+	 int exchangeId;
 	
 	
 	
@@ -24,6 +25,10 @@ public class store implements Comparable <store> {
 		else {
 			return -1;
 		} 
+	}
+	
+	public void setExchangeID(int exchangeId) {
+		this.exchangeId = exchangeId;
 	}
 	
 	

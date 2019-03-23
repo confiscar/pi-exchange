@@ -1,18 +1,23 @@
 package bot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 
 public class Initialization {
-	String s;
+	String s,sc;
 	double Gprice=0,Ggap=0;
+	double valvevalue=0.5;
 	int amount=10;
-	int number_stored = 10000; 
+	
+	public static int number_stored = 10000; 
 	int orderId = 0;
-	final List<store> buylist = new ArrayList<>();
-	final List<store> selllist = new ArrayList<>();
-
+	
+	public static Boolean buy_turn = true;
+	public static double match_price = 0;
+	public static Boolean gap = false;
+	public static int cancled = 0;
+	
+	int countsell,countbuy;
+	
 	public Initialization(double price, double gap) {
 		Gprice=price;
 		Ggap=gap;
@@ -20,66 +25,91 @@ public class Initialization {
 
 
 	public void initial() {
-		if (orderId<number_stored)
+		
+		if (buy_turn) {
 			initial_buy();
-		else 
+			buy_turn = false;
+			}
+		else {
 			initial_sell();
-		if (orderId-number_stored == number_stored) 
+			buy_turn = true; 
+		}
+			
+		
+		if (orderId-number_stored == number_stored) {
 			sender.initialize = false;
+		}
 	}
-	
-
 	public void initial_buy() {
 		double price=Gprice+Math.random()-Ggap;
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		buylist.add(new store(orderId,price,amount));
-		Collections.sort(buylist);
 	}
 	
 	public void initial_sell() {
-		double price=Gprice+Math.random();
+		double price=Gprice+Math.random()+Ggap;
 		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		selllist.add(new store(orderId,price,amount));
-		Collections.sort(selllist);
 	}
 	
 	public String send() {
 		return s;
 	}
 	
+	public String sendcancle() {
+		return sc;
+	}
+	
+
 	public void response() {
-		 if (receiver.matchID == buylist.get(number_stored-1).id) {
-			Gprice = buylist.get(number_stored-1).price;
-			buy();
+		 if (buy_turn) {
+			 buy();
 		 }
 		 else {
-			 Gprice = selllist.get(0).price;
 			 sell();
 		 }
 	}
 	
 	public void buy() {
-		double price=Gprice-Math.random()/2;
+		double price=match_price-Math.random()/2;
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		buylist.remove(number_stored-1);
-		buylist.add(new store(orderId,price,amount));
-		Collections.sort(buylist);
+		countbuy++;
 	}
 	
 	public void sell() {
-		double price=Gprice+Math.random()/2;
+		double price=match_price+Math.random()/2;
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
-		selllist.remove(0);
-		selllist.add(new store(orderId,price,amount));
-		Collections.sort(selllist);
+		countsell++;
 	}
+	
 	
 
 	
-	
-	
+	public void gap() {
+			double price;
+			int canclenumber = 100,canclebuy;
+			double Proportion;
+			Proportion= countbuy/(countsell+countbuy);
+			canclebuy = canclenumber-(int) Math.ceil(Proportion*canclenumber) ;
+			if (cancled==0) {
+				Gprice -= (Proportion*2-1) * valvevalue;
+			}
+			
+			if (cancled<canclebuy) {
+				sc = "c,b,"+ String.valueOf(receiver.buylist.get(number_stored-1).price)+String.valueOf(receiver.buylist.get(number_stored-1).exchangeId);
+				
+				price=Gprice+Math.random()/(1/((1-Proportion)*valvevalue))-Ggap;
+				s="p,b," + String.valueOf(price);
+				s += "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
+			}
+			else {
+				sc = "c,s,"+ String.valueOf(receiver.selllist.get(0).price)+String.valueOf(receiver.selllist.get(0).exchangeId);
+				
+				price =Gprice+Math.random()/(1/(Proportion*valvevalue))+Ggap;
+				s="p,s," + String.valueOf(price);
+				s+= "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
+			}
+	}
 }

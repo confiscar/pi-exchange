@@ -12,7 +12,7 @@ public class main {
 		 
 		
 		 
-		Socket client = new Socket("127.0.0.1", 8890);
+		Socket client = new Socket("192.168.137.22", 8890);
 		
 		client.setSoTimeout(0);
 		

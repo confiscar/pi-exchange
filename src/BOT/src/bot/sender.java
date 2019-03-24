@@ -44,7 +44,7 @@ public class sender extends Thread {
 			if (initialize) {
 					a.initial();
 					str=a.send();
-					//System.out.println("send: " + str);
+					System.out.println("send: " + str);
 					out.print(str);
 					out.flush();
 			}
@@ -53,6 +53,7 @@ public class sender extends Thread {
 			if ((!initialize) &&(!Initialization.gap)) {
 				a.response();
 				str = a.send();
+				System.out.println("matched send: " + str);
 				out.print(str);
 				out.flush();
 				

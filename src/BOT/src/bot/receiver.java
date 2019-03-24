@@ -42,10 +42,10 @@ public class receiver extends Thread{
 				}
 			}	
 			
-			if(echo.contains("-"))  {
+			if(echo.contains("current order"))  {
 				parse x= new parse(echo);
 				int exchangeID = x.getid(1);
-				int price = x.getid(2);
+				double price = x.getprice();
 				int amount = x.getid(3);
 				
 				
@@ -64,13 +64,18 @@ public class receiver extends Thread{
 					
 				}
 				
-				if (Initialization.buy_turn) {
+				if (!Initialization.buy_turn) {
 					buylist.add(new store(exchangeID,price,amount));
 					Collections.sort(buylist);
 				}
 				else {
 					selllist.add(new store(exchangeID,price,amount));
 					Collections.sort(selllist);
+				}
+				
+				if (selllist.size() == Initialization.number_stored ) {
+					System.out.println(selllist.size());
+					sender.initialize = false;
 				}
 				
 				
@@ -88,7 +93,7 @@ public class receiver extends Thread{
 				
 			}		
 			
-			if (echo.contains("~")) {
+			if (echo.contains("previous order")) {
 				parse s= new parse(echo);
 				int exchangeid = s.getid(1);
 				if (exchangeid== buylist.get(Initialization.number_stored-1).id) {

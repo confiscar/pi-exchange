@@ -8,7 +8,7 @@ public class Initialization {
 	double valvevalue=0.5;
 	int amount=10;
 	
-	public static int number_stored = 10000; 
+	public static int number_stored = 10; 
 	int orderId = 0;
 	
 	public static Boolean buy_turn = true;
@@ -34,11 +34,7 @@ public class Initialization {
 			initial_sell();
 			buy_turn = true; 
 		}
-			
 		
-		if (orderId-number_stored == number_stored) {
-			sender.initialize = false;
-		}
 	}
 	public void initial_buy() {
 		double price=Gprice+Math.random()-Ggap;

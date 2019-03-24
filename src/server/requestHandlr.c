@@ -42,9 +42,23 @@ void handleRequest(user_client * pair)
 
         // decide what kind of request by compare 1st and 2nd parameter
         if(strcmp(pOc, "p") == 0){
-            float price = atof(strtok( NULL, delim));
-            int amount = atoi(strtok( NULL, delim));
-            int orderId = atoi(strtok( NULL, delim));
+
+            char * priceStr = strtok(NULL, delim); // third parameter, stands for price
+            char * amountStr = strtok( NULL, delim); // fouth parameter, stands for amount
+            char * orderIdStr = strtok(NULL, delim); // fifth parameter, stands for order id
+
+            if(priceStr == NULL || amountStr == NULL || orderIdStr == NULL){
+                    printf("invalid input\n");
+                    send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
+                    continue;
+            }
+
+            float price = atof(priceStr);
+            printf("%f | ", price);
+            int amount = atoi(amountStr);
+            printf("%d | ", price);
+            int orderId = atoi(orderIdStr);
+            printf("%d | ", price);
 
             if(price == 0 || amount == 0 || orderId == 0) {
                 printf("invalid input\n");

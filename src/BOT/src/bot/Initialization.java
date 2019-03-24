@@ -75,7 +75,7 @@ public class Initialization {
 	
 	public void sell() {
 		double price=match_price+Math.random()/2;
-		s="p,b," + String.valueOf(price);
+		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		countsell++;
 	}

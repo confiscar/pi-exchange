@@ -96,6 +96,7 @@ public class receiver extends Thread{
 			if (echo.contains("previous order")) {
 				parse s= new parse(echo);
 				int exchangeid = s.getid(1);
+				System.out.println(exchangeid);
 				if (exchangeid== buylist.get(Initialization.number_stored-1).id) {
 					Initialization.buy_turn=true;
 					Initialization.match_price = buylist.get(Initialization.number_stored-1).price;
@@ -103,7 +104,7 @@ public class receiver extends Thread{
 				}
 				else {
 					Initialization.buy_turn=false;
-					Initialization.match_price = buylist.get(0).price;
+					Initialization.match_price = selllist.get(0).price;
 					selllist.remove(0);
 				}	
 				synchronized(main.lock){

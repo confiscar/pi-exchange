@@ -26,7 +26,7 @@ order * placeBuyOrder(float price, int amount, int orderId, int userId){
             book * tempBook = NULL;
             HASH_FIND(hh, sellBook, &price, 4, tempBook);
             if(tempBook == NULL){
-                int tempBuyPrice = 0;
+                float tempBuyPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
                 for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
                     if(tempBuyPrice > tempBook -> price || tempBuyPrice == 0){
@@ -81,7 +81,7 @@ order * placeSellOrder(float price, int amount, int orderId, int userId){
             book * tempBook = NULL;
             HASH_FIND(hh, buyBook, &price, 4, tempBook);
             if(tempBook == NULL){
-                int tempSellPrice = 0;
+                float tempSellPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
                 for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
                     if(tempSellPrice < tempBook -> price){

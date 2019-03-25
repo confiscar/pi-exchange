@@ -94,18 +94,22 @@ public class Initialization {
 			}
 			
 			if (cancled<canclebuy) {
-				sc = "c,b,"+ String.valueOf(receiver.buylist.get(number_stored-1).price)+String.valueOf(receiver.buylist.get(number_stored-1).exchangeId);
+				buy_turn = true;
+				sc = "c,b,"+ String.valueOf(receiver.buylist.get(0).price)+String.valueOf(receiver.buylist.get(0).exchangeId);
 				
 				price=Gprice+Math.random()/(1/((1-Proportion)*valvevalue))-Ggap;
 				s="p,b," + String.valueOf(price);
 				s += "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 			}
 			else {
-				sc = "c,s,"+ String.valueOf(receiver.selllist.get(0).price)+String.valueOf(receiver.selllist.get(0).exchangeId);
+				buy_turn = false;
+				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+String.valueOf(receiver.selllist.get(number_stored-1).exchangeId);
 				
 				price =Gprice+Math.random()/(1/(Proportion*valvevalue))+Ggap;
 				s="p,s," + String.valueOf(price);
 				s+= "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 			}
+			
+			
 	}
 }

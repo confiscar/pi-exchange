@@ -21,17 +21,15 @@ void handleRequest(user_client * pair)
     memset(not_exist_msg,0, sizeof(not_exist_msg));
     sprintf(not_exist_msg,"------------------\norder not exist, please check\n------------------\n");
 
-    while(1)
-    {
+    while(1){
         memset(buffer,0,sizeof(buffer));
         int len = recv(sockfd, buffer, sizeof(buffer),0);
-        if(strcmp(buffer,"exit\n")==0)
-        {
+        if(strcmp(buffer,"exit\n")==0 || strcmp(buffer,"") == 0){
             printf("client %d exited.\n",sockfd);
             break;
         }
-        printf("client received: %s", buffer);
-        printf("client %d send:\n",sockfd);
+        printf("server received: %s", buffer);
+        printf("server send to client %d:\n",sockfd);
 
         // split the string parameter by comma (see readme for more specific definition of parameter)
         char * delim = ",";

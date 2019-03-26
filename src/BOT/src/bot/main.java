@@ -7,10 +7,7 @@ import java.net.UnknownHostException;
 
 public class main {
 	public static Object lock = new Object();
-	
 	 public static void main(String[] args) throws UnknownHostException, IOException{  
-		 
-		
 		 
 		Socket client = new Socket("192.168.137.22", 8890);
 		

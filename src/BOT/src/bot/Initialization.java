@@ -28,11 +28,9 @@ public class Initialization {
 		
 		if (buy_turn) {
 			initial_buy();
-			buy_turn = false;
 			}
 		else {
 			initial_sell();
-			buy_turn = true; 
 		}
 		
 	}
@@ -53,7 +51,9 @@ public class Initialization {
 	}
 	
 	public String sendcancle() {
+		cancled++;
 		return sc;
+		
 	}
 	
 

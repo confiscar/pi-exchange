@@ -14,7 +14,7 @@
 // no need to look at this file
 
 int main(){
-    float price = 1.1;
+    double price = 1.1;
     //convertToBuffer(price);
     char buf[1024];
     sprintf(buf, "price = %f", 1.1);

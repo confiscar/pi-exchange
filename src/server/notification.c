@@ -6,15 +6,15 @@
 
 #define BUFFER_SIZE 1024
 
-extern float buyPrice;
-extern float sellPrice;
+extern double buyPrice;
+extern double sellPrice;
 
 notificationPoll * nPoll = NULL;
 
 void notify(){
 
-    float tempBuyPrice = 0;
-    float tempSellPrice = 0;
+    double tempBuyPrice = 0;
+    double tempSellPrice = 0;
     char sendBuffer[BUFFER_SIZE];
     struct timeval time;
     // do endless loop to check if best price changes

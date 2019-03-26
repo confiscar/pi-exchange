@@ -4,8 +4,8 @@
 
 #define BUFFER_SIZE 1024
 
-extern float buyPrice;
-extern float sellPrice;
+extern double buyPrice;
+extern double sellPrice;
 
 void handleRequest(user_client * pair)
 {
@@ -53,12 +53,9 @@ void handleRequest(user_client * pair)
                     continue;
             }
 
-            float price = atof(priceStr);
-            printf("%f | ", price);
+            double price = atof(priceStr);
             int amount = atoi(amountStr);
-            printf("%d | ", price);
             int orderId = atoi(orderIdStr);
-            printf("%d | ", price);
 
             if(price == 0 || amount == 0 || orderId == 0) {
                 printf("invalid input\n");
@@ -80,7 +77,7 @@ void handleRequest(user_client * pair)
                 continue;
             }
         } else if(strcmp(pOc, "c") == 0){
-            float price = atof(strtok( NULL, delim));
+            double price = atof(strtok( NULL, delim));
             int exchangeId = atoi(strtok( NULL, delim));
             if(price == 0 || exchangeId == 0){
                 printf("invalid input\n");

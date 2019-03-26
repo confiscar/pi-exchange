@@ -3,7 +3,7 @@
 
 int exchangeId = 1;
 
-order * generateOrder(float price, int amount, int orderId, int userId){
+order * generateOrder(double price, int amount, int orderId, int userId){
 	order * temp = malloc(sizeof(order));
 	temp -> price = price;
 	temp -> amount = amount;

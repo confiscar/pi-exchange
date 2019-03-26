@@ -21,8 +21,8 @@
 
 extern notificationPoll *  nPoll;
 int user_id = 0;
-extern float buyPrice;
-extern float sellPrice;
+extern double buyPrice;
+extern double sellPrice;
 
 void addToNotificationPoll(int user_id, int conn){
     notificationPoll * temp = NULL;

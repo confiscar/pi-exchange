@@ -89,8 +89,13 @@ int main(int argc, char **argv)
         // assign a user_id to client
         // else add it to notification poll
         memset(sendBuf,0,sizeof(sendBuf));
-        sprintf(sendBuf, "sell price: %f, buy price: %f\n", sellPrice, buyPrice);
+        sprintf(sendBuf, "best buy: %f\n", buyPrice);
         send(conn, sendBuf, sizeof(sendBuf), 0);
+
+        memset(sendBuf,0,sizeof(sendBuf));
+        sprintf(sendBuf, "best sell: %f\n", sellPrice);
+        send(conn, sendBuf, sizeof(sendBuf), 0);
+
         pthread_t tid;
         user_client * pair = malloc(sizeof(user_client));
         pair -> sockfd = conn;

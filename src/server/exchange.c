@@ -24,7 +24,7 @@ order * placeBuyOrder(double price, int amount, int orderId, int userId){
     } else {
         if(buyPrice == price){
             book * tempBook = NULL;
-            HASH_FIND(hh, sellBook, &price, 4, tempBook);
+            HASH_FIND(hh, sellBook, &price, 8, tempBook);
             if(tempBook == NULL){
                 double tempBuyPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
@@ -48,7 +48,7 @@ order * cancelBuyOrder(double price, int exchangeId){
     priceBucket * tempPriceBucket = NULL;
     priceBucket * orderPriceBucket = NULL;
     order * tempOrder = NULL;
-    HASH_FIND(hh, buyBook, &price, 4, tempBook);
+    HASH_FIND(hh, buyBook, &price, 8, tempBook);
     // check if price exists in book
     if(tempBook == NULL){
         return tempOrder;
@@ -79,7 +79,7 @@ order * placeSellOrder(double price, int amount, int orderId, int userId){
     } else {
         if(sellPrice == price){
             book * tempBook = NULL;
-            HASH_FIND(hh, buyBook, &price, 4, tempBook);
+            HASH_FIND(hh, buyBook, &price, 8, tempBook);
             if(tempBook == NULL){
                 double tempSellPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
@@ -103,7 +103,7 @@ order * cancelSellOrder(double price, int exchangeId){
     priceBucket * tempPriceBucket = NULL;
     priceBucket * orderPriceBucket = NULL;
     order * tempOrder = NULL;
-    HASH_FIND(hh, sellBook, &price, 4, tempBook);
+    HASH_FIND(hh, sellBook, &price, 8, tempBook);
     // check if price exists in book
     if(tempBook == NULL){
         return tempOrder;
@@ -127,7 +127,7 @@ order * matchOrder(order * curOrder, book ** curBook){
     book * tempBook = NULL;
     order * tempOrder = NULL;
     // check if the price exists in the book
-    HASH_FIND(hh, * curBook, &price, 4, tempBook);
+    HASH_FIND(hh, * curBook, &price, 8, tempBook);
     if(tempBook == NULL){
         return tempOrder;
     }

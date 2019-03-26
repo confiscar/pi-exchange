@@ -1,5 +1,59 @@
 #!/bin/bash
 
+echo '                                                                                         
+                                                                                                    
+                                      /ydmmmmmmmmmmmmdy-                                            
+                                     /MMMMMMMMMMMMMMMMMN.                                           
+                                     +MMMMMMMMMMMMMMMMMM-                                           
+                      `/++-          +MMMMMd/////+NMMMMM-         `:++:`                            
+                    `+mMMMNh:    `-/smMMMMMh     `mMMMMMho/-`   `/dNMMNd/                           
+                  `+mMMMMMMMNh/ohmNMMMMMMMMs     `dMMMMMMMMNmh+/dMMMMMMMMd/`                        
+                `+dMMMMMMMMMMMMMMMMMMMMNmho`      -sdmNMMMMMMMMMMMMMMMMMMMNh:                       
+              `/dMMMMMMNshNMMMMMMMNhs/-.``          ``.-+ydNMMMMMMMNsyNMMMMMNh:                     
+             /dMMMMMMNs. `:hNMNms/.`                      `./ymMMms-  -yNMMMMMNh-                   
+            .NMMMMMMd-      .--`                              .--.      /NMMMMMMd                   
+             sNMMMMMNh:                                               `/dMMMMMMm/                   
+              -yNMMMMMNs                                             `hMMMMMMmo.                    
+                :NMMMMMd                   ``....``                  .mMMMMMm.                      
+               `yMMMMMh.              `./shdmmNNmmdho:.               -mMMMMMo                      
+               sMMMMMh`             .+hNMMMMMMMMMMMMMMmh/`             .mMMMMN/                     
+        ``````/MMMMMd`            `oNMMMMMMMMNNNNMMMMMMMMm/`            -NMMMMm.`````               
+      `ohdddddNMMMMM-            :dMMMMMMmy+:-.--/ohNMMMMMMh`            +MMMMMmdddddh+             
+      yMMMMMMMMMMMMs            :NMMMMMm/`          .oNMMMMMd.           `dMMMMMMMMMMMM/            
+      dMMMMMMMMMMNd.           `NMMMMMy`              -mMMMMMy            :mMMMMMMMMMMMo            
+      dMMMMMy::::-             oMMMMMm`                -MMMMMM-            `:::::dMMMMMo            
+      dMMMMM+                  yMMMMMo                  dMMMMM/                  hMMMMMo            
+      dMMMMM+                  yMMMMMs                  dMMMMM/                  hMMMMMo            
+      dMMMMMhooo+/`            +MMMMMm.                :MMMMMN-            .+oooomMMMMMo            
+      dMMMMMMMMMMMm.            dMMMMMd.              :NMMMMMs            /NMMMMMMMMMMMo            
+      sMMMMMMMMMMMMy            .mMMMMMNs-          :yMMMMMMh`           `mMMMMMMMMMMMM:            
+       /syyyyymMMMMM-            .hMMMMMMMmy+/::/oymMMMMMMMs             oMMMMMhyyyyys-             
+              :NMMMMm.             /dMMMMMMMMMMMMMMMMMMMMh-             /MMMMMd`                    
+               +MMMMMd.             `:smMMMMMMMMMMMMMNdo.              :NMMMMN-                     
+                sMMMMMm-               `-/oyhddddhyo:.`               +NMMMMN:                      
+               `+NMMMMMm                     ````                    .NMMMMMm:                      
+             `/dMMMMMMN+                                             `sNMMMMMNh:                    
+            `hMMMMMMNs.                                                -yNMMMMMNs                   
+            `NMMMMMMm:     `:+/-`                            `-/+:`    `+NMMMMMMh                   
+             -yNMMMMMNh: `+mMMMNdo:.                     `.:sdNMMNh/``/dMMMMMMNs`                   
+               -yNMMMMMNhdMMMMMMMMMmds+:-.         `.-:+ydNMMMMMMMMMhdMMMMMMNs.                     
+                 :hNMMMMMMMMMMNMMMMMMMMMNmh-      :dmNMMMMMMMMMNMMMMMMMMMMNs.                       
+                   :hNMMMMMMmo-:shmNMMMMMMMy     `mMMMMMMMNmho:-yNMMMMMMNs-                         
+                     :hNMMms.     .-/hMMMMMh     `mMMMMMs/-`     -yNMMNy-                           
+                       -::.          +MMMMMmssssssNMMMMM-          .::.                             
+                                     +MMMMMMMMMMMMMMMMMM-                                           
+                                     :NMMMMMMMMMMMMMMMMm`                                           
+                                      -osyyyyyyyyyyyys+.        '
+
+sleep 1
+
+echo 'Getting dependences for PI-EXCHANGE'
+sleep 1
+echo '.'
+sleep 1
+echo '..'
+sleep 1
+echo '...'
 sudo apt-get update -y
 echo -e $TEXT_YELLOW
 echo 'APT update finished...'

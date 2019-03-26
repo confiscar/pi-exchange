@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "169.254.36.229:8890"
+HOST_IP = "10.42.0.227:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -33,6 +33,10 @@ import time
 RELIEF = tkinter.RIDGE
 
 import time
+
+#Variable to store the balance locally
+balance = 0
+stockCount = 0
 
 #Code to parse data from socket
 #Possible Formats:
@@ -122,25 +126,29 @@ news.grid(row=0,column=0,padx=4,pady=4)
 orderFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=100)
 orderFrame.grid(row=1,column=1,columnspan=2)
 
+#Balance display
+balanceText = tkinter.Label(orderFrame,text="Balance (£): {0}\nStock Count: {1}".format(balance,stockCount))
+balanceText.grid(row=0,column=0)
+
 orderLabel = tkinter.Label(orderFrame, text="Order Form", font=("",12))
-orderLabel.grid(row=0,column=0)
+orderLabel.grid(row=1,column=0)
 
 #Buy/Sell Radiobuttons (only one can be active at a time)
 bsFrame = tkinter.Frame(orderFrame,relief=RELIEF)
-bsFrame.grid(row=1,column=0,pady=10,padx=10)
+bsFrame.grid(row=2,column=0,pady=10,padx=10)
 
 buyOrSell = tkinter.StringVar()
 buyButton = tkinter.Radiobutton(bsFrame,text="Buy",indicatoron=False,value="buy",variable=buyOrSell,width=10,pady=4)
-buyButton.grid(row=1,column=0)
+buyButton.grid(row=0,column=0)
 sellButton = tkinter.Radiobutton(bsFrame,text="Sell",indicatoron=False,value="sell",variable=buyOrSell,width=10,pady=4)
-sellButton.grid(row=1,column=1)
+sellButton.grid(row=0,column=1)
 
 #Set default state to buy
 buyButton.select()
 
 #Price Input
 priceFrame = tkinter.Frame(orderFrame)
-priceFrame.grid(row=2,column=0,pady=10,padx=10)
+priceFrame.grid(row=4,column=0,pady=10,padx=10)
 
 priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
 priceLabel.grid(row=0,column=0)
@@ -158,7 +166,7 @@ priceInput.grid(row=0,column=1)
 
 #Quantity
 quantityFrame = tkinter.Frame(orderFrame)
-quantityFrame.grid(row=3,column=0,pady=10,padx=10)
+quantityFrame.grid(row=5,column=0,pady=10,padx=10)
 
 quantityLabel = tkinter.Label(quantityFrame,width=10,text="Quantity: ")
 quantityLabel.grid(row=0,column=0)
@@ -168,7 +176,7 @@ quantityInput.grid(row=0,column=1)
 
 #Place Order Button
 confirmFrame = tkinter.Frame(orderFrame)
-confirmFrame.grid(row=4,column=0,pady=10,padx=5)
+confirmFrame.grid(row=6,column=0,pady=10,padx=5)
 
 confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
@@ -273,6 +281,7 @@ class Client():
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
+            print(msg)
             data = parseToDict(msg)
             if "best sell" in data.keys():
                 x = data["time"]
@@ -355,6 +364,22 @@ class Graph():
                                         int(self.CW*((self.values[c+1][0]-minx)/scalex))+self.padding//2,
                                         self.CH-int(self.CH*((self.values[c+1][1]-miny)/scaley))+self.padding//2,
                                         fill=col,width=2)
+
+        #Write the current balance to the screen
+        if len(self.values) > 1:
+
+            c = len(self.values)-2
+            if self.values[c][1] > self.values[c+1][1]:
+                col = "#ff8888"
+            elif self.values[c][1] < self.values[c+1][1]:
+                col = "#88ff88"
+            else:
+                col = "#bebebe"
+
+            #Label the balance at the text
+            self.canvas.create_text(int(self.CW*((self.values[-1][0]-minx)/scalex))+self.padding//2 + 6,
+                                            self.CH-int(self.CH*((self.values[-1][1]-miny)/scaley))+self.padding//2,
+                                            fill=col,text="£"+str(self.values[-1][1]),anchor=tkinter.NW)
 
         #Create axis based on self.padding
         self.canvas.create_line(self.padding//2,self.padding//2,self.padding//2,self.CH+self.padding//2,fill="#ffffff",width=2)

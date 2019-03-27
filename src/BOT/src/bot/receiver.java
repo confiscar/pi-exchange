@@ -34,12 +34,17 @@ public class receiver extends Thread{
 			String echo = new String(readResult);
 			//System.out.println(echo);
 			
+			
+			
 			if (echo.contains(initialInfo)) {
 				sender.initialize = true;
 				synchronized(main.lock){
 					main.lock.notify();
 				}
 			}	
+			
+			
+			
 			
 			if(echo.contains("current order"))  {
 				parse x= new parse(echo);
@@ -57,6 +62,8 @@ public class receiver extends Thread{
 						if ((!sender.initialize)&&(!Initialization.gap)) {
 							double best_buy = buylist.get(Initialization.number_stored-1).price;
 							double best_sell = selllist.get(0).price;
+							
+							System.out.println("gap: " + (best_sell - best_buy));
 							if ((best_sell - best_buy)>1.5) {
 								Initialization.gap = true;
 								synchronized(main.lock){
@@ -72,6 +79,7 @@ public class receiver extends Thread{
 						if ((!sender.initialize)&&(!Initialization.gap)) {
 							double best_buy = buylist.get(Initialization.number_stored-1).price;
 							double best_sell = selllist.get(0).price;
+							System.out.println("gap: " + (best_sell - best_buy));
 							if ((best_sell - best_buy)>1.5) {
 								Initialization.gap = true;
 								synchronized(main.lock){
@@ -80,10 +88,24 @@ public class receiver extends Thread{
 							}
 						}
 					}
+					
+					if (Initialization.gap) {
+						System.out.println("cancled: "+ Initialization.cancled);
+						if (Initialization.cancled == 4) {
+							Initialization.cancled = 0;
+							Initialization.gap = false;
+							continue;
+						}
+						
+						synchronized(main.lock){
+							main.lock.notify();
+						}
+					}
+					
 				}		
 				
 				if ((selllist.size() == Initialization.number_stored ) && (sender.initialize)) {
-					System.out.println(selllist.size());
+					//System.out.println(selllist.size());
 					sender.initialize = false;
 				}
 				
@@ -95,22 +117,21 @@ public class receiver extends Thread{
 				}
 				
 				if (status == 2) {
-					if (Initialization.buy_turn) {
+					if (Initialization.cancle_buy_turn) {
+						System.out.println("buy remove: ");
 						buylist.remove(0);
 					}
 					else {
+						System.out.println("sell remove: ");
 						selllist.remove(Initialization.number_stored-1);
 					}	
 					
-					if (Initialization.gap) {
-						if (Initialization.cancled == 10) {
-							Initialization.cancled = 0;
-							Initialization.gap = false;
-							continue;
-						}
-						synchronized(main.lock){
-							main.lock.notify();
-						}
+					
+					
+					System.out.println("next start:");
+					synchronized(main.lock){
+						main.lock.notify();
+					
 					}	
 					
 				}
@@ -135,8 +156,19 @@ public class receiver extends Thread{
 				synchronized(main.lock){
 					main.lock.notify();
 					//System.out.println("notify");
-				}		
+				}
 			}
+			
+			for (int i=0;i<buylist.size();i++) {
+				System.out.println("id: " + buylist.get(i).id + "   " + buylist.get(i).price );
+			}
+			for (int i=0;i<selllist.size();i++) {
+				System.out.println("id: " + selllist.get(i).id + "   " + selllist.get(i).price );
+			}
+			
+			
+			
 		}
+		
 	}
 }

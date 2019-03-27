@@ -12,6 +12,7 @@ public class Initialization {
 	int orderId = 0;
 	
 	public static Boolean buy_turn = true;
+	public static Boolean cancle_buy_turn = true;
 	public static double match_price = 0;
 	public static Boolean gap = false;
 	public static int cancled = 0;
@@ -85,27 +86,34 @@ public class Initialization {
 	
 	public void gap() {
 			double price;
-			int canclenumber = 100,canclebuy;
-			double Proportion;
-			Proportion= countbuy/(countsell+countbuy);
-			canclebuy = canclenumber-(int) Math.ceil(Proportion*canclenumber) ;
-			if (cancled==0) {
-				Gprice -= (Proportion*2-1) * valvevalue;
-			}
+			int canclenumber = 4,canclebuy;
+			//double Proportion;
+			//Proportion= countbuy/(countsell+countbuy);
+			//canclebuy = canclenumber-(int) Math.ceil(Proportion*canclenumber) ;
 			
-			if (cancled<canclebuy) {
+			System.out.println(" count buy: " + countbuy +" count sell: " + countsell);
+			//System.out.println(" cancle buy: " + canclebuy);
+			
+			
+			//if (cancled==0) {
+			//	Gprice -= (Proportion*2-1) * valvevalue;
+			//}
+			
+			if (cancled<=4) {
 				buy_turn = true;
-				sc = "c,b,"+ String.valueOf(receiver.buylist.get(0).price)+String.valueOf(receiver.buylist.get(0).exchangeId);
-				
-				price=Gprice+Math.random()/(1/((1-Proportion)*valvevalue))-Ggap;
+				cancle_buy_turn = true;
+				sc = "c,b,"+ String.valueOf(receiver.buylist.get(0).price)+","+String.valueOf(receiver.buylist.get(0).id);
+				price=Gprice+Math.random()/2-Ggap/2;
+				//price=Gprice+Math.random()/(1/((1-Proportion)*valvevalue))-Ggap;
 				s="p,b," + String.valueOf(price);
 				s += "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 			}
 			else {
 				buy_turn = false;
-				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+String.valueOf(receiver.selllist.get(number_stored-1).exchangeId);
-				
-				price =Gprice+Math.random()/(1/(Proportion*valvevalue))+Ggap;
+				cancle_buy_turn = false;
+				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+","+String.valueOf(receiver.selllist.get(number_stored-1).id);
+				price=Gprice+Math.random()/4+Ggap;
+				//price =Gprice+Math.random()/(1/(Proportion*valvevalue))+Ggap;
 				s="p,s," + String.valueOf(price);
 				s+= "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 			}

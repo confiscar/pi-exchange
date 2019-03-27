@@ -38,6 +38,10 @@ import time
 balance = 0
 stockCount = 0
 
+#Variables for best buy and sell
+bestBuy = None
+bestSell = None
+
 #Code to parse data from socket
 #Possible Formats:
 
@@ -59,6 +63,8 @@ def inferDataType(string):
 def parseToDict(data):
     """Convert data from socket into a dictionary object for easier manipulation"""
     dataDict = {}
+
+    data = data.lstrip()
 
     #Split into lines
     data = data.split("\n")
@@ -162,6 +168,7 @@ def ValidateIfNum(self, s, S):
         return valid
         
 priceInput.insert(0,0)
+priceInput.config(state=tkinter.DISABLED)
 priceInput.grid(row=0,column=1)
 
 #Quantity
@@ -171,7 +178,8 @@ quantityFrame.grid(row=5,column=0,pady=10,padx=10)
 quantityLabel = tkinter.Label(quantityFrame,width=10,text="Quantity: ")
 quantityLabel.grid(row=0,column=0)
 quantityInput = tkinter.Spinbox(quantityFrame,from_=QUANTITY_LOWER_RANGE,to=QUANTITY_UPPER_RANGE)
-quantityInput.insert(0,0)
+quantityInput.delete(0,tkinter.END)
+quantityInput.insert(0,10)
 quantityInput.grid(row=0,column=1)
 
 #Place Order Button
@@ -277,6 +285,7 @@ class Client():
         """Send string data to server"""
         self.s.sendall(data.encode())
     def receiveLoop(self):
+        global bestBuy, bestSell
         """Listen to the server"""
         while True:
             msg = self.s.recv(2**16)
@@ -284,12 +293,14 @@ class Client():
             print(msg)
             data = parseToDict(msg)
             if "best sell" in data.keys():
+                bestSell = data["best sell"]
                 x = data["time"]
                 y = data["best sell"]
                 graphLock.acquire()
                 g.addCoords((x,y))
                 graphLock.release()
             if "best buy" in data.keys():
+                bestBuy = data["best buy"]
                 x = data["time"]
                 y = data["best buy"]
                 graphLock2.acquire()
@@ -311,7 +322,7 @@ class Graph():
         while len(self.values) > self.maxCoords:
             self.values.pop(0)
     def autoScroll(self):
-        if len(self.values) > 1:
+        if len(self.values) >= 1:
             if time.time() - self.values[-1][0] < DELAY_BEFORE_AUTO_DRAW:
                 self.addCoords((time.time(),self.values[-1][1]))
     def plot(self):
@@ -358,6 +369,7 @@ class Graph():
                 else:
                     col = "#bebebe"
 
+                #print("values[c] = {0}\nminx, maxx, miny, maxy = {1}, {2}, {3}, {4}\n scalex = {5}\nscaley = {6}".format(values[c],minx,maxx,miny,maxy,scalex,scaley))
                 #Create line between this point and the next, applying calculations to scale and fit the points
                 self.canvas.create_line(int(self.CW*((self.values[c][0]-minx)/scalex))+self.padding//2,
                                         self.CH-int(self.CH*((self.values[c][1]-miny)/scaley))+self.padding//2,
@@ -449,13 +461,22 @@ class OrderID():
 def placeOrder():
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
     #Format for the server
-    data = "p," + order["orderType"][0] + "," + str(order["price"]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
+    data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
     print(data)
     #Send through socket
     c.send(data)
 
 def updateStats():
+    global bestBuy, bestSell
     cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))
+    #Set the price to current buy or sell price
+    priceInput.config(state=tkinter.NORMAL)
+    priceInput.delete(0,tkinter.END)
+    if buyOrSell.get()[0] == 'b':
+        priceInput.insert(0,str(bestBuy))
+    elif buyOrSell.get()[0] == 's':
+        priceInput.insert(0,str(bestSell))
+    priceInput.config(state=tkinter.DISABLED)
     root.after(500,updateStats)
 
 

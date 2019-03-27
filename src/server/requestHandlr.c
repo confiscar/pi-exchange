@@ -75,8 +75,17 @@ void handleRequest(user_client * pair)
                 continue;
             }
         } else if(strcmp(pOc, "c") == 0){
-            double price = atof(strtok( NULL, delim));
-            int exchangeId = atoi(strtok( NULL, delim));
+            char * priceStr = strtok(NULL, delim); // third parameter, stands for price
+            char * exchangeIdStr = strtok(NULL, delim); // fourth parameter, stands for order id
+
+            if(priceStr == NULL || exchangeIdStr == NULL){
+                    printf("invalid input\n");
+                    send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
+                    continue;
+            }
+
+            double price = atof(priceStr);
+            int exchangeId = atoi(exchangeIdStr);
             if(price == 0 || exchangeId == 0){
                 printf("invalid input\n");
                 send(sockfd, invalid_msg, sizeof(invalid_msg), 0);

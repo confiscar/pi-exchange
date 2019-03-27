@@ -2,13 +2,13 @@ package bot;
 
 public class store implements Comparable <store> {
 	 final int id;
-	 final double price;
+	 final float price;
 	 final int amount;
 	 int exchangeId;
 	
 	
 	
-	public store( int id,  double price,  int amount) {
+	public store( int id,  float price,  int amount) {
 		this.id = id;
 		this.price = price;
 		this.amount = amount;

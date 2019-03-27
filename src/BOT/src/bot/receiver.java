@@ -13,7 +13,7 @@ public class receiver extends Thread{
 	public static int matchID = 0;
 	public static Boolean respon = false;
 	
-	String initialInfo = "sell price: 0.000000, buy price: 0.000000\n";
+	String initialInfo = "best buy: 0.000000";
 	public static List<store> buylist = new ArrayList<>();
 	public static List<store> selllist = new ArrayList<>();
 	
@@ -32,7 +32,7 @@ public class receiver extends Thread{
 			}
 			
 			String echo = new String(readResult);
-			//System.out.println(echo);
+			System.out.println(echo);
 			
 			
 			
@@ -49,7 +49,7 @@ public class receiver extends Thread{
 			if(echo.contains("current order"))  {
 				parse x= new parse(echo);
 				int exchangeID = x.getid(1);
-				double price = x.getprice();
+				float price = x.getprice();
 				int amount = x.getid(3);
 				int status = x.getid(4);
 				
@@ -60,15 +60,12 @@ public class receiver extends Thread{
 						Collections.sort(buylist);
 						Initialization.buy_turn = false;
 						if ((!sender.initialize)&&(!Initialization.gap)) {
-							double best_buy = buylist.get(Initialization.number_stored-1).price;
-							double best_sell = selllist.get(0).price;
+							float best_buy = buylist.get(Initialization.number_stored-1).price;
+							float best_sell = selllist.get(0).price;
 							
 							System.out.println("gap: " + (best_sell - best_buy));
 							if ((best_sell - best_buy)>1.5) {
 								Initialization.gap = true;
-								synchronized(main.lock){
-									main.lock.notify();
-								}
 							}
 						}
 					}
@@ -77,25 +74,25 @@ public class receiver extends Thread{
 						Collections.sort(selllist);
 						Initialization.buy_turn = true;
 						if ((!sender.initialize)&&(!Initialization.gap)) {
-							double best_buy = buylist.get(Initialization.number_stored-1).price;
-							double best_sell = selllist.get(0).price;
+							float best_buy = buylist.get(Initialization.number_stored-1).price;
+							float best_sell = selllist.get(0).price;
 							System.out.println("gap: " + (best_sell - best_buy));
 							if ((best_sell - best_buy)>1.5) {
 								Initialization.gap = true;
-								synchronized(main.lock){
-									main.lock.notify();
-								}
 							}
 						}
 					}
 					
 					if (Initialization.gap) {
 						System.out.println("cancled: "+ Initialization.cancled);
+						sender.cancle = true;
 						if (Initialization.cancled == 4) {
 							Initialization.cancled = 0;
 							Initialization.gap = false;
 							continue;
 						}
+						
+						
 						
 						synchronized(main.lock){
 							main.lock.notify();
@@ -126,12 +123,11 @@ public class receiver extends Thread{
 						selllist.remove(Initialization.number_stored-1);
 					}	
 					
-					
+					sender.cancle = false;
 					
 					System.out.println("next start:");
 					synchronized(main.lock){
 						main.lock.notify();
-					
 					}	
 					
 				}
@@ -145,12 +141,12 @@ public class receiver extends Thread{
 				int exchangeid = s.getid(1);
 				if (exchangeid== buylist.get(Initialization.number_stored-1).id) {
 					Initialization.buy_turn=true;
-					Initialization.match_price = buylist.get(Initialization.number_stored-1).price;
+					Initialization.match_price = (float) buylist.get(Initialization.number_stored-1).price;
 					buylist.remove(Initialization.number_stored-1);
 				}
 				else {
 					Initialization.buy_turn=false;
-					Initialization.match_price = selllist.get(0).price;
+					Initialization.match_price = (float) selllist.get(0).price;
 					selllist.remove(0);
 				}	
 				synchronized(main.lock){
@@ -159,12 +155,12 @@ public class receiver extends Thread{
 				}
 			}
 			
-			for (int i=0;i<buylist.size();i++) {
-				System.out.println("id: " + buylist.get(i).id + "   " + buylist.get(i).price );
-			}
-			for (int i=0;i<selllist.size();i++) {
-				System.out.println("id: " + selllist.get(i).id + "   " + selllist.get(i).price );
-			}
+//			for (int i=0;i<buylist.size();i++) {
+//				System.out.println("id: " + buylist.get(i).id + "   " + buylist.get(i).price );
+//			}
+//			for (int i=0;i<selllist.size();i++) {
+//				System.out.println("id: " + selllist.get(i).id + "   " + selllist.get(i).price );
+//			}
 			
 			
 			

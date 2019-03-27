@@ -11,7 +11,7 @@ public class sender extends Thread {
 	String str = null;
 	Socket client = null;
 
-	Boolean cancle = true;
+	public static Boolean cancle = true;
 	
 	public sender(Socket client, Object lock) {
 		this.client = client;
@@ -66,10 +66,8 @@ public class sender extends Thread {
 				System.out.println("cancle send: " + str);
 				out.print(str);
 				out.flush();
-				cancle = false;
 			}
 			if ((Initialization.gap) && (!cancle)) {
-				cancle = true;
 				str = a.send();
 				System.out.println("str send: " + str);
 				out.print(str);

@@ -4,8 +4,8 @@ package bot;
 
 public class Initialization {
 	String s,sc;
-	double Gprice=0,Ggap=0;
-	double valvevalue=0.5;
+	float Gprice=0,Ggap=0;
+	float valvevalue=(float) 0.5;
 	int amount=10;
 	
 	public static int number_stored = 10; 
@@ -13,13 +13,13 @@ public class Initialization {
 	
 	public static Boolean buy_turn = true;
 	public static Boolean cancle_buy_turn = true;
-	public static double match_price = 0;
+	public static float match_price = 0;
 	public static Boolean gap = false;
 	public static int cancled = 0;
 	
 	int countsell,countbuy;
 	
-	public Initialization(double price, double gap) {
+	public Initialization(float price, float gap) {
 		Gprice=price;
 		Ggap=gap;
 	}
@@ -36,13 +36,13 @@ public class Initialization {
 		
 	}
 	public void initial_buy() {
-		double price=Gprice+Math.random()-Ggap;
+		float price=(float) (Gprice+Math.random()-Ggap);
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 	}
 	
 	public void initial_sell() {
-		double price=Gprice+Math.random()+Ggap;
+		float price=(float) (Gprice+Math.random()+Ggap);
 		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 	}
@@ -68,14 +68,14 @@ public class Initialization {
 	}
 	
 	public void buy() {
-		double price=match_price-Math.random()/2;
+		float price=(float) (match_price-Math.random()/2);
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		countbuy++;
 	}
 	
 	public void sell() {
-		double price=match_price+Math.random()/2;
+		float price=(float) (match_price+Math.random()/2);
 		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		countsell++;
@@ -85,9 +85,9 @@ public class Initialization {
 
 	
 	public void gap() {
-			double price;
+			float price;
 			int canclenumber = 4,canclebuy;
-			//double Proportion;
+			//float Proportion;
 			//Proportion= countbuy/(countsell+countbuy);
 			//canclebuy = canclenumber-(int) Math.ceil(Proportion*canclenumber) ;
 			
@@ -103,7 +103,7 @@ public class Initialization {
 				buy_turn = true;
 				cancle_buy_turn = true;
 				sc = "c,b,"+ String.valueOf(receiver.buylist.get(0).price)+","+String.valueOf(receiver.buylist.get(0).id);
-				price=Gprice+Math.random()/2-Ggap/2;
+				price=(float) (Gprice+Math.random()/2-Ggap/2);
 				//price=Gprice+Math.random()/(1/((1-Proportion)*valvevalue))-Ggap;
 				s="p,b," + String.valueOf(price);
 				s += "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
@@ -112,7 +112,7 @@ public class Initialization {
 				buy_turn = false;
 				cancle_buy_turn = false;
 				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+","+String.valueOf(receiver.selllist.get(number_stored-1).id);
-				price=Gprice+Math.random()/4+Ggap;
+				price=(float) (Gprice+Math.random()/4+Ggap);
 				//price =Gprice+Math.random()/(1/(Proportion*valvevalue))+Ggap;
 				s="p,s," + String.valueOf(price);
 				s+= "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";

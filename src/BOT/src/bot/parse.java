@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class parse {
 	String str;
 	String id;
-	double []x = new double[5];
+	float []x = new float[5];
 	int i = 0;
 	public parse(String str) {
 		this.str = str;
@@ -25,7 +25,7 @@ public class parse {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
-            x[i++] = Double.parseDouble(matcher.group());
+            x[i++] = (float) Double.parseDouble(matcher.group());
 //            System.out.println(x[i-1]);
         }
 	}
@@ -36,7 +36,7 @@ public class parse {
 	
 	
 
-	public double getprice() {
+	public float getprice() {
 		return x[2];
 	}
 	

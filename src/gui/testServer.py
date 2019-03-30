@@ -1,7 +1,7 @@
 PORT = 43242
 MAX_CONNS = 5
 
-
+SIMULATED_LATENCY = 10
 
 import socket
 import threading
@@ -36,17 +36,22 @@ class Server():
 ##                print("Connection with {0}:{1} closed".format(addr[0],addr[1]))
 ##                break
         i=0
-        while True:
+        bp = 100
+        sp = 100
+        while i < 100:
             i += 1
             try:
-                dataToSend = "best sell: {1}, time: {0}\n".format(round(time.time(),4),math.sin(i/100)*100+math.sin(i/33)*20)
-                print(dataToSend)
+                bp += random.random()-0.5
+                dataToSend = "best sell: {1}, time: {0}\n".format(round(time.time()-SIMULATED_LATENCY,4),bp)
+                self.send(conn,dataToSend)
+                sp += random.random()-0.5
+                dataToSend = "best buy: {1}, time: {0}\n".format(round(time.time()-SIMULATED_LATENCY,4),sp)
                 self.send(conn,dataToSend)
             except Exception as e:
                 print(e)
                 print("Disconnected with {0}:{1}\n".format(addr[0],addr[1]))
                 break
-            time.sleep(0.01)
+            time.sleep(random.random()/4)
     def serverLoop(self):
         """Repeatedly accepts connections and assigns new threads to each"""
         self.s.listen(self.max_conns)

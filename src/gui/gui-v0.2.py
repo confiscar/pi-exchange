@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "192.168.1.10:43242"
+HOST_IP = "10.42.0.227:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -16,6 +16,10 @@ FEEDWIDTH = 100
 TABLE_WIDTH = 2
 TABLE_HEIGHT = 5
 
+#Graph Settings
+DELAY_BEFORE_AUTO_DRAW = 2000000
+GRAPH_MAX_COORDS = 100
+
 import tkinter
 import random
 import feedparser
@@ -23,10 +27,71 @@ import socket
 import threading
 import platform
 import psutil
+import time
 
 #Style Options
 RELIEF = tkinter.RIDGE
 
+import time
+
+#Variable to store the balance locally
+balance = 0
+stockCount = 0
+
+#Variables for best buy and sell
+bestBuy = None
+bestSell = None
+
+#Code to parse data from socket
+#Possible Formats:
+
+#-----------------
+#<key>: <value>
+#<key2>: <value2>
+#<key3>: <value3>, time: <int>
+#-----------------
+
+def inferDataType(string):
+    """Converts data type to best matching and returns"""
+    if string.isalpha():
+        return string
+    elif '.' in string:
+        return float(string)
+    else:
+        return int(string)
+
+def parseToDict(data):
+    """Convert data from socket into a dictionary object for easier manipulation"""
+    dataDict = {}
+
+    data = data.lstrip()
+
+    #Split into lines
+    data = data.split("\n")
+
+    #For each line in the received data
+    for d in data:
+
+        #Ignore blank lines
+        if d != '':
+
+            #If not a separator line
+            if d[0] != '-':
+
+                #If multiple key/value pairs on one line, split
+                d = d.split(", ")
+                for pair in d:
+
+                    #Separate key and value then save in dataDict
+                    pair = pair.split(": ")
+                    if len(pair) == 2:
+                        dataDict[pair[0]] = inferDataType(pair[1])
+
+    #Add a timestamp
+    dataDict["time"] = time.time()
+
+    #Return created dictionary object
+    return dataDict
 
 
 #Create window
@@ -40,15 +105,15 @@ root.attributes("-fullscreen",False)
 
 
 #Create canvas frame
-canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-50))
+canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-100))
 canvasFrame.grid(row=0,column=0,rowspan=10)
 
 #Create canvas for graph
-canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#001100')
+canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#001100')
 canvas.grid(row=0,column=0)
 
 #Create a canvas for the other graph
-canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-50)/2,bg='#110000')
+canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#110000')
 canvas2.grid(row=1,column=0)
 
 
@@ -67,25 +132,29 @@ news.grid(row=0,column=0,padx=4,pady=4)
 orderFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=100)
 orderFrame.grid(row=1,column=1,columnspan=2)
 
+#Balance display
+balanceText = tkinter.Label(orderFrame,text="Balance (£): {0}\nStock Count: {1}".format(balance,stockCount))
+balanceText.grid(row=0,column=0)
+
 orderLabel = tkinter.Label(orderFrame, text="Order Form", font=("",12))
-orderLabel.grid(row=0,column=0)
+orderLabel.grid(row=1,column=0)
 
 #Buy/Sell Radiobuttons (only one can be active at a time)
 bsFrame = tkinter.Frame(orderFrame,relief=RELIEF)
-bsFrame.grid(row=1,column=0,pady=10,padx=10)
+bsFrame.grid(row=2,column=0,pady=10,padx=10)
 
 buyOrSell = tkinter.StringVar()
 buyButton = tkinter.Radiobutton(bsFrame,text="Buy",indicatoron=False,value="buy",variable=buyOrSell,width=10,pady=4)
-buyButton.grid(row=1,column=0)
+buyButton.grid(row=0,column=0)
 sellButton = tkinter.Radiobutton(bsFrame,text="Sell",indicatoron=False,value="sell",variable=buyOrSell,width=10,pady=4)
-sellButton.grid(row=1,column=1)
+sellButton.grid(row=0,column=1)
 
 #Set default state to buy
 buyButton.select()
 
 #Price Input
 priceFrame = tkinter.Frame(orderFrame)
-priceFrame.grid(row=2,column=0,pady=10,padx=10)
+priceFrame.grid(row=4,column=0,pady=10,padx=10)
 
 priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
 priceLabel.grid(row=0,column=0)
@@ -99,21 +168,23 @@ def ValidateIfNum(self, s, S):
         return valid
         
 priceInput.insert(0,0)
+priceInput.config(state=tkinter.DISABLED)
 priceInput.grid(row=0,column=1)
 
 #Quantity
 quantityFrame = tkinter.Frame(orderFrame)
-quantityFrame.grid(row=3,column=0,pady=10,padx=10)
+quantityFrame.grid(row=5,column=0,pady=10,padx=10)
 
 quantityLabel = tkinter.Label(quantityFrame,width=10,text="Quantity: ")
 quantityLabel.grid(row=0,column=0)
 quantityInput = tkinter.Spinbox(quantityFrame,from_=QUANTITY_LOWER_RANGE,to=QUANTITY_UPPER_RANGE)
-quantityInput.insert(0,0)
+quantityInput.delete(0,tkinter.END)
+quantityInput.insert(0,10)
 quantityInput.grid(row=0,column=1)
 
 #Place Order Button
 confirmFrame = tkinter.Frame(orderFrame)
-confirmFrame.grid(row=4,column=0,pady=10,padx=5)
+confirmFrame.grid(row=6,column=0,pady=10,padx=5)
 
 confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
@@ -196,6 +267,9 @@ cputext.grid(row=0,column=0)
 
 graphLock = threading.Lock()
 
+#Secondary lock for second graph
+graphLock2 = threading.Lock()
+
 class Client():
     """A class to encapsulate client funcitonality"""
     def __init__(self,hostIP):
@@ -211,24 +285,27 @@ class Client():
         """Send string data to server"""
         self.s.sendall(data.encode())
     def receiveLoop(self):
+        global bestBuy, bestSell
         """Listen to the server"""
         while True:
             msg = self.s.recv(2**16)
             msg = msg.decode()
-            msg = msg.split("\n")
-            for m in msg:
-                if m != '':
-                    #Data received in this format:
-                    #best sell: <float>, time: <int>
-                    if m.rfind("best sell") > -1:
-                        #Split into 2 items, crop the text from the data
-                        m = m.split(",")
-                        m[0] = m[0][11:]
-                        m[1] = m[1][7:]
-                        graphLock.acquire()
-                        g.addCoords((float(m[1]),float(m[0])))
-                        g2.addCoords((float(m[1]),float(m[0])))
-                        graphLock.release()
+            print(msg)
+            data = parseToDict(msg)
+            if "best sell" in data.keys():
+                bestSell = data["best sell"]
+                x = data["time"]
+                y = data["best sell"]
+                graphLock.acquire()
+                g.addCoords((x,y))
+                graphLock.release()
+            if "best buy" in data.keys():
+                bestBuy = data["best buy"]
+                x = data["time"]
+                y = data["best buy"]
+                graphLock2.acquire()
+                g2.addCoords((x,y))
+                graphLock2.release()
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -244,6 +321,10 @@ class Graph():
         self.values.append(coords)
         while len(self.values) > self.maxCoords:
             self.values.pop(0)
+    def autoScroll(self):
+        if len(self.values) >= 1:
+            if time.time() - self.values[-1][0] < DELAY_BEFORE_AUTO_DRAW:
+                self.addCoords((time.time(),self.values[-1][1]))
     def plot(self):
         """Plot stored coordinates to the canvas"""
 
@@ -288,6 +369,7 @@ class Graph():
                 else:
                     col = "#bebebe"
 
+                #print("values[c] = {0}\nminx, maxx, miny, maxy = {1}, {2}, {3}, {4}\n scalex = {5}\nscaley = {6}".format(values[c],minx,maxx,miny,maxy,scalex,scaley))
                 #Create line between this point and the next, applying calculations to scale and fit the points
                 self.canvas.create_line(int(self.CW*((self.values[c][0]-minx)/scalex))+self.padding//2,
                                         self.CH-int(self.CH*((self.values[c][1]-miny)/scaley))+self.padding//2,
@@ -295,24 +377,45 @@ class Graph():
                                         self.CH-int(self.CH*((self.values[c+1][1]-miny)/scaley))+self.padding//2,
                                         fill=col,width=2)
 
+        #Write the current balance to the screen
+        if len(self.values) > 1:
+
+            c = len(self.values)-2
+            if self.values[c][1] > self.values[c+1][1]:
+                col = "#ff8888"
+            elif self.values[c][1] < self.values[c+1][1]:
+                col = "#88ff88"
+            else:
+                col = "#bebebe"
+
+            #Label the balance at the text
+            self.canvas.create_text(int(self.CW*((self.values[-1][0]-minx)/scalex))+self.padding//2 + 6,
+                                            self.CH-int(self.CH*((self.values[-1][1]-miny)/scaley))+self.padding//2,
+                                            fill=col,text="£"+str(self.values[-1][1]),anchor=tkinter.NW)
+
         #Create axis based on self.padding
         self.canvas.create_line(self.padding//2,self.padding//2,self.padding//2,self.CH+self.padding//2,fill="#ffffff",width=2)
         self.canvas.create_line(self.padding//2,self.CH+self.padding//2,self.CW+self.padding//2,self.CH+self.padding//2,fill="#ffffff",width=2)
 
         #Label axis with coordinates
-        self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=str(int(minx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
-        self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=str(int(maxx)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        #X Axis
+        #Convert time to string
+        minx = time.ctime(minx)
+        maxx = time.ctime(maxx)
+        #Place text on canvas
+        self.canvas.create_text(self.padding//2,self.CH+int(self.padding*3/4),text=minx,fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
+        self.canvas.create_text(self.CW+self.padding//2,self.CH+int(self.padding*3/4),text=maxx,fill="#ffffff",font=("fixedsys",7),anchor=tkinter.E)
         #Y Axis
-        self.canvas.create_text(self.padding//4,self.padding//2,text=str(int(maxy)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
-        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",10),anchor=tkinter.W)
+        self.canvas.create_text(self.padding//4,self.padding//2,text=str(int(maxy)),fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
+        self.canvas.create_text(self.padding//4,self.CH+self.padding//2,text=str(int(miny)),fill="#ffffff",font=("fixedsys",7),anchor=tkinter.W)
 
         #Update canvas
         self.canvas.update()
 
 
 #Create graphs
-g = Graph(canvas,600)
-g2 = Graph(canvas2,600)
+g = Graph(canvas,GRAPH_MAX_COORDS)
+g2 = Graph(canvas2,GRAPH_MAX_COORDS)
 
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
@@ -324,9 +427,14 @@ def plot():
 
     #Draw to canvas
     graphLock.acquire()
+    g.autoScroll()
     g.plot()
-    g2.plot()
     graphLock.release()
+
+    graphLock2.acquire()
+    g2.autoScroll()
+    g2.plot()
+    graphLock2.release()
 
     #Call in next mainloop
     root.after(10,plot)
@@ -342,13 +450,33 @@ def scrollFeed():
         scrollAmount = 0
     root.after(70,scrollFeed)
 
+#For generating client order IDs
+class OrderID():
+    currentID = 0
+    def getNextOrderID():
+        OrderID.currentID += 1
+        return OrderID.currentID
+
 #Form has been submitted
 def placeOrder():
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
-    print(order)
+    #Format for the server
+    data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
+    print(data)
+    #Send through socket
+    c.send(data)
 
 def updateStats():
+    global bestBuy, bestSell
     cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))
+    #Set the price to current buy or sell price
+    priceInput.config(state=tkinter.NORMAL)
+    priceInput.delete(0,tkinter.END)
+    if buyOrSell.get()[0] == 'b':
+        priceInput.insert(0,str(bestBuy))
+    elif buyOrSell.get()[0] == 's':
+        priceInput.insert(0,str(bestSell))
+    priceInput.config(state=tkinter.DISABLED)
     root.after(500,updateStats)
 
 

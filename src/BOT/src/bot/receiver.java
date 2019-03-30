@@ -41,6 +41,7 @@ public class receiver extends Thread{
 			}
 			String echo = new String(readResult);
 			System.out.println(echo);
+
 			
 			// check if it is the initial information 
 			
@@ -53,6 +54,7 @@ public class receiver extends Thread{
 			}	
 			
 			
+
 			// receive a feedback that server have handled the information which sender class have sent before.
 			
 			if(echo.contains("current order"))  {

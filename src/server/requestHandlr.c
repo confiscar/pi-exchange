@@ -4,8 +4,8 @@
 
 #define BUFFER_SIZE 1024
 
-extern float buyPrice;
-extern float sellPrice;
+extern double buyPrice;
+extern double sellPrice;
 
 void handleRequest(user_client * pair)
 {
@@ -21,17 +21,15 @@ void handleRequest(user_client * pair)
     memset(not_exist_msg,0, sizeof(not_exist_msg));
     sprintf(not_exist_msg,"------------------\norder not exist, please check\n------------------\n");
 
-    while(1)
-    {
+    while(1){
         memset(buffer,0,sizeof(buffer));
         int len = recv(sockfd, buffer, sizeof(buffer),0);
-        if(strcmp(buffer,"exit\n")==0)
-        {
+        if(strcmp(buffer,"exit\n")==0 || strcmp(buffer,"") == 0){
             printf("client %d exited.\n",sockfd);
             break;
         }
-        printf("client received: %s", buffer);
-        printf("client %d send:\n",sockfd);
+        printf("server received: %s", buffer);
+        printf("server send to client %d:\n",sockfd);
 
         // split the string parameter by comma (see readme for more specific definition of parameter)
         char * delim = ",";
@@ -42,9 +40,20 @@ void handleRequest(user_client * pair)
 
         // decide what kind of request by compare 1st and 2nd parameter
         if(strcmp(pOc, "p") == 0){
-            float price = atof(strtok( NULL, delim));
-            int amount = atoi(strtok( NULL, delim));
-            int orderId = atoi(strtok( NULL, delim));
+
+            char * priceStr = strtok(NULL, delim); // third parameter, stands for price
+            char * amountStr = strtok( NULL, delim); // fouth parameter, stands for amount
+            char * orderIdStr = strtok(NULL, delim); // fifth parameter, stands for order id
+
+            if(priceStr == NULL || amountStr == NULL || orderIdStr == NULL){
+                    printf("invalid input\n");
+                    send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
+                    continue;
+            }
+
+            double price = atof(priceStr);
+            int amount = atoi(amountStr);
+            int orderId = atoi(orderIdStr);
 
             if(price == 0 || amount == 0 || orderId == 0) {
                 printf("invalid input\n");
@@ -66,8 +75,17 @@ void handleRequest(user_client * pair)
                 continue;
             }
         } else if(strcmp(pOc, "c") == 0){
-            float price = atof(strtok( NULL, delim));
-            int exchangeId = atoi(strtok( NULL, delim));
+            char * priceStr = strtok(NULL, delim); // third parameter, stands for price
+            char * exchangeIdStr = strtok(NULL, delim); // fourth parameter, stands for order id
+
+            if(priceStr == NULL || exchangeIdStr == NULL){
+                    printf("invalid input\n");
+                    send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
+                    continue;
+            }
+
+            double price = atof(priceStr);
+            int exchangeId = atoi(exchangeIdStr);
             if(price == 0 || exchangeId == 0){
                 printf("invalid input\n");
                 send(sockfd, invalid_msg, sizeof(invalid_msg), 0);
@@ -102,9 +120,9 @@ void handleRequest(user_client * pair)
             continue;
         }
 
-        // send specific information to server
+        // send specific information to client
         memset(buffer,0,sizeof(buffer));
-        sprintf(buffer, "------------------\n|order ID: %d\n|exchange ID: %d\n|price: %f\n|amount: %d\n|status: %d\n------------------\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
+        sprintf(buffer, "current order\norder ID: %d\nexchange ID: %d\nprice: %f\namount: %d\nstatus: %d\n",temp->orderId, temp->exchangeId, temp->price, temp->amount, temp->status);
         send(sockfd, buffer, sizeof(buffer), 0);
 
     }

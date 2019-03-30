@@ -12,7 +12,7 @@ typedef struct priceBucket{
 }priceBucket;
 
 typedef struct book {
-    float price;
+    double price;
     priceBucket * pb;
     UT_hash_handle hh;
 } book;

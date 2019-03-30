@@ -10,6 +10,7 @@ public class Initialization {
 	
 	public static int number_stored = 10; 
 	int orderId = 0;
+
 	
 	public static Boolean buy_turn = true;
 	public static Boolean cancle_buy_turn = true;
@@ -27,6 +28,7 @@ public class Initialization {
 	
 	
 	public void initial() {
+
 		
 		if (buy_turn) {
 			initial_buy();

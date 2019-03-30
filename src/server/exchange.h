@@ -13,26 +13,26 @@ typedef struct user_client{
  * if matched return order with status 1
  * else add it to buy book and return order with status 0
  */
-order * placeBuyOrder(float price, int amount, int orderId, int userId);
+order * placeBuyOrder(double price, int amount, int orderId, int userId);
 
 /**
  * generate a sell order and try to match with buys
  * if matched return order with status 1
  * else add it to buy book and return order with status 0
  */
-order * placeSellOrder(float price, int amount, int orderId, int userId);
+order * placeSellOrder(double price, int amount, int orderId, int userId);
 
 /**
  * remove order from buy book and return order with status 2
  * NULL if order with certain exchangeId is not in book
  */
-order * cancelBuyOrder(float price, int exchangeId);
+order * cancelBuyOrder(double price, int exchangeId);
 
 /**
  * remove order from buy book and return order with status 2
  * NULL if order with certain exchangeId is not in book
  */
-order * cancelSellOrder(float price, int exchangeId);
+order * cancelSellOrder(double price, int exchangeId);
 
 
 /**

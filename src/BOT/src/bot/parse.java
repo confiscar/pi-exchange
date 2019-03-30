@@ -26,8 +26,10 @@ public class parse {
         }
 	}
 	
+
 	public int getid(int y) {
 		return (int)x[y];
+
 	}
 	
 	

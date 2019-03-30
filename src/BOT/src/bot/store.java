@@ -1,5 +1,7 @@
 package bot;
 
+
+// store the order. (lowest-highest)
 public class store implements Comparable <store> {
 	 final int id;
 	 final float price;

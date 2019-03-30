@@ -3,7 +3,7 @@ package bot;
 
 
 public class Initialization {
-	String s,sc;
+	String s,sc; 
 	float Gprice=0,Ggap=0;
 	float valvevalue=(float) 0.5;
 	int amount=10;
@@ -24,7 +24,8 @@ public class Initialization {
 		Ggap=gap;
 	}
 
-
+	
+	
 	public void initial() {
 		
 		if (buy_turn) {
@@ -35,29 +36,32 @@ public class Initialization {
 		}
 		
 	}
+	
+	// create the buy order string
 	public void initial_buy() {
 		float price=(float) (Gprice+Math.random()-Ggap);
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 	}
-	
+	// create the sell order string
 	public void initial_sell() {
 		float price=(float) (Gprice+Math.random()+Ggap);
 		s="p,s," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 	}
 	
+	//return the order string
 	public String send() {
 		return s;
 	}
-	
+	//return the cancel string
 	public String sendcancle() {
 		cancled++;
 		return sc;
 		
 	}
 	
-
+	
 	public void response() {
 		 if (buy_turn) {
 			 buy();
@@ -66,14 +70,14 @@ public class Initialization {
 			 sell();
 		 }
 	}
-	
+	// create the buy order string
 	public void buy() {
 		float price=(float) (match_price-Math.random()/2);
 		s="p,b," + String.valueOf(price);
 		s=s + "," + String.valueOf(amount) + "," + String.valueOf(++orderId) + "\n";
 		countbuy++;
 	}
-	
+	// create the sell order string
 	public void sell() {
 		float price=(float) (match_price+Math.random()/2);
 		s="p,s," + String.valueOf(price);

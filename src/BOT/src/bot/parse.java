@@ -14,14 +14,10 @@ public class parse {
 	}
 	
 	public void run() {
-		//String regEx = "[^0-9]";
-		//Pattern p = Pattern.compile(regEx);
-		//Matcher m = p.matcher(str);
-		//String string = m.replaceAll(" ").trim();
-		//String[] strArr = string.split(" ");
 		
 //		System.out.println(str);
-		String regex = "\\d+(\\.\\d+)?";
+		String regex = "\\d+(\\.\\d+)?";   //regular expression ： extract decimals or integers
+		
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {

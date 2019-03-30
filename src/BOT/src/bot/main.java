@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+// control the socket and the lock; 
 
 public class main {
 	public static Object lock = new Object();

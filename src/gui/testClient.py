@@ -42,7 +42,6 @@ c = Client(ip)
 threading.Thread(target=c.receiveLoop).start()
 c.send("generateExampleData")
 
-
 class Graph():
     """Class to plot data to a canvas"""
     def __init__(self,canvasRef,maxCoords,CW,CH,padding=200):
@@ -66,18 +65,6 @@ class Graph():
         if len(self.values) < 1:
             return
 
-        #Logic to make sure that not all y values are the same
-        #Avoids /0 error later when scaling the data
-        v = 0
-        ok = False
-        while v < len(self.values):
-            if self.values[v][1] != self.values[0][1]:
-                ok = True
-                break
-            v += 1
-        if not ok:
-            return
-
         #Establish minimums and maximums for the data
         minx = self.values[0][0]
         maxx = self.values[-1][0]
@@ -88,6 +75,14 @@ class Graph():
                 miny = c[1]
             elif c[1] > maxy:
                 maxy = c[1]
+
+        #Prevent the scales from being 0, but favour using only the necessary graph space
+        if maxx-minx == 0:
+            maxx+=0.5
+            minx-=0.5
+        if maxy-miny == 0:
+            maxy+=0.5
+            miny-=0.5
 
         #Calculate the scale
         scalex = maxx-minx
@@ -130,9 +125,7 @@ root.title("Live Graph")
 canvas = tkinter.Canvas(master=root,width=CW,height=CH,bg="#000000")
 canvas.grid(row=0,column=0)
 
-g = Graph(canvas,1000,CW,CH)
-for x in range(100):
-    g.addCoords((0,0))
+g = Graph(canvas,100,CW,CH)
 
 def graphUpdateLoop():
     global plotData, plotDataLock

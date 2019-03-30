@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class parse {
 	String str;
 	String id;
-	int []x = new int[10];
+	float []x = new float[5];
 	int i = 0;
 	public parse(String str) {
 		this.str = str;
@@ -14,26 +14,29 @@ public class parse {
 	}
 	
 	public void run() {
-		//String regEx = "[^0-9]";
-		//Pattern p = Pattern.compile(regEx);
-		//Matcher m = p.matcher(str);
-		//String string = m.replaceAll(" ").trim();
-		//String[] strArr = string.split(" ");
 		
-		String regex = "\\d+";
+//		System.out.println(str);
+		String regex = "\\d+(\\.\\d+)?";   //regular expression ： extract decimals or integers
+		
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
-            x[++i] = Integer.parseInt(matcher.group());
-            //System.out.println(x);
+            x[i++] = (float) Double.parseDouble(matcher.group());
+//            System.out.println(x[i-1]);
         }
 	}
 	
-	public int getid() {
-		System.out.println(x[0]);
-		return x[0];
+
+	public int getid(int y) {
+		return (int)x[y];
+
 	}
 	
+	
+
+	public float getprice() {
+		return x[2];
+	}
 	
 	
 

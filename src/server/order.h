@@ -2,7 +2,7 @@
 #define ORDER_H_
 
 
-// order's status: 0 in book; 1 matched; 2 cancel; 3 NACH
+// order's status: 0 in book; 1 matched; 2 cancel
 typedef struct order
 {
 	double price;

@@ -5,12 +5,21 @@
 #include "order.h"
 #include <stdio.h>
 
+/**
+* key: exchange ID
+* value: an order with specific exchange ID
+*/
 typedef struct priceBucket{
 	 int exchangeId;
 	 struct order * curOrder;
 	 UT_hash_handle hh;
 }priceBucket;
 
+/**
+* two book in system, one for sell, one for buy
+* key: price
+* value: a hash variable storing orders with specific price for buy or sell
+*/
 typedef struct book {
     double price;
     priceBucket * pb;

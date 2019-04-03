@@ -1,3 +1,11 @@
+/**
+ * @file requestHandlr.c
+ * @brief implementation of requestHandlr.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "requestHandlr.h"
 #include <pthread.h>
 #include <semaphore.h>

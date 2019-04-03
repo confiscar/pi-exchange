@@ -1,3 +1,11 @@
+/**
+ * @file orderBook.h
+ * @brief defines data structure book and priceBucket and functions handle relation between order and book
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #ifndef ORDERBOOK_H_
 #define ORDERBOOK_H_
 
@@ -6,8 +14,8 @@
 #include <stdio.h>
 
 /**
-* key: exchange ID
-* value: an order with specific exchange ID
+* key: exchange ID\n
+* value: an order with specific exchange ID\n
 */
 typedef struct priceBucket{
 	 int exchangeId;
@@ -16,9 +24,9 @@ typedef struct priceBucket{
 }priceBucket;
 
 /**
-* two book in system, one for sell, one for buy
-* key: price
-* value: a hash variable storing orders with specific price for buy or sell
+* two book in system, one for sell, one for buy\n
+* key: price\n
+* value: a hash variable storing orders with specific price for buy or sell\n
 */
 typedef struct book {
     double price;
@@ -27,12 +35,18 @@ typedef struct book {
 } book;
 
 /**
-* temporary set return type to void, to be decided further
+* add a certain order to its corresponding book
+* @param curOrder the order to be added to book
+* @param curBook the book which current order should be added to
+*
 */
 void addToBook(order * curOrder, book ** curBook);
 
 /**
-* temporary set return type to void, to be decided further
+* delete a certain order from buy/sell book
+* @param curOrder the order to be deleted from book
+* @param curBook the book which current order should be deleted from
+*
 */
 void deleteFromBook(order * curOrder, book ** curBook);
 

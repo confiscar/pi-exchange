@@ -1,3 +1,11 @@
+/**
+ * @file tcp_server.c
+ * @brief include main function of server
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -24,6 +32,12 @@ int user_id = 0;
 extern double buyPrice;
 extern double sellPrice;
 
+/**
+* add userId-socketId pair to notification poll if it is not in
+*
+* @param user_id user ID assigned by server
+* @param conn connect/socket ID
+*/
 void addToNotificationPoll(int user_id, int conn){
     notificationPoll * temp = NULL;
     HASH_FIND_INT(nPoll, &user_id, temp);
@@ -37,6 +51,12 @@ void addToNotificationPoll(int user_id, int conn){
     }
 }
 
+/**
+ * main function of server\n
+ * create a thread to handle notification\n
+ * continuously check if there's a new client connected\n
+ * create a thread for each connected client to handle request\n
+ */
 int main(int argc, char **argv)
 {
     //Socket descriptor that defines the TCP connection for IPV4

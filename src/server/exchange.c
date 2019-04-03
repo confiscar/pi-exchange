@@ -1,3 +1,11 @@
+/**
+ * @file exchange.c
+ * @brief implementation of exchange.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "exchange.h"
 #include <stdio.h>
 #include "notification.h"

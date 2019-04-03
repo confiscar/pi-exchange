@@ -1,3 +1,11 @@
+/**
+ * @file order.c
+ * @brief implementation of order.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "order.h"
 #include <stdlib.h>
 

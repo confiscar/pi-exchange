@@ -14,14 +14,21 @@ public class sender extends Thread {
 	String str = null;
 	Socket client = null;
 
-	public static Boolean cancle = true; // Alternate between cancellation and supplement
+	public static Boolean cancel = true; // Alternate between cancellation and supplement
 	
+	
+	/**
+	 * send information to server and parse it.
+	 * choose the corresponding operation.
+	 */
 	public sender(Socket client, Object lock) {
 		this.client = client;
 		this.lock = lock;
 	}
 	
-	
+	/**
+	 * send the information.
+	 */
 	public void run() {
 		PrintStream out = null;
 		try {
@@ -68,16 +75,16 @@ public class sender extends Thread {
 			
 			
 			// cancel order when gap is large
-			if ((Initialization.gap) && (cancle)) {
+			if ((Initialization.gap) && (cancel)) {
 				a.gap();
-				str = a.sendcancle();
-				System.out.println("cancle send: " + str);
+				str = a.sendcancel();
+				System.out.println("cancel send: " + str);
 				out.print(str);
 				out.flush();
 			}
 			
 			// send order when the order have been canceled
-			if ((Initialization.gap) && (!cancle)) {
+			if ((Initialization.gap) && (!cancel)) {
 				str = a.send();
 				System.out.println("str send: " + str);
 				out.print(str);

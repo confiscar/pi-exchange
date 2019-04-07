@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// receive the information from server
-// parse the information and choose the corresponding method 
+
 
 
 
@@ -23,11 +22,21 @@ public class receiver extends Thread{
 	public static List<store> buylist = new ArrayList<>();  // a list to store buy order 
 	public static List<store> selllist = new ArrayList<>(); // a list to store sell order 
 	
+	/**
+	 * Constructor
+	 * @param client - the socket used to connect with server
+	 * @param lock - Mutual exclusion
+	 */
+	
 	public receiver(Socket client, Object lock) {
 		this.client = client;
 		this.lock = lock;
 	}
-		
+	
+	/**
+	 * receiver information from server and parse it.
+	 * choose the corresponding operation.
+	 */
 	public void run() {
 		byte[] readResult=new byte[1024];
 		while (true) {
@@ -76,7 +85,7 @@ public class receiver extends Thread{
 							float best_sell = selllist.get(0).price;
 							
 							System.out.println("gap: " + (best_sell - best_buy));
-							if ((best_sell - best_buy)>1.5) {
+							if ((best_sell - best_buy)>3) {
 								Initialization.gap = true; 		// Start dealing with large gap
 							}
 						}
@@ -90,20 +99,20 @@ public class receiver extends Thread{
 							float best_buy = buylist.get(Initialization.number_stored-1).price;
 							float best_sell = selllist.get(0).price;
 							System.out.println("gap: " + (best_sell - best_buy));
-							if ((best_sell - best_buy)>1.5) {
+							if ((best_sell - best_buy)>3) {
 								Initialization.gap = true;
 							}
 						}
 					}
 					
 					if (Initialization.gap) {
-						System.out.println("cancled: "+ Initialization.cancled);
-						sender.cancle = true;  // turn to cancel;
+						System.out.println("canceld: "+ Initialization.canceld);
+						sender.cancel = true;  // turn to cancel;
 						
 						
-						if (Initialization.cancled == 4)  // have cancelled a number of order, the gap is back to normal
+						if (Initialization.canceld == (Initialization.number_stored / 10))  // have cancelled a number of order, the gap is back to normal
 						{
-							Initialization.cancled = 0;
+							Initialization.canceld = 0;
 							Initialization.gap = false;
 							continue;
 						}
@@ -134,7 +143,7 @@ public class receiver extends Thread{
 				// server cancel a order to the book
 				if (status == 2) 
 				{
-					if (Initialization.cancle_buy_turn) {
+					if (Initialization.cancel_buy_turn) {
 					//	System.out.println("buy remove: ");
 						buylist.remove(0);
 					}
@@ -142,7 +151,7 @@ public class receiver extends Thread{
 					//	System.out.println("sell remove: ");
 						selllist.remove(Initialization.number_stored-1);
 					}	
-					sender.cancle = false;  //turn to supplement;
+					sender.cancel = false;  //turn to supplement;
 					//System.out.println("next start:");
 					synchronized(main.lock){
 						main.lock.notify();
@@ -171,13 +180,6 @@ public class receiver extends Thread{
 					//System.out.println("notify");
 				}
 			}
-			
-//			for (int i=0;i<buylist.size();i++) {
-//				System.out.println("id: " + buylist.get(i).id + "   " + buylist.get(i).price );
-//			}
-//			for (int i=0;i<selllist.size();i++) {
-//				System.out.println("id: " + selllist.get(i).id + "   " + selllist.get(i).price );
-//			}
 			
 			
 			

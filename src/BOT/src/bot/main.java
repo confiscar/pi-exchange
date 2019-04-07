@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-// control the socket and the lock; 
 
+/**
+ * control the socket and the lock; 
+ * 
+ * @author shenhuan
+ */
 public class main {
 	public static Object lock = new Object();
 	 public static void main(String[] args) throws UnknownHostException, IOException{  

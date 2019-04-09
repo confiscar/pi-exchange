@@ -1,3 +1,11 @@
+/**
+ * @file requestHandlr.h
+ * @brief defines function of handling request
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "exchange.h"
 
 #include <sys/types.h>
@@ -12,6 +20,7 @@
 #include <sys/shm.h>
 
 /**
-* handle request with different parameters
-*/
+ * handle request with different parameters
+ * @param sockfd the userId-clientId(socket id) pair
+ */
 void handleRequest(user_client * sockfd);

@@ -1,17 +1,25 @@
+/**
+ * @file exchange.c
+ * @brief implementation of exchange.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "exchange.h"
 #include <stdio.h>
 #include "notification.h"
 
 book * buyBook = NULL;
 book * sellBook = NULL;
-float buyPrice = 0;
-float sellPrice = 0;
+double buyPrice = 0;
+double sellPrice = 0;
 
 // not any of orders are freed currently
 // decide when to free once the way to inform client is decided
 /// status of order: 0 not matched, 1 matched, 2 canceled
 
-order * placeBuyOrder(float price, int amount, int orderId, int userId){
+order * placeBuyOrder(double price, int amount, int orderId, int userId){
     order * currentOrder = generateOrder(price, amount, orderId, userId);
     order * temp = matchOrder(currentOrder, &sellBook);
     // if the order is not matched, add it to buy book and update the best sell price
@@ -24,12 +32,12 @@ order * placeBuyOrder(float price, int amount, int orderId, int userId){
     } else {
         if(buyPrice == price){
             book * tempBook = NULL;
-            HASH_FIND(hh, sellBook, &price, 4, tempBook);
+            HASH_FIND(hh, sellBook, &price, 8, tempBook);
             if(tempBook == NULL){
-                int tempBuyPrice = 0;
+                double tempBuyPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
                 for(tempBook = sellBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
-                    if(tempBuyPrice > tempBook -> price || buyPrice == 0){
+                    if(tempBuyPrice > tempBook -> price || tempBuyPrice == 0){
                         tempBuyPrice = tempBook -> price;
                     }
                 }
@@ -43,12 +51,12 @@ order * placeBuyOrder(float price, int amount, int orderId, int userId){
     return currentOrder;
 }
 
-order * cancelBuyOrder(float price, int exchangeId){
+order * cancelBuyOrder(double price, int exchangeId){
     book * tempBook = NULL;
     priceBucket * tempPriceBucket = NULL;
     priceBucket * orderPriceBucket = NULL;
     order * tempOrder = NULL;
-    HASH_FIND(hh, buyBook, &price, 4, tempBook);
+    HASH_FIND(hh, buyBook, &price, 8, tempBook);
     // check if price exists in book
     if(tempBook == NULL){
         return tempOrder;
@@ -66,7 +74,7 @@ order * cancelBuyOrder(float price, int exchangeId){
     return tempOrder;
 }
 
-order * placeSellOrder(float price, int amount, int orderId, int userId){
+order * placeSellOrder(double price, int amount, int orderId, int userId){
     order * currentOrder = generateOrder(price, amount, orderId, userId);
     order * temp = matchOrder(currentOrder, &buyBook);
     // if the order is not matched, add it to sell book and update the best buy price
@@ -79,9 +87,9 @@ order * placeSellOrder(float price, int amount, int orderId, int userId){
     } else {
         if(sellPrice == price){
             book * tempBook = NULL;
-            HASH_FIND(hh, buyBook, &price, 4, tempBook);
+            HASH_FIND(hh, buyBook, &price, 8, tempBook);
             if(tempBook == NULL){
-                int tempSellPrice = 0;
+                double tempSellPrice = 0;
                 // loop through the sell book to find the lowest price (best buy price)
                 for(tempBook = buyBook; tempBook != NULL; tempBook = (book *)tempBook -> hh.next){
                     if(tempSellPrice < tempBook -> price){
@@ -98,12 +106,12 @@ order * placeSellOrder(float price, int amount, int orderId, int userId){
     return currentOrder;
 }
 
-order * cancelSellOrder(float price, int exchangeId){
+order * cancelSellOrder(double price, int exchangeId){
     book * tempBook = NULL;
     priceBucket * tempPriceBucket = NULL;
     priceBucket * orderPriceBucket = NULL;
     order * tempOrder = NULL;
-    HASH_FIND(hh, sellBook, &price, 4, tempBook);
+    HASH_FIND(hh, sellBook, &price, 8, tempBook);
     // check if price exists in book
     if(tempBook == NULL){
         return tempOrder;
@@ -122,12 +130,12 @@ order * cancelSellOrder(float price, int exchangeId){
 }
 
 order * matchOrder(order * curOrder, book ** curBook){
-    float price = curOrder -> price;
+    double price = curOrder -> price;
     int amount = curOrder -> amount;
     book * tempBook = NULL;
     order * tempOrder = NULL;
     // check if the price exists in the book
-    HASH_FIND(hh, * curBook, &price, 4, tempBook);
+    HASH_FIND(hh, * curBook, &price, 8, tempBook);
     if(tempBook == NULL){
         return tempOrder;
     }

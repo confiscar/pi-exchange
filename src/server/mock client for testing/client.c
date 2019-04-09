@@ -21,7 +21,7 @@ void receiver(int * sock_cli){
     char recvbuf[BUFFER_SIZE];
     while(1){
         recv(sock_fd, recvbuf, 1024, 0);
-        if(recvbuf[0] == '-'){
+        if(recvbuf[0] == 'c'){
             request_status = 1;
         }
         printf("%s", recvbuf);

@@ -4,28 +4,31 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
+
+// send order to the server
+
 public class sender extends Thread {
-	public static boolean initialize = true;
+	public static boolean initialize = false;
 	
-	//public static int status = 0;
 	Object lock;
-	int Gnumber = 100;
 	String str = null;
 	Socket client = null;
-	double newPrice = 0; 
-	int amount = 10; 
-	int buyCount = 0;
-	int sellCount = 0;
-	int orderId = 0;
-	store data = new store();
+
+	public static Boolean cancel = true; // Alternate between cancellation and supplement
 	
+	
+	/**
+	 * send information to server and parse it.
+	 * choose the corresponding operation.
+	 */
 	public sender(Socket client, Object lock) {
 		this.client = client;
 		this.lock = lock;
 	}
 	
-	
-	
+	/**
+	 * send the information.
+	 */
 	public void run() {
 		PrintStream out = null;
 		try {
@@ -35,9 +38,11 @@ public class sender extends Thread {
 			e.printStackTrace();
 		}
 		
-		Initialization a = new Initialization(100,2); 
+		Initialization a = new Initialization(100,1); 
+		
 		
 		while(true) {
+			// wait to be waked up by receiver class
 			synchronized(main.lock){
 				try {
 					//System.out.println("waiting");
@@ -47,19 +52,47 @@ public class sender extends Thread {
 				}
 			}
 			
+			// send order to initialize
 			if (initialize) {
 					a.initial();
 					str=a.send();
-					//System.out.println("send: " + str);
+					System.out.println("send: " + str);
 					out.print(str);
 					out.flush();
 			}
-			else {
-				a.ID(receiver.matchID);
+			
+			
+			// send order when order have been matched
+			if ((!initialize) &&(!Initialization.gap)) {
+				a.response();
 				str = a.send();
+				System.out.println("matched send: " + str);
+				out.print(str);
+				out.flush();
+				
+			}
+			
+			
+			
+			// cancel order when gap is large
+			if ((Initialization.gap) && (cancel)) {
+				a.gap();
+				str = a.sendcancel();
+				System.out.println("cancel send: " + str);
 				out.print(str);
 				out.flush();
 			}
+			
+			// send order when the order have been canceled
+			if ((Initialization.gap) && (!cancel)) {
+				str = a.send();
+				System.out.println("str send: " + str);
+				out.print(str);
+				out.flush();
+			}
+			
+			
+
 			
 		}		
 			

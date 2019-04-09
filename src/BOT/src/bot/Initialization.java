@@ -133,7 +133,7 @@ public class Initialization {
 			else {
 				buy_turn = false;
 				cancel_buy_turn = false;
-				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+","+String.valueOf(receiver.selllist.get(number_stored-1).id);
+				sc = "c,s,"+ String.valueOf(receiver.selllist.get(receiver.selllist.size()-1).price)+","+String.valueOf(receiver.selllist.get(receiver.selllist.size()-1).id);
 				
 				price=(float) (receiver.selllist.get(0).price - Math.random()/100);
 				s="p,s," + String.valueOf(price);

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"bot","l":"Initialization"},{"p":"bot","l":"main"},{"p":"bot","l":"parse"},{"p":"bot","l":"receiver"},{"p":"bot","l":"sender"},{"p":"bot","l":"store"}]

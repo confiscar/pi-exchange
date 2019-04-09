@@ -32,6 +32,7 @@ public class parse {
 //            System.out.println(x[i-1]);
         }
 	}
+
 	/**
 	 * 
 	 * @param y - the index of the number in string
@@ -39,6 +40,7 @@ public class parse {
 	 */
 	public int getid(int y) {
 		return (int)x[y];
+
 	}
 	/**
 	 * 

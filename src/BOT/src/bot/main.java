@@ -14,6 +14,7 @@ public class main {
 	public static Object lock = new Object();
 	 public static void main(String[] args) throws UnknownHostException, IOException{  
 		 
+
 		Socket client = new Socket("192.168.137.220", 8890);
 		
 		client.setSoTimeout(0);

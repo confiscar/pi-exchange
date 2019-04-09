@@ -10,6 +10,7 @@ public class Initialization {
 	
 	public static int number_stored = 2000; 
 	int orderId = 0;
+
 	
 	public static Boolean buy_turn = true;
 	public static Boolean cancel_buy_turn = true;
@@ -36,6 +37,7 @@ public class Initialization {
 	 * initialize the buy price and sell price one by one
 	 */
 	public void initial() {
+
 		if (buy_turn) {
 			initial_buy();
 			}

@@ -1,3 +1,11 @@
+/**
+ * @file requestHandlr.c
+ * @brief implementation of requestHandlr.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "requestHandlr.h"
 #include <pthread.h>
 #include <semaphore.h>
@@ -94,7 +102,7 @@ void handleRequest(user_client * pair)
             if(strcmp(bOs, "b") == 0){
                 temp = cancelBuyOrder(price, exchangeId);
                 if(temp == NULL){
-                    printf("------------------\norder not exist, please check again\n------------------\n");
+                    printf("order not exist, please check again\n");
                     send(sockfd, not_exist_msg, sizeof(not_exist_msg), 0);
                     continue;
                 }
@@ -103,7 +111,7 @@ void handleRequest(user_client * pair)
             } else if(strcmp(bOs, "s") == 0){
                 temp = cancelSellOrder(price, exchangeId);
                 if(temp == NULL){
-                    printf("------------------\norder not exist, please check again\n------------------\n");
+                    printf("order not exist, please check again\n");
                     send(sockfd, not_exist_msg, sizeof(not_exist_msg), 0);
                     continue;
                 }

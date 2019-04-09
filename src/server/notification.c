@@ -1,3 +1,11 @@
+/**
+ * @file notification.c
+ * @brief implementation of notification.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "notification.h"

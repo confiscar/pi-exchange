@@ -1,3 +1,11 @@
+/**
+ * @file orderBook.c
+ * @brief implementation of orderBook.h
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include "orderBook.h"
 
 void addToBook(order * curOrder, book ** curBook){

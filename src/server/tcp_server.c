@@ -1,3 +1,11 @@
+/**
+ * @file tcp_server.c
+ * @brief include main function of server
+ * @mainpage Pi Exchange - Server
+ * @author Ke CHEN
+ * @date 03-04-2019
+ */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -21,9 +29,15 @@
 
 extern notificationPoll *  nPoll;
 int user_id = 0;
-extern float buyPrice;
-extern float sellPrice;
+extern double buyPrice;
+extern double sellPrice;
 
+/**
+* add userId-socketId pair to notification poll if it is not in
+*
+* @param user_id user ID assigned by server
+* @param conn connect/socket ID
+*/
 void addToNotificationPoll(int user_id, int conn){
     notificationPoll * temp = NULL;
     HASH_FIND_INT(nPoll, &user_id, temp);
@@ -37,6 +51,12 @@ void addToNotificationPoll(int user_id, int conn){
     }
 }
 
+/**
+ * main function of server\n
+ * create a thread to handle notification\n
+ * continuously check if there's a new client connected\n
+ * create a thread for each connected client to handle request\n
+ */
 int main(int argc, char **argv)
 {
     //Socket descriptor that defines the TCP connection for IPV4
@@ -89,8 +109,13 @@ int main(int argc, char **argv)
         // assign a user_id to client
         // else add it to notification poll
         memset(sendBuf,0,sizeof(sendBuf));
-        sprintf(sendBuf, "%f,%f\n", sellPrice, buyPrice);
+        sprintf(sendBuf, "best buy: %f\n", buyPrice);
         send(conn, sendBuf, sizeof(sendBuf), 0);
+
+        memset(sendBuf,0,sizeof(sendBuf));
+        sprintf(sendBuf, "best sell: %f\n", sellPrice);
+        send(conn, sendBuf, sizeof(sendBuf), 0);
+
         pthread_t tid;
         user_client * pair = malloc(sizeof(user_client));
         pair -> sockfd = conn;

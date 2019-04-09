@@ -5,12 +5,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
+/**
+ * control the socket and the lock; 
+ * 
+ * @author shenhuan
+ */
 public class main {
 	public static Object lock = new Object();
-	
 	 public static void main(String[] args) throws UnknownHostException, IOException{  
 		 
-		Socket client = new Socket("127.0.0.1", 8890);
+
+		Socket client = new Socket("192.168.137.220", 8890);
 		
 		client.setSoTimeout(0);
 		

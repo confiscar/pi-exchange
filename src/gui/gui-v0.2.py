@@ -1,7 +1,7 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "10.42.0.227:8890"
+HOST_IP = "127.0.0.1:8890"
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -189,6 +189,10 @@ confirmFrame.grid(row=6,column=0,pady=10,padx=5)
 confirmButton = tkinter.Button(confirmFrame,width=10,text="Confirm")
 confirmButton.pack()
 #Confirm button is bound to placeOrder() later on (it must first be defined)
+
+#Create an error message Label
+errorLabel = tkinter.Label(orderFrame,width=10,text="")
+errorLabel.grid(row=7,column=0,columnspan=2)
 
 #Book display
 tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
@@ -457,14 +461,33 @@ class OrderID():
         OrderID.currentID += 1
         return OrderID.currentID
 
+def displayErrorOutput(text,col):
+    errorLabel.config(text=text,fg=col)
+
+#Validate buy/sell form input
+def validateFormInput(quantity):
+    #Make sure it is numeric data
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        displayErrorOutput("Error: Invalid/non-numerical input","#ff0000")
+        return False
+    if quantity < QUANTITY_LOWER_RANGE or quantity > QUANTITY_UPPER_RANGE:
+        displayErrorOutput("Error: Quantity must be in range {0} < quantity < {1}".format(LOWER_QUANTITY_RANGE, UPPER_QUANTITY_RANGE),"#ff0000")
+        return False
+    displayErrorOutput("Success!","#00ff00")
+    return True
+
+
 #Form has been submitted
 def placeOrder():
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
     #Format for the server
-    data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
-    print(data)
-    #Send through socket
-    c.send(data)
+    if validateFormInput(order["quantity"]):
+        data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
+        print(data)
+        #Send through socket
+        c.send(data)
 
 def updateStats():
     global bestBuy, bestSell

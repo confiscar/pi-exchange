@@ -1,5 +1,59 @@
 #!/bin/bash
 
+echo '                                                                                         
+                                                                                                    
+                                      /ydmmmmmmmmmmmmdy-                                            
+                                     /MMMMMMMMMMMMMMMMMN.                                           
+                                     +MMMMMMMMMMMMMMMMMM-                                           
+                      `/++-          +MMMMMd/////+NMMMMM-         `:++:`                            
+                    `+mMMMNh:    `-/smMMMMMh     `mMMMMMho/-`   `/dNMMNd/                           
+                  `+mMMMMMMMNh/ohmNMMMMMMMMs     `dMMMMMMMMNmh+/dMMMMMMMMd/`                        
+                `+dMMMMMMMMMMMMMMMMMMMMNmho`      -sdmNMMMMMMMMMMMMMMMMMMMNh:                       
+              `/dMMMMMMNshNMMMMMMMNhs/-.``          ``.-+ydNMMMMMMMNsyNMMMMMNh:                     
+             /dMMMMMMNs. `:hNMNms/.`                      `./ymMMms-  -yNMMMMMNh-                   
+            .NMMMMMMd-      .--`                              .--.      /NMMMMMMd                   
+             sNMMMMMNh:                                               `/dMMMMMMm/                   
+              -yNMMMMMNs                                             `hMMMMMMmo.                    
+                :NMMMMMd                   ``....``                  .mMMMMMm.                      
+               `yMMMMMh.              `./shdmmNNmmdho:.               -mMMMMMo                      
+               sMMMMMh`             .+hNMMMMMMMMMMMMMMmh/`             .mMMMMN/                     
+        ``````/MMMMMd`            `oNMMMMMMMMNNNNMMMMMMMMm/`            -NMMMMm.`````               
+      `ohdddddNMMMMM-            :dMMMMMMmy+:-.--/ohNMMMMMMh`            +MMMMMmdddddh+             
+      yMMMMMMMMMMMMs            :NMMMMMm/`          .oNMMMMMd.           `dMMMMMMMMMMMM/            
+      dMMMMMMMMMMNd.           `NMMMMMy`              -mMMMMMy            :mMMMMMMMMMMMo            
+      dMMMMMy::::-             oMMMMMm`                -MMMMMM-            `:::::dMMMMMo            
+      dMMMMM+                  yMMMMMo                  dMMMMM/                  hMMMMMo            
+      dMMMMM+                  yMMMMMs                  dMMMMM/                  hMMMMMo            
+      dMMMMMhooo+/`            +MMMMMm.                :MMMMMN-            .+oooomMMMMMo            
+      dMMMMMMMMMMMm.            dMMMMMd.              :NMMMMMs            /NMMMMMMMMMMMo            
+      sMMMMMMMMMMMMy            .mMMMMMNs-          :yMMMMMMh`           `mMMMMMMMMMMMM:            
+       /syyyyymMMMMM-            .hMMMMMMMmy+/::/oymMMMMMMMs             oMMMMMhyyyyys-             
+              :NMMMMm.             /dMMMMMMMMMMMMMMMMMMMMh-             /MMMMMd`                    
+               +MMMMMd.             `:smMMMMMMMMMMMMMNdo.              :NMMMMN-                     
+                sMMMMMm-               `-/oyhddddhyo:.`               +NMMMMN:                      
+               `+NMMMMMm                     ````                    .NMMMMMm:                      
+             `/dMMMMMMN+                                             `sNMMMMMNh:                    
+            `hMMMMMMNs.                                                -yNMMMMMNs                   
+            `NMMMMMMm:     `:+/-`                            `-/+:`    `+NMMMMMMh                   
+             -yNMMMMMNh: `+mMMMNdo:.                     `.:sdNMMNh/``/dMMMMMMNs`                   
+               -yNMMMMMNhdMMMMMMMMMmds+:-.         `.-:+ydNMMMMMMMMMhdMMMMMMNs.                     
+                 :hNMMMMMMMMMMNMMMMMMMMMNmh-      :dmNMMMMMMMMMNMMMMMMMMMMNs.                       
+                   :hNMMMMMMmo-:shmNMMMMMMMy     `mMMMMMMMNmho:-yNMMMMMMNs-                         
+                     :hNMMms.     .-/hMMMMMh     `mMMMMMs/-`     -yNMMNy-                           
+                       -::.          +MMMMMmssssssNMMMMM-          .::.                             
+                                     +MMMMMMMMMMMMMMMMMM-                                           
+                                     :NMMMMMMMMMMMMMMMMm`                                           
+                                      -osyyyyyyyyyyyys+.        '
+
+sleep 1
+
+echo 'Getting dependences for PI-EXCHANGE'
+sleep 1
+echo '.'
+sleep 1
+echo '..'
+sleep 1
+echo '...'
 sudo apt-get update -y
 echo -e $TEXT_YELLOW
 echo 'APT update finished...'
@@ -14,8 +68,8 @@ sudo apt-get upgrade -y
 echo -e $TEXT_YELLOW
 echo 'APT upgrade finished...'
 echo -e $TEXT_RESET
-
-sudo apt-add-repository ppa:webupd8team/java
+ 
+sudo add-apt-repository ppa:linuxuprising/java
 echo -e $TEXT_YELLOW
 echo 'Added Repository...'
 echo -e $TEXT_RESET
@@ -23,9 +77,9 @@ sudo apt-get update -y
 echo -e $TEXT_YELLOW
 echo 'APT update finished...'
 echo -e $TEXT_RESET
-sudo apt-get install oracle-java8-installer
+sudo apt-get install oracle-java10-installer
 echo -e $TEXT_YELLOW
-echo 'finished installing Java 8'
+echo 'finished installing Java 10'
 echo -e $TEXT_RESET
 
 sudo apt install python3-pip

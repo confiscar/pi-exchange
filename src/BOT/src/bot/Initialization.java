@@ -10,6 +10,7 @@ public class Initialization {
 	
 	public static int number_stored = 2000; 
 	int orderId = 0;
+
 	
 	public static Boolean buy_turn = true;
 	public static Boolean cancel_buy_turn = true;
@@ -36,6 +37,7 @@ public class Initialization {
 	 * initialize the buy price and sell price one by one
 	 */
 	public void initial() {
+
 		if (buy_turn) {
 			initial_buy();
 			}
@@ -133,7 +135,7 @@ public class Initialization {
 			else {
 				buy_turn = false;
 				cancel_buy_turn = false;
-				sc = "c,s,"+ String.valueOf(receiver.selllist.get(number_stored-1).price)+","+String.valueOf(receiver.selllist.get(number_stored-1).id);
+				sc = "c,s,"+ String.valueOf(receiver.selllist.get(receiver.selllist.size()-1).price)+","+String.valueOf(receiver.selllist.get(receiver.selllist.size()-1).id);
 				
 				price=(float) (receiver.selllist.get(0).price - Math.random()/100);
 				s="p,s," + String.valueOf(price);

@@ -1,7 +1,11 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "127.0.0.1:8890"
+HOST_IP = "100.65.195.11:43242"
+
+#Simulation Settings
+START_BALANCE = 200
+START_STOCK_COUNT = 50
 
 #Order form constraints
 PRICE_LOWER_RANGE = 0
@@ -13,12 +17,13 @@ QUANTITY_UPPER_RANGE = 10000
 
 #Width and heights of the window/screen
 FEEDWIDTH = 100
-TABLE_WIDTH = 2
+TABLE_WIDTH = 5
 TABLE_HEIGHT = 5
 
 #Graph Settings
 DELAY_BEFORE_AUTO_DRAW = 2000000
 GRAPH_MAX_COORDS = 100
+PADDING = 200
 
 import tkinter
 import random
@@ -35,8 +40,8 @@ RELIEF = tkinter.RIDGE
 import time
 
 #Variable to store the balance locally
-balance = 0
-stockCount = 0
+balance = 200
+stockCount = 50
 
 #Variables for best buy and sell
 bestBuy = None
@@ -197,8 +202,8 @@ errorLabel.grid(row=7,column=0,columnspan=2)
 #Book display
 tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
 tableFrame.grid(row=3,column=1)
-buyTableLabel = tkinter.Label(tableFrame, text="Buy", pady=4, font=("",12))
-buyTableLabel.grid(row=0,column=0, columnspan=2)
+tableLabel = tkinter.Label(tableFrame, text="Your Orders", pady=4, font=("",12))
+tableLabel.grid(row=0,column=0, columnspan=2)
 
 class Table():
     """Class to act as a table widget"""
@@ -212,7 +217,7 @@ class Table():
 
         #Create the headers of the columns
         for x in range(self.width):
-            self.headers.append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
+            self.headers.append(tkinter.Text(self.frame, width=5,height=1,bg="#eeeeef",fg="#666666"))
             self.headers[-1].grid(row=1,column=x)
             self.headers[-1].insert(tkinter.END,self.headerTitles[x])
             self.headers[-1].config(state=tkinter.DISABLED)
@@ -221,7 +226,7 @@ class Table():
         for y in range(1,self.height+1):
             self.rows.append([])
             for x in range(self.width):
-                self.rows[-1].append(tkinter.Text(self.frame, width=10,height=1,bg="#eeeeef",fg="#666666"))
+                self.rows[-1].append(tkinter.Text(self.frame, width=5,height=1,bg="#eeeeef",fg="#666666"))
                 self.rows[-1][-1].grid(row=y+1,column=x)
                 self.rows[-1][-1].config(state=tkinter.DISABLED)
 
@@ -238,28 +243,28 @@ class Table():
         self.rows[row][column].insert(tkinter.END,text)
         self.rows[row][column].config(state=tkinter.DISABLED)
 
-table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["Price","Quantity"])
+table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["ID","Type","Price","Qty","State"])
 
-examplePrice = 4 + random.random()*10
-for y in range(TABLE_HEIGHT):
-    table.insert(0,y,str(examplePrice))
-    table.insert(1,y,random.randint(1,6)*100)
-    examplePrice = examplePrice+random.random()*2
+##examplePrice = 4 + random.random()*10
+##for y in range(TABLE_HEIGHT):
+##    table.insert(0,y,str(examplePrice))
+##    table.insert(1,y,random.randint(1,6)*100)
+##    examplePrice = examplePrice+random.random()*2
 
 #created second frame with class
-tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
-tableFrame2.grid(row=4,column=1)
-buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4, font=("",12))
-buyTableLabel.grid(row=0, column=0, columnspan=2)
+##tableFrame2 = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
+##tableFrame2.grid(row=4,column=1)
+##buyTableLabel = tkinter.Label(tableFrame2, text="Sell", pady=4, font=("",12))
+##buyTableLabel.grid(row=0, column=0, columnspan=2)
 
 
-table2 = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame2, ["Price","Quantity"])
-
-examplePrice = 4 + random.random()*10
-for y in range(TABLE_HEIGHT):
-    table2.insert(0,y,str(examplePrice))
-    table2.insert(1,y,random.randint(1,6)*100)
-    examplePrice = examplePrice+random.random()*2
+##table2 = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame2, ["Price","Quantity"])
+##
+##examplePrice = 4 + random.random()*10
+##for y in range(TABLE_HEIGHT):
+##    table2.insert(0,y,str(examplePrice))
+##    table2.insert(1,y,random.randint(1,6)*100)
+##    examplePrice = examplePrice+random.random()*2
 
 #EXTRA STUFF
 #CPU LABEL POWER
@@ -303,6 +308,7 @@ class Client():
                 graphLock.acquire()
                 g.addCoords((x,y))
                 graphLock.release()
+                updatePriceInput()
             if "best buy" in data.keys():
                 bestBuy = data["best buy"]
                 x = data["time"]
@@ -310,6 +316,7 @@ class Client():
                 graphLock2.acquire()
                 g2.addCoords((x,y))
                 graphLock2.release()
+                updatePriceInput()
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -395,7 +402,7 @@ class Graph():
             #Label the balance at the text
             self.canvas.create_text(int(self.CW*((self.values[-1][0]-minx)/scalex))+self.padding//2 + 6,
                                             self.CH-int(self.CH*((self.values[-1][1]-miny)/scaley))+self.padding//2,
-                                            fill=col,text="£"+str(self.values[-1][1]),anchor=tkinter.NW)
+                                            fill=col,text="£"+str(round(self.values[-1][1],8)),anchor=tkinter.NW)
 
         #Create axis based on self.padding
         self.canvas.create_line(self.padding//2,self.padding//2,self.padding//2,self.CH+self.padding//2,fill="#ffffff",width=2)
@@ -418,8 +425,8 @@ class Graph():
 
 
 #Create graphs
-g = Graph(canvas,GRAPH_MAX_COORDS)
-g2 = Graph(canvas2,GRAPH_MAX_COORDS)
+g = Graph(canvas,GRAPH_MAX_COORDS,padding=PADDING)
+g2 = Graph(canvas2,GRAPH_MAX_COORDS,padding=PADDING)
 
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
@@ -489,17 +496,22 @@ def placeOrder():
         #Send through socket
         c.send(data)
 
-def updateStats():
+def updatePriceInput():
     global bestBuy, bestSell
-    cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))
-    #Set the price to current buy or sell price
     priceInput.config(state=tkinter.NORMAL)
     priceInput.delete(0,tkinter.END)
     if buyOrSell.get()[0] == 'b':
-        priceInput.insert(0,str(bestBuy))
+        if bestBuy != None:
+            priceInput.insert(0,str(round(bestBuy,10)))
     elif buyOrSell.get()[0] == 's':
-        priceInput.insert(0,str(bestSell))
+        if bestSell != None:
+            priceInput.insert(0,str(round(bestSell,10)))
     priceInput.config(state=tkinter.DISABLED)
+    
+
+def updateStats():
+    cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))
+    #Set the price to current buy or sell price
     root.after(500,updateStats)
 
 

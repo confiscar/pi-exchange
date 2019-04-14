@@ -628,8 +628,8 @@ def updatePriceInput():
     priceInput.config(state=tkinter.DISABLED)
 
 #Bind updatePriceInput function to the buy and sell buttons
-buyButton.config(function=updatePriceInput)
-sellButton.config(function=updatePriceInput)
+buyButton.config(command=updatePriceInput)
+sellButton.config(command=updatePriceInput)
 
 def updateStats():
     cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))

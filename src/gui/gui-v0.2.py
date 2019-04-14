@@ -1,10 +1,10 @@
 #CONSTANTS
 
 #Socket Options
-HOST_IP = "100.65.195.11:43242"
+HOST_IP = "100.65.195.10:43242"
 
 #Simulation Settings
-START_BALANCE = 200
+START_BALANCE = 10000
 START_STOCK_COUNT = 50
 
 #Order form constraints
@@ -15,15 +15,17 @@ PRICE_ACCURACY = 0.00001
 QUANTITY_LOWER_RANGE = 0
 QUANTITY_UPPER_RANGE = 10000
 
-#Width and heights of the window/screen
-FEEDWIDTH = 100
+#Table Settings
+FEEDWIDTH = 80
 TABLE_WIDTH = 5
-TABLE_HEIGHT = 5
+TABLE_HEIGHT = 20
+CELL_WIDTH = 7
 
 #Graph Settings
 DELAY_BEFORE_AUTO_DRAW = 2000000
 GRAPH_MAX_COORDS = 100
 PADDING = 200
+SIDE_PANEL_SIZE = 400
 
 import tkinter
 import random
@@ -40,8 +42,10 @@ RELIEF = tkinter.RIDGE
 import time
 
 #Variable to store the balance locally
-balance = 200
-stockCount = 50
+balance = START_BALANCE
+virtualBalance = START_BALANCE
+stockCount = START_STOCK_COUNT
+virtualStockCount = START_STOCK_COUNT
 
 #Variables for best buy and sell
 bestBuy = None
@@ -110,15 +114,15 @@ root.attributes("-fullscreen",False)
 
 
 #Create canvas frame
-canvasFrame = tkinter.Frame(root,width=win_width-300,height=(win_height-100))
+canvasFrame = tkinter.Frame(root,width=win_width-SIDE_PANEL_SIZE,height=(win_height-120))
 canvasFrame.grid(row=0,column=0,rowspan=10)
 
 #Create canvas for graph
-canvas = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#001100')
+canvas = tkinter.Canvas(canvasFrame,width=win_width-SIDE_PANEL_SIZE,height=(win_height-120)/2,bg='#001100')
 canvas.grid(row=0,column=0)
 
 #Create a canvas for the other graph
-canvas2 = tkinter.Canvas(canvasFrame,width=win_width-300,height=(win_height-100)/2,bg='#110000')
+canvas2 = tkinter.Canvas(canvasFrame,width=win_width-SIDE_PANEL_SIZE,height=(win_height-120)/2,bg='#110000')
 canvas2.grid(row=1,column=0)
 
 
@@ -138,8 +142,12 @@ orderFrame = tkinter.Frame(root, relief=RELIEF, bd=3, width=100)
 orderFrame.grid(row=1,column=1,columnspan=2)
 
 #Balance display
-balanceText = tkinter.Label(orderFrame,text="Balance (£): {0}\nStock Count: {1}".format(balance,stockCount))
+balanceText = tkinter.Label(orderFrame,text="Balance (£): {0} ({1})\nStock Count: {2} ({3})".format(balance, virtualBalance, stockCount, virtualStockCount))
 balanceText.grid(row=0,column=0)
+
+def updateBalanceOutput():
+    global balance, virtualBalance, stockCount
+    balanceText.config(text="Balance (£): {0} ({1})\nStock Count: {2} ({3})".format(balance, virtualBalance, stockCount, virtualStockCount))
 
 orderLabel = tkinter.Label(orderFrame, text="Order Form", font=("",12))
 orderLabel.grid(row=1,column=0)
@@ -196,11 +204,11 @@ confirmButton.pack()
 #Confirm button is bound to placeOrder() later on (it must first be defined)
 
 #Create an error message Label
-errorLabel = tkinter.Label(orderFrame,width=10,text="")
-errorLabel.grid(row=7,column=0,columnspan=2)
+errorLabel = tkinter.Label(orderFrame,text="")
+errorLabel.grid(row=7,column=0,columnspan=5)
 
-#Book display
-tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=30, pady=10)
+#Order tables
+tableFrame = tkinter.Frame(root, relief=RELIEF, bd=3, padx=10, pady=10)
 tableFrame.grid(row=3,column=1)
 tableLabel = tkinter.Label(tableFrame, text="Your Orders", pady=4, font=("",12))
 tableLabel.grid(row=0,column=0, columnspan=2)
@@ -208,16 +216,17 @@ tableLabel.grid(row=0,column=0, columnspan=2)
 class Table():
     """Class to act as a table widget"""
 
-    def __init__(self,width,height,frame,headers):
+    def __init__(self,width,height,frame,headers,cellWidth=CELL_WIDTH):
         """Initialise object and place Text widgets into the frame"""
         self.width,self.height,self.frame = width,height,frame
         self.headerTitles = headers
         self.headers = []
         self.rows = []
+        self.cellWidth = cellWidth
 
         #Create the headers of the columns
         for x in range(self.width):
-            self.headers.append(tkinter.Text(self.frame, width=5,height=1,bg="#eeeeef",fg="#666666"))
+            self.headers.append(tkinter.Text(self.frame, width=self.cellWidth,height=1,bg="#eeeeef",fg="#666666"))
             self.headers[-1].grid(row=1,column=x)
             self.headers[-1].insert(tkinter.END,self.headerTitles[x])
             self.headers[-1].config(state=tkinter.DISABLED)
@@ -226,7 +235,7 @@ class Table():
         for y in range(1,self.height+1):
             self.rows.append([])
             for x in range(self.width):
-                self.rows[-1].append(tkinter.Text(self.frame, width=5,height=1,bg="#eeeeef",fg="#666666"))
+                self.rows[-1].append(tkinter.Text(self.frame, width=self.cellWidth,height=1,bg="#eeeeef",fg="#666666"))
                 self.rows[-1][-1].grid(row=y+1,column=x)
                 self.rows[-1][-1].config(state=tkinter.DISABLED)
 
@@ -244,6 +253,38 @@ class Table():
         self.rows[row][column].config(state=tkinter.DISABLED)
 
 table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["ID","Type","Price","Qty","State"])
+
+myOrders = []
+#Example order
+
+def addOrder(id_,type_,price,quantity):
+    global myOrders
+    myOrders.append({"id":id_,"type":type_,"price":price,"quantity":quantity,"state":-1})
+
+def updateOrderState(id_,newState):
+    for i in range(len(myOrders)):
+        if myOrders[i]["id"] == id_:
+            myOrders[i]["state"] = newState
+
+def updateTable():
+    global myOrders, table
+    #Get most recent TABLE_HEIGHT amount of orders
+    displayFrom = len(myOrders)-TABLE_HEIGHT
+    displayFrom = max(displayFrom,0)
+    row = 0
+    for i in range(displayFrom,len(myOrders)):
+        table.insert(0,row,myOrders[i]["id"])
+        table.insert(1,row,myOrders[i]["type"])
+        table.insert(2,row,myOrders[i]["price"])
+        table.insert(3,row,myOrders[i]["quantity"])
+        table.insert(4,row,{-1:"Waiting...",0:"Table",1:"Matched",2:"Cancel"}[myOrders[i]["state"]])
+        row += 1
+    while row < TABLE_HEIGHT:
+        for i in range(5):
+            table.insert(i,row,"-")
+        row += 1
+
+updateTable()
 
 ##examplePrice = 4 + random.random()*10
 ##for y in range(TABLE_HEIGHT):
@@ -301,22 +342,40 @@ class Client():
             msg = msg.decode()
             print(msg)
             data = parseToDict(msg)
+            print(data)
             if "best sell" in data.keys():
+                #Update best sell price
                 bestSell = data["best sell"]
                 x = data["time"]
                 y = data["best sell"]
+                #Plot to graph
                 graphLock.acquire()
                 g.addCoords((x,y))
                 graphLock.release()
+                #Update the price input to match the best price
                 updatePriceInput()
             if "best buy" in data.keys():
+                #Update best buy price
                 bestBuy = data["best buy"]
                 x = data["time"]
                 y = data["best buy"]
+                #Plot to graph
                 graphLock2.acquire()
                 g2.addCoords((x,y))
                 graphLock2.release()
+                #Update the price input to match the best price
                 updatePriceInput()
+            if "order ID" in data.keys() and "status" in data.keys():
+                updateOrderState(data["order ID"],data["status"])
+                updateTable()
+                #If it has been placed into the book
+                if data["status"] == 0:
+                    freeButton()
+                #If it is matched
+                if data["status"] == 1:
+                    for order in myOrders:
+                        if order["id"] == data["order ID"]:
+                            applyMatch(order)
 
 class Graph():
     """Class to plot data to a canvas"""
@@ -450,11 +509,12 @@ def plot():
     #Call in next mainloop
     root.after(10,plot)
 
-#Scroll through the feed
 scrollAmount = 0
 def scrollFeed():
+    """Scroll through the feed"""
     global scrollAmount
     global feedstr
+    #Update graphical element
     news.config(text=(" "*FEEDWIDTH + feedstr + " "*FEEDWIDTH)[scrollAmount:scrollAmount+FEEDWIDTH])
     scrollAmount += 1
     if scrollAmount+FEEDWIDTH > len(feedstr) + FEEDWIDTH*2:
@@ -469,18 +529,31 @@ class OrderID():
         return OrderID.currentID
 
 def displayErrorOutput(text,col):
+    """Update the error label"""
     errorLabel.config(text=text,fg=col)
 
 #Validate buy/sell form input
-def validateFormInput(quantity):
+def validateFormInput(quantity, price, type_):
+    global virtualBalance, virtualStockCount
     #Make sure it is numeric data
     try:
         quantity = int(quantity)
-    except ValueError:
+        price = float(price)
+    except ValueError:#Impossible conversion implies an invalid input
         displayErrorOutput("Error: Invalid/non-numerical input","#ff0000")
         return False
+    #Potential other errors
     if quantity < QUANTITY_LOWER_RANGE or quantity > QUANTITY_UPPER_RANGE:
-        displayErrorOutput("Error: Quantity must be in range {0} < quantity < {1}".format(LOWER_QUANTITY_RANGE, UPPER_QUANTITY_RANGE),"#ff0000")
+        displayErrorOutput("Error: Quantity must be in range {0} < quantity < {1}".format(QUANTITY_LOWER_RANGE, QUANTITY_UPPER_RANGE),"#ff0000")
+        return False
+    if price < PRICE_LOWER_RANGE or price > PRICE_UPPER_RANGE:
+        displayErrorOutput("Error: Price must be in range {0} < price < {1}".format(PRICE_LOWER_RANGE, PRICE_UPPER_RANGE),"#ff0000")
+        return False
+    if type_ == "buy" and virtualBalance < float(price)*float(quantity):
+        displayErrorOutput("Error: Insufficient funds: £{0} < £{1}".format(virtualBalance,float(price)*float(quantity)),"#ff0000")
+        return False
+    if type_ == "sell" and virtualStockCount < int(quantity):
+        displayErrorOutput("Error: Insufficient stock: {0} < {1}".format(virtualStockCount,quantity),"#ff0000")
         return False
     displayErrorOutput("Success!","#00ff00")
     return True
@@ -488,26 +561,75 @@ def validateFormInput(quantity):
 
 #Form has been submitted
 def placeOrder():
+    global myOrders, virtualBalance, virtualStockCount
+    #Block button until this order is resolved
+    blockButton()
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
     #Format for the server
-    if validateFormInput(order["quantity"]):
-        data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(OrderID.getNextOrderID())
-        print(data)
+    if validateFormInput(order["quantity"],order["price"],order["orderType"]):
+        #Get new unique clientside order ID
+        id_ = OrderID.getNextOrderID()
+
+        #Assemble the data for the server
+        data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(id_)
+        #Add the order to the local client records (table)
+        addOrder(id_,order["orderType"],order["price"],order["quantity"])
+        #Update virtual balances and stock levels
+        if order["orderType"] == "buy":
+            virtualBalance -= float(order["price"])*float(order["quantity"])
+        if order["orderType"] == "sell":
+            virtualStockCount -= int(order["quantity"])
+        #Update graphical parts
+        updateBalanceOutput()
+        updateTable()
         #Send through socket
+        print("Sending:",data)
         c.send(data)
+    else:
+        #Unblock the button
+        freeButton()
+
+def applyMatch(order):
+    """Update balance and stock levels based on order"""
+    global balance, stockCount, virtualBalance, virtualStockCount
+    #If buy order placed, get the goods and pay from your balance
+    if order["type"] == "buy":
+        stockCount += int(order["quantity"])
+        virtualStockCount += int(order["quantity"])
+        balance -= float(order["price"])*float(order["quantity"])
+    elif order["type"] == "sell":
+        stockCount -= int(order["quantity"])
+        balance += float(order["price"])*float(order["quantity"])
+        virtualBalance += float(order["price"])*float(order["quantity"])
+    updateBalanceOutput()
+
+def blockButton():
+    """Disable the button for the user"""
+    confirmButton.config(state=tkinter.DISABLED)
+
+def freeButton():
+    """Enable the button for the user"""
+    confirmButton.config(state=tkinter.NORMAL)    
 
 def updatePriceInput():
+    """Update price input graphical element"""
     global bestBuy, bestSell
+    #Enable editing, remove previous text
     priceInput.config(state=tkinter.NORMAL)
     priceInput.delete(0,tkinter.END)
+    #If buy or sell, insert best buy or best sell price respectively
     if buyOrSell.get()[0] == 'b':
         if bestBuy != None:
             priceInput.insert(0,str(round(bestBuy,10)))
     elif buyOrSell.get()[0] == 's':
         if bestSell != None:
             priceInput.insert(0,str(round(bestSell,10)))
+    #Disable editing
     priceInput.config(state=tkinter.DISABLED)
-    
+
+#Bind updatePriceInput function to the buy and sell buttons
+buyButton.config(function=updatePriceInput)
+sellButton.config(function=updatePriceInput)
 
 def updateStats():
     cputext.config(text="CPU Usage: {0}%\nRAM Usage: {1}%".format(psutil.cpu_percent(),psutil.virtual_memory().percent))

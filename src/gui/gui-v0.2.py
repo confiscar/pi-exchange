@@ -114,6 +114,11 @@ def parseToDict(data):
             #If not a separator line
             if d[0] != '-':
 
+                #Remove pipe characters
+                if len(d) > 0:
+                    if d[0] == '|':
+                        d = d[1:]
+
                 #If multiple key/value pairs on one line, split
                 d = d.split(", ")
                 for pair in d:

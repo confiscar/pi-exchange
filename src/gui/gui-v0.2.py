@@ -1,7 +1,11 @@
 #CONSTANTS
 
-#Socket Options
-HOST_IP = "100.65.195.10:43242"
+#Socket Settings
+#Set OVERWRITE_IP to None to read from config file
+OVERWRITE_IP = "100.65.195.10:43242"
+
+#Enable/disable automatic price inputs
+AUTO_PRICE = False
 
 #Simulation Settings
 START_BALANCE = 10000
@@ -35,7 +39,7 @@ import threading
 import platform
 import psutil
 import time
-
+import os
 #Style Options
 RELIEF = tkinter.RIDGE
 
@@ -50,6 +54,29 @@ virtualStockCount = START_STOCK_COUNT
 #Variables for best buy and sell
 bestBuy = None
 bestSell = None
+
+#Navigate up 2 folders to the config file
+os.chdir("..")
+os.chdir("..")
+
+#Get info from the config file
+with open('config.txt') as fin:
+    # get lines of the file as list
+    lines = fin.readlines()
+    for line in lines:
+        list_ = line.split(": ")
+        if list_[0] == "IP-Address" :
+            HOST_IP = list_[1].strip()
+        elif list_[0] == "Port" :
+            port = list_[1]
+    fin.close()
+
+HOST_IP = HOST_IP + ":" + port
+#Overwrite IP here for testing
+if OVERWRITE_IP != None:
+    HOST_IP = OVERWRITE_IP
+else:
+    print("IP Read from file: "+HOST_IP)
 
 #Code to parse data from socket
 #Possible Formats:
@@ -181,7 +208,8 @@ def ValidateIfNum(self, s, S):
         return valid
         
 priceInput.insert(0,0)
-priceInput.config(state=tkinter.DISABLED)
+if AUTO_PRICE:
+    priceInput.config(state=tkinter.DISABLED)
 priceInput.grid(row=0,column=1)
 
 #Quantity
@@ -614,6 +642,9 @@ def freeButton():
 def updatePriceInput():
     """Update price input graphical element"""
     global bestBuy, bestSell
+    #Break if auto-pricing is off
+    if not AUTO_PRICE:
+        return
     #Enable editing, remove previous text
     priceInput.config(state=tkinter.NORMAL)
     priceInput.delete(0,tkinter.END)

@@ -593,13 +593,15 @@ def placeOrder():
     #Block button until this order is resolved
     blockButton()
     order = {"orderType":buyOrSell.get(),"price":priceInput.get(),"quantity":quantityInput.get()}
+    if AUTO_PRICE:
+        order["price"] = str({"b": bestBuy, "s": bestSell}[order["orderType"][0]])
     #Format for the server
     if validateFormInput(order["quantity"],order["price"],order["orderType"]):
         #Get new unique clientside order ID
         id_ = OrderID.getNextOrderID()
 
         #Assemble the data for the server
-        data = "p," + order["orderType"][0] + "," + str({"b": bestBuy, "s": bestSell}[order["orderType"][0]]) + "," + str(order["quantity"]) + "," + str(id_)
+        data = "p," + order["orderType"][0] + "," + str(order["price"]) + "," + str(order["quantity"]) + "," + str(id_)
         #Add the order to the local client records (table)
         addOrder(id_,order["orderType"],order["price"],order["quantity"])
         #Update virtual balances and stock levels

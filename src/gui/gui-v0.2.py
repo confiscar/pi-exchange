@@ -114,9 +114,9 @@ def parseToDict(data):
             #If not a separator line
             if d[0] != '-':
 
-                #Remove pipe characters
+                #Remove | and ~ characters from the starts of keys
                 if len(d) > 0:
-                    if d[0] == '|':
+                    if d[0] == '|' or d[0] == '~':
                         d = d[1:]
 
                 #If multiple key/value pairs on one line, split
@@ -134,6 +134,17 @@ def parseToDict(data):
     #Return created dictionary object
     return dataDict
 
+def splitIntoPackets(data):
+    packets = [""]
+    for line in data.split("\n"):
+        if line == '-'*18 or line == '~'*18:
+            if packets[-1] != '':
+                packets.append('')
+        else:
+            packets[-1] = packets[-1] + line + '\n'
+    if packets[-1] == '':
+        packets = packets[:-1]
+    return packets
 
 #Create window
 root = tkinter.Tk()
@@ -374,41 +385,42 @@ class Client():
             msg = self.s.recv(2**16)
             msg = msg.decode()
             print(msg)
-            data = parseToDict(msg)
-            print(data)
-            if "best sell" in data.keys():
-                #Update best sell price
-                bestSell = data["best sell"]
-                x = data["time"]
-                y = data["best sell"]
-                #Plot to graph
-                graphLock.acquire()
-                g.addCoords((x,y))
-                graphLock.release()
-                #Update the price input to match the best price
-                updatePriceInput()
-            if "best buy" in data.keys():
-                #Update best buy price
-                bestBuy = data["best buy"]
-                x = data["time"]
-                y = data["best buy"]
-                #Plot to graph
-                graphLock2.acquire()
-                g2.addCoords((x,y))
-                graphLock2.release()
-                #Update the price input to match the best price
-                updatePriceInput()
-            if "order ID" in data.keys() and "status" in data.keys():
-                updateOrderState(data["order ID"],data["status"])
-                updateTable()
-                #If it has been placed into the book
-                if data["status"] == 0:
-                    freeButton()
-                #If it is matched
-                if data["status"] == 1:
-                    for order in myOrders:
-                        if order["id"] == data["order ID"]:
-                            applyMatch(order)
+            for m in splitIntoPackets(msg):
+                data = parseToDict(m)
+                print(data)
+                if "best sell" in data.keys():
+                    #Update best sell price
+                    bestSell = data["best sell"]
+                    x = data["time"]
+                    y = data["best sell"]
+                    #Plot to graph
+                    graphLock.acquire()
+                    g.addCoords((x,y))
+                    graphLock.release()
+                    #Update the price input to match the best price
+                    updatePriceInput()
+                if "best buy" in data.keys():
+                    #Update best buy price
+                    bestBuy = data["best buy"]
+                    x = data["time"]
+                    y = data["best buy"]
+                    #Plot to graph
+                    graphLock2.acquire()
+                    g2.addCoords((x,y))
+                    graphLock2.release()
+                    #Update the price input to match the best price
+                    updatePriceInput()
+                if "order ID" in data.keys() and "status" in data.keys():
+                    updateOrderState(data["order ID"],data["status"])
+                    updateTable()
+                    #If it has been placed into the book
+                    if data["status"] == 0:
+                        freeButton()
+                    #If it is matched
+                    if data["status"] == 1:
+                        for order in myOrders:
+                            if order["id"] == data["order ID"]:
+                                applyMatch(order)
 
 class Graph():
     """Class to plot data to a canvas"""

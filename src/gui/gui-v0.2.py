@@ -590,8 +590,8 @@ def validateFormInput(quantity, price, type_):
         displayErrorOutput("Error: Invalid/non-numerical input","#ff0000")
         return False
     #Potential other errors
-    if quantity < QUANTITY_LOWER_RANGE or quantity > QUANTITY_UPPER_RANGE:
-        displayErrorOutput("Error: Quantity must be in range {0} < quantity < {1}".format(QUANTITY_LOWER_RANGE, QUANTITY_UPPER_RANGE),"#ff0000")
+    if quantity <= QUANTITY_LOWER_RANGE or quantity > QUANTITY_UPPER_RANGE:
+        displayErrorOutput("Error: Quantity must be in range {0} <= quantity < {1}".format(QUANTITY_LOWER_RANGE, QUANTITY_UPPER_RANGE),"#ff0000")
         return False
     if price <= PRICE_LOWER_RANGE or price > PRICE_UPPER_RANGE:
         displayErrorOutput("Error: Price must be in range {0} <= price < {1}".format(PRICE_LOWER_RANGE, PRICE_UPPER_RANGE),"#ff0000")

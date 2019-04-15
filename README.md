@@ -18,7 +18,7 @@ Then **run the run.sh script** to run all the bits of the project together. Take
 
 For now only the Bot gets configured from the configuration file , the programs needs to be run in this order
 
-**SERVER ** ---> **GUI** ---> **Bot** 
+**SERVER** ---> **GUI** ---> **Bot** 
 
 ***Windows***: 
 

@@ -30,7 +30,7 @@ Then just compile and run the bot, server and GUI. Take into account that you ha
 
 Server
 ------
-#### 	Compile: gcc tcp_server.c exchange.c orderBook.c order.c -o server
+#### 	Compile: gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c -o server -pthread
 #### 	Run: ./server
 #### 	Connect to server using ip and port 8890
 *Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on*

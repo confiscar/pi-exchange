@@ -137,6 +137,7 @@ def parseToDict(data):
     return dataDict
 
 def splitIntoPackets(data):
+    """Identify separate packets and return them"""
     packets = [""]
     for line in data.split("\n"):
         if line == '-'*18 or line == '~'*18:
@@ -191,7 +192,7 @@ balanceText = tkinter.Label(orderFrame,text="Balance (£): {0} ({1})\nStock Coun
 balanceText.grid(row=0,column=0)
 
 def updateBalanceOutput():
-    global balance, virtualBalance, stockCount
+    global balance, virtualBalance, stockCount, virtualStockCount
     balanceText.config(text="Balance (£): {0} ({1})\nStock Count: {2} ({3})".format(balance, virtualBalance, stockCount, virtualStockCount))
 
 orderLabel = tkinter.Label(orderFrame, text="Order Form", font=("",12))
@@ -214,7 +215,7 @@ buyButton.select()
 priceFrame = tkinter.Frame(orderFrame)
 priceFrame.grid(row=4,column=0,pady=10,padx=10)
 
-priceLabel = tkinter.Label(priceFrame,width=10,text="Price (): ")
+priceLabel = tkinter.Label(priceFrame,width=10,text="Price (£): ")
 priceLabel.grid(row=0,column=0)
 priceInput = tkinter.Spinbox(priceFrame,from_=PRICE_LOWER_RANGE,to=PRICE_UPPER_RANGE,increment=PRICE_ACCURACY)  
 
@@ -367,7 +368,7 @@ graphLock = threading.Lock()
 graphLock2 = threading.Lock()
 
 class Client():
-    """A class to encapsulate client funcitonality"""
+    """A class to encapsulate client functionality"""
     def __init__(self,hostIP):
         self.hostIP = hostIP
         self.s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -537,11 +538,8 @@ g2 = Graph(canvas2,GRAPH_MAX_COORDS,padding=PADDING)
 c = Client(HOST_IP)
 threading.Thread(target=c.receiveLoop).start()
 
-x = 0
 #Plot function is called repeatedly in mainloop
 def plot():
-    global x
-
     #Draw to canvas
     graphLock.acquire()
     g.autoScroll()

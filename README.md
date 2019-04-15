@@ -143,17 +143,17 @@ Python 3, Java SE 9 and C compiled with GCC.
 
 ## Authors
 
-- Vasilis Ieropolous
+- Vasilis Ieropolous (Group Leader / Gui)
 
-- Ke Chen
+- Ke Chen (Administrator / Server)
 
-- Francisco Caeiro
+- Francisco Caeiro ( GitMaster / Server)
 
-- Julian Henjes
+- Julian Henjes (Gui)
 
-- Guanghao Yang
+- Guanghao Yang (Bot)
 
-- Shen Huan 
+- Shen Huan (Bot) 
 
   -----
 

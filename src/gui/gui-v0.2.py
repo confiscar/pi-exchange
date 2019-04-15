@@ -1,8 +1,8 @@
 #CONSTANTS
 
 #Socket Settings
-#Set OVERWRITE_IP to None to read from config file
-OVERWRITE_IP = "100.65.195.10:43242"
+#Set OVERRIDE_IP to None to read from config file
+OVERRIDE_IP = "100.65.195.10:43242"
 
 #Enable/disable automatic price inputs
 AUTO_PRICE = False
@@ -72,9 +72,9 @@ with open('config.txt') as fin:
     fin.close()
 
 HOST_IP = HOST_IP + ":" + port
-#Overwrite IP here for testing
-if OVERWRITE_IP != None:
-    HOST_IP = OVERWRITE_IP
+#Override IP here for testing
+if OVERRIDE_IP != None:
+    HOST_IP = OVERRIDE_IP
 else:
     print("IP Read from file: "+HOST_IP)
 

@@ -16,6 +16,10 @@ Both **Python** 3, **C **(*has to be run on raspberry pi / Linux*) and **Java 10
 
 Then **run the run.sh script** to run all the bits of the project together. Take into account that the **setup** of the **ports and IP configurations** will have to be done manually for now. 
 
+For now only the Bot gets configured from the configuration file , the programs needs to be run in this order
+
+**SERVER ** ---> **GUI** ---> **Bot** 
+
 ***Windows***: 
 
 A **powershell** script is availible to install the python dependencies. Open powershell as admin and use `Set-ExecutionPolicy Unrestricted` to be able to run the script. **Alternatively** use `pip install feedparser` and `pip install psutil`. *(Note that this will only work if you have a pip already or a version of Python that comes with it.)*

@@ -31,6 +31,9 @@ GRAPH_MAX_COORDS = 100
 PADDING = 200
 SIDE_PANEL_SIZE = 400
 
+#Style Options
+RELIEF = 'ridge'
+
 import tkinter
 import random
 import feedparser
@@ -40,10 +43,9 @@ import platform
 import psutil
 import time
 import os
-#Style Options
-RELIEF = tkinter.RIDGE
-
 import time
+
+#Setup initial variables
 
 #Variable to store the balance locally
 balance = START_BALANCE
@@ -72,7 +74,7 @@ with open('config.txt') as fin:
     fin.close()
 
 HOST_IP = HOST_IP + ":" + port
-#Override IP here for testing
+#Override IP here if specified
 if OVERRIDE_IP != None:
     HOST_IP = OVERRIDE_IP
 else:

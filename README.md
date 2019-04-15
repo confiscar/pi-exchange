@@ -16,6 +16,25 @@ Both **Python** 3, **C **(*has to be run on raspberry pi / Linux*) and **Java 10
 
 Then **run the run.sh script** to run all the bits of the project together. Take into account that the **setup** of the **ports and IP configurations** will have to be done manually for now. 
 
+**IF THE RUN SCRIPT DOES NOT WORK ON YOUR DEVICE DO:**
+FOR THE SERVER
+```
+gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c -o server -pthread
+```
+**RUN WITH**
+
+```
+./server
+```
+
+**RUN the gui with (edit IP address with ip address of server) 
+
+```
+python gui-v0.2.py
+```
+***Run the BOt with eclipse/inteli j
+
+
 For now only the Bot gets configured from the configuration file , the programs needs to be run in this order
 
 **SERVER** ---> **GUI** ---> **Bot** 

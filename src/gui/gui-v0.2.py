@@ -2,7 +2,7 @@
 
 #Socket Settings
 #Set OVERRIDE_IP to None to read from config file
-OVERRIDE_IP = "100.65.195.10:43242"
+OVERRIDE_IP = "100.65.195.9:43242"
 
 #Enable/disable automatic price inputs
 AUTO_PRICE = False
@@ -44,6 +44,7 @@ import psutil
 import time
 import os
 import time
+from functools import partial
 
 #Setup initial variables
 
@@ -278,6 +279,7 @@ class Table():
             self.headers[-1].insert(tkinter.END,self.headerTitles[x])
             self.headers[-1].config(state=tkinter.DISABLED)
 
+
         #Create the cells of the table
         for y in range(1,self.height+1):
             self.rows.append([])
@@ -285,6 +287,12 @@ class Table():
                 self.rows[-1].append(tkinter.Text(self.frame, width=self.cellWidth,height=1,bg="#eeeeef",fg="#666666"))
                 self.rows[-1][-1].grid(row=y+1,column=x)
                 self.rows[-1][-1].config(state=tkinter.DISABLED)
+
+            #Create buttons to cancel orders
+            self.rows[-1].append(tkinter.Button(self.frame,width=1,height=1,activebackground="#550000",activeforeground="#ffffff",bg="#aa0000",fg="#ffffff",text="X",font=("",6,"bold")))
+            self.rows[-1][-1].config(command=partial(cancelOrder,y-1))
+            self.rows[-1][-1].grid(row=y+1,column=x+1)
+
 
     #Clear the value in a cell
     def clear(self,column,row):
@@ -299,19 +307,54 @@ class Table():
         self.rows[row][column].insert(tkinter.END,text)
         self.rows[row][column].config(state=tkinter.DISABLED)
 
+    def get(self,column,row):
+        return self.rows[row][column].get("1.0",tkinter.END)
+
+def cancelOrder(row):
+    """Cancel an order from the table"""
+    #Get the ID from the table, and the order from the list
+    id_ = table.get(0,row)
+    print(id_)
+    try:
+        id_ = int(id_)
+    except:
+        return
+    order = getOrder(id_)
+    print(order)
+    if order != None:
+        #Ensure order is in book state
+        if order["state"] == 0:
+            packet = "{0},{1},{2},{3}".format('c',order["type"][0],order["price"],order["exID"])
+            print("Sending: "+packet)
+            c.send(packet)
+
 table = Table(TABLE_WIDTH, TABLE_HEIGHT, tableFrame, ["ID","Type","Price","Qty","State"])
 
 myOrders = []
 #Example order
 
+def getOrder(id_):
+    """Get order information for the order with the provided client-side ID"""
+    for order in myOrders:
+        if order["id"] == id_:
+            return order
+    return None
+
 def addOrder(id_,type_,price,quantity):
     global myOrders
-    myOrders.append({"id":id_,"type":type_,"price":price,"quantity":quantity,"state":-1})
+    myOrders.append({"id":id_,"type":type_,"price":price,"quantity":quantity,"state":-1,"exID":None})
 
 def updateOrderState(id_,newState):
+    """Update the status of the order"""
     for i in range(len(myOrders)):
         if myOrders[i]["id"] == id_:
             myOrders[i]["state"] = newState
+
+def addExchangeID(id_,exID):
+    """Add an exchange ID to the order - required for cancelling the order"""
+    for i in range(len(myOrders)):
+        if myOrders[i]["id"] == id_:
+            myOrders[i]["exID"] = exID
 
 def updateTable():
     global myOrders, table
@@ -424,6 +467,8 @@ class Client():
                         for order in myOrders:
                             if order["id"] == data["order ID"]:
                                 applyMatch(order)
+                if "exchange ID" in data.keys() and "order ID" in data.keys():
+                    addExchangeID(data["order ID"],data["exchange ID"])
 
 class Graph():
     """Class to plot data to a canvas"""

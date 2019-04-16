@@ -60,9 +60,9 @@ class Server():
                 print("[{0}:{1}]<{2}>: {3}".format(addr[0],addr[1],time.time(),data))
                 data = data.split(",")
                 if data[0] == "p":
-                    self.send(conn,"order ID: "+data[4]+"\nstatus: 0\n")
-                    time.sleep(1)
-                    self.send(conn,"order ID: "+data[4]+"\nstatus: 1\n")
+                    self.send(conn,"order ID: "+data[4]+"\nstatus: 0\nexchange ID: "+data[4]+"\n")
+                if data[0] == "c":
+                    self.send(conn,"order ID: "+data[3]+"\nstatus: 2\n")
             except BaseException as e:
                 print("Connection with {0}:{1} closed".format(addr[0],addr[1]))
                 break

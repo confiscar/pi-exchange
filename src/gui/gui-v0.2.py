@@ -2,10 +2,10 @@
 
 #Socket Settings
 #Set OVERRIDE_IP to None to read from config file
-OVERRIDE_IP = "100.65.195.9:43242"
+OVERRIDE_IP = "100.65.201.23:43242"
 
 #Enable/disable automatic price inputs
-AUTO_PRICE = False
+AUTO_PRICE = True
 
 #Simulation Settings
 START_BALANCE = 10000
@@ -103,13 +103,13 @@ def parseToDict(data):
     """Convert data from socket into a dictionary object for easier manipulation"""
     dataDict = {}
 
-    data = data.lstrip()
-
     #Split into lines
     data = data.split("\n")
 
     #For each line in the received data
     for d in data:
+
+        d = d.lstrip()
 
         #Ignore blank lines
         if d != '':
@@ -580,8 +580,7 @@ class Graph():
 g = Graph(canvas,GRAPH_MAX_COORDS,padding=PADDING)
 g2 = Graph(canvas2,GRAPH_MAX_COORDS,padding=PADDING)
 
-c = Client(HOST_IP)
-threading.Thread(target=c.receiveLoop).start()
+
 
 #Plot function is called repeatedly in mainloop
 def plot():
@@ -739,6 +738,9 @@ def backgroundTasks():
     plot()
     scrollFeed()
     updateStats()
+
+c = Client(HOST_IP)
+threading.Thread(target=c.receiveLoop).start()
 
 #Add plot to mainloop and hand over control to gui
 root.after(1,backgroundTasks)

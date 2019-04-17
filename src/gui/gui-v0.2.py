@@ -110,6 +110,7 @@ def parseToDict(data):
     for d in data:
 
         d = d.lstrip()
+        d = d.lstrip("\x00")
 
         #Ignore blank lines
         if d != '':

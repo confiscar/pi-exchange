@@ -357,11 +357,12 @@ def addExchangeID(id_,exID):
         if myOrders[i]["id"] == id_:
             myOrders[i]["exID"] = exID
 
+tableScroll = 0
 def updateTable():
-    global myOrders, table
+    global myOrders, table, tableScroll
     #Get most recent TABLE_HEIGHT amount of orders
     displayFrom = len(myOrders)-TABLE_HEIGHT
-    displayFrom = max(displayFrom,0)
+    displayFrom = max(displayFrom,0)+tableScroll
     row = 0
     for i in range(displayFrom,len(myOrders)):
         table.insert(0,row,myOrders[i]["id"])
@@ -739,6 +740,20 @@ def updateStats():
 #Configure confirm button to this function after the function has been defined
 confirmButton.config(command=placeOrder)
 
+def mouseWheel(event):
+    """Called when the mousewheel is used"""
+    global tableScroll
+    #Change the scroll of the table
+    if event.delta > 0:
+        tableScroll -= 1
+    elif event.delta < 0:
+        tableScroll += 1
+    if tableScroll > len(myOrders)-1:
+        tableScroll = len(myOrders)-1
+    if tableScroll < 0:
+        tableScroll = 0
+    updateTable()
+
 def backgroundTasks():
     plot()
     scrollFeed()
@@ -749,4 +764,5 @@ threading.Thread(target=c.receiveLoop).start()
 
 #Add plot to mainloop and hand over control to gui
 root.after(1,backgroundTasks)
+root.bind("<MouseWheel>",mouseWheel)
 root.mainloop()

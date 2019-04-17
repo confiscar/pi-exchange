@@ -2,7 +2,7 @@
 
 #Socket Settings
 #Set OVERRIDE_IP to None to read from config file
-OVERRIDE_IP = "100.65.201.23:43242"
+OVERRIDE_IP = "100.65.195.9:43242"
 
 #Enable/disable automatic price inputs
 AUTO_PRICE = True
@@ -460,14 +460,18 @@ class Client():
                 if "order ID" in data.keys() and "status" in data.keys():
                     updateOrderState(data["order ID"],data["status"])
                     updateTable()
-                    #If it has been placed into the book
-                    if data["status"] == 0:
-                        freeButton()
                     #If it is matched
                     if data["status"] == 1:
                         for order in myOrders:
                             if order["id"] == data["order ID"]:
                                 applyMatch(order)
+                    #If all orders are not in book
+                    unblock = True
+                    for order in myOrders:
+                        if order["state"] == -1:
+                            unblock = False
+                    if unblock:
+                        freeButton()
                 if "exchange ID" in data.keys() and "order ID" in data.keys():
                     addExchangeID(data["order ID"],data["exchange ID"])
 

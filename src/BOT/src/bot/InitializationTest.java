@@ -49,4 +49,24 @@ public class InitializationTest {
 		assertEquals("1\n",s[4]); // first orderID is 1
 	}	
 	
+	
+	@Test
+	public void test_sell() {
+		Initialization initial = new Initialization(100, 1);
+		//assume that the matched price is 100, this method will create a new sell order to replace it to meet the gap
+		initial.match_price = 100; 
+		initial.sell(); 
+		String[] s = initial.s.split(",");
+		assertEquals("p",s[0]);
+		assertEquals("s",s[1]);
+		assertEquals(100,Double.parseDouble(s[2]),0.5);  //random price from 99.5 to 100.5
+		assertEquals("10",s[3]); //initial amount is 10
+		assertEquals("1\n",s[4]); // first orderID is 1
+	}	
+	
+	
+	
+	
+	
+	
 }

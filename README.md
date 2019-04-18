@@ -129,8 +129,12 @@ Server
 
 ## Bot
 #### 	Connect to server using ip and port 8890
-*Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on*
+*Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on (ip address and port can be reset in config.txt under the same Java directory*
 
+#### 	Running the BOT
+
+1. Initilization and providing market liquidity:
+   After running, this BOT will automatically start with generating initial buy and sell orders (total amount of buy and sell orders to be generated can be reset by modifying the value of Initialization.number_stored)
 
 ## GUI
 

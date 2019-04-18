@@ -128,7 +128,8 @@ Server
 
 
 ## Bot
-
+#### 	Connect to server using ip and port 8890
+*Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on*
 
 
 ## GUI

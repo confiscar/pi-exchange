@@ -133,8 +133,25 @@ Server
 
 #### 	Running the BOT
 
-1. Initilization and providing market liquidity:
-   After running, this BOT will automatically start with generating initial buy and sell orders (total amount of buy and sell orders to be generated can be reset by modifying the value of Initialization.number_stored)
+1. Initilization:
+
+After running, this BOT will automatically start with generating initial buy and sell orders (total amount of buy and sell orders to be generated can be reset by modifying the value of Initialization.number_stored).
+
+2. Storing the information of orders:
+
+A class called Store is used to save the information in each order, in the form of:
+
+	* id: %d
+	* price: %f
+	* amount: %d
+	* exchangeId: %d
+	
+#### 	Note:	
+- the constructor is: store( int id,  float price,  int amount)
+- buy orders and sell orders are saved in 2 different Lists: buylist and selllist
+
+3. Providing market liquidity
+
 
 ## GUI
 

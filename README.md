@@ -136,10 +136,30 @@ Server
 **1. Initilization:**
 
 After running, this BOT will automatically start with generating initial buy and sell orders (total amount of buy and sell orders to be generated can be reset by modifying the value of Initialization.number_stored).
+	
+
+**2. Providing market liquidity**
+
+The prices in this market is always changing when the BOT generate a new order. Initially: 
+
+	* best buy price == Gprice-Math.random()-Ggap
+	* best sell price == Gprice+Math.random()+Ggap
+	
+By default, Gprice == 100 and Ggap == 1. Due to the use of Math.random(), each order will likely to have a different price so that the price in the market is always chaning. However, since the nature of trading is to "buy low, sell high", the buy price will be always reduing and the sell price will be always increasing. Hence, a gap between the best sell price and the best buy price is maintained: when the gap between these two prices > 3, this BOT will automatically cancel some orders and replace them with prices in the range of normal gaps.
+
+#### 	How the BOT works
+
+**1. Sending and receiving orders:**
+
+All the orders must be synchronized and maintained in both the BOT and the server, which involves receiving / sending information of orders from / to the server. Two classes called **Sender** and **Receiver** are used to do the job. They are running concurrently by extending **Thread**, mutex(lock) is used to allow them running in parallel.
+
+#### 	Note:	
+- the string format of placing / cancelling orders is the same as mentioned above in the **server** part.
+- since the information of orders is received in the data type of String, a class called **Parse** is used to extract each order's id, price, amount etc. to their real data type (e.g. int) so that they can be stored in the BOT. The regular expression used is **"\\d+(\\.\\d+)?"** 
 
 **2. Storing the information of orders:**
 
-A class called Store is used to save the information in each order, in the form of:
+A class called **Store** is used to save the information in each order, in the form of:
 
 	* id: %d
 	* price: %f
@@ -150,14 +170,6 @@ A class called Store is used to save the information in each order, in the form 
 - the constructor is: store( int id,  float price,  int amount)
 - buy orders and sell orders are saved in 2 different Lists: buylist and selllist
 
-**3. Providing market liquidity**
-
-The prices in this market is always changing when the BOT generate a new order. Initially: 
-
-	* best buy price == Gprice-Math.random()-Ggap
-	* best sell price == Gprice+Math.random()+Ggap
-	
-By default, Gprice == 100 and Ggap == 1. Due to the use of Math.random(), each order will likely to have a different price so that the price in the market is always chaning. However, since the nature of trading is to "buy low, sell high", the buy price will be always reduing and the sell price will be always increasing. Hence, a gap between the best sell price and the best buy price is maintained: when the gap between these two prices > 3, this BOT will automatically cancel some orders and replace them with prices in the range of normal gaps.
 
 
 ## GUI

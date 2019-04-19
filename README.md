@@ -144,8 +144,8 @@ The prices in this market is always changing when the BOT generate a new order. 
 
 	* best buy price == Gprice-Math.random()-Ggap
 	* best sell price == Gprice+Math.random()+Ggap
-	
-By default, Gprice == 100 and Ggap == 1. Due to the use of Math.random(), each order will likely to have a different price so that the price in the market is always chaning. However, since the nature of trading is to "buy low, sell high", the buy price will be always reduing and the sell price will be always increasing. Hence, a gap between the best sell price and the best buy price is maintained: when the gap between these two prices > 3, this BOT will automatically cancel some orders and replace them with prices in the range of normal gaps.
+
+By default, **Gprice == 100** and **Ggap == 1**, which means the initial gap between the best sell price and best buy price is about **2**. Due to the use of Math.random(), each order will likely to have a different price so that the price in the market is always chaning. However, since the nature of trading is to "buy low, sell high", the buy price will be always reduing and the sell price will be always increasing. Hence, a gap between the best sell price and the best buy price is maintained: when the gap between these two prices > **3**, this BOT will automatically cancel some orders and replace them with prices in the range of normal gaps.
 
 #### 	How the BOT works
 

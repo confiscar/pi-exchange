@@ -151,11 +151,11 @@ By default, Gprice == 100 and Ggap == 1. Due to the use of Math.random(), each o
 
 **1. Sending and receiving orders:**
 
-All the orders must be synchronized and maintained in both the BOT and the server, which involves receiving / sending information of orders from / to the server. Two classes called **Sender** and **Receiver** are used to do the job. They are running concurrently by extending **Thread**, mutex(lock) is used to allow them running in parallel.
+All the orders must be synchronized and maintained in both the BOT and the server, which involves receiving / sending information of orders from / to the server. Two classes called **Sender** and **Receiver** are used to do the job. They are running concurrently by extending **Thread**, a mutex(lock) is used to allow them running in parallel.
 
 #### 	Note:	
 - the string format of placing / cancelling orders is the same as mentioned above in the **server** part.
-- since the information of orders is received in the data type of String, a class called **Parse** is used to extract each order's id, price, amount etc. to their real data type (e.g. int) so that they can be stored in the BOT. The regular expression used is **"\\d+(\\.\\d+)?"** 
+- since the information of orders is received in the data type of String, a class called **Parse** is used to extract and change each order's **id, price, amount, exchangeID etc.** back to their original data type respectively (e.g. int) so that they can be stored in the BOT. The regular expression used is **"\\d+(\\.\\d+)?"** to parse the String
 
 **2. Storing the information of orders:**
 
@@ -167,10 +167,8 @@ A class called **Store** is used to save the information in each order, in the f
 	* exchangeId: %d
 	
 #### 	Note:	
-- the constructor is: store( int id,  float price,  int amount)
+- the constructor is: store(int id,  float price,  int amount)
 - buy orders and sell orders are saved in 2 different Lists: buylist and selllist
-
-
 
 ## GUI
 

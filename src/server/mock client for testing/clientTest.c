@@ -12,7 +12,7 @@
 
 #define PORT  8890
 #define BUFFER_SIZE 1024
-#define times 500000
+#define times 10
 
 long int getDifferenceInMicroSeconds(struct timeval start, struct timeval end)
 {
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     while (count < times)
     {
         //gettimeofday(&temp, NULL);
-        send(sock_cli, "p,b,1.1,10,0", 15,0); ///发送
+        send(sock_cli, "p,b,1.1,10,1", 15,0); ///发送
         //if(strcmp(sendbuf,"exit\n")==0)
         //{
 	    //printf("client exited.\n");
@@ -75,9 +75,13 @@ int main(int argc, char **argv)
         //}
         //printf("client receive:\n");
         recv(sock_cli, recvbuf, sizeof(recvbuf),0); ///接收
+if(recvbuf[0] !=  'c'){
+recv(sock_cli, recvbuf, sizeof(recvbuf), 0);
+}
         //gettimeofday(&latency, NULL);
         //printf("latency: %d micro seconds\n", getDifferenceInMicroSeconds(temp,latency));
         //fputs(recvbuf, stdout);
+printf("%d \n", count);
         count++;
 
         //memset(sendbuf, 0, sizeof(sendbuf));
@@ -86,7 +90,7 @@ int main(int argc, char **argv)
     while (count < 2 * times)
     {
         //gettimeofday(&temp, NULL);
-        send(sock_cli, "p,s,1.1,10,0", 15,0); ///发送
+        send(sock_cli, "p,s,1.1,10,1", 15,0); ///发送
         //if(strcmp(sendbuf,"exit\n")==0)
         //{
 	    //printf("client exited.\n");
@@ -94,9 +98,14 @@ int main(int argc, char **argv)
         //}
         //printf("client receive:\n");
         recv(sock_cli, recvbuf, sizeof(recvbuf),0); ///接收
+if(recvbuf[0] !=  'c'){
+recv(sock_cli, recvbuf, sizeof(recvbuf), 0);
+}
+
         //gettimeofday(&latency, NULL);
         //printf("latency: %d micro seconds\n", getDifferenceInMicroSeconds(temp,latency));
         //fputs(recvbuf, stdout);
+printf("%d \n", count);
         count++;
 
         //memset(sendbuf, 0, sizeof(sendbuf));
@@ -107,6 +116,6 @@ int main(int argc, char **argv)
     printf("time consumed for %d request: %d\n",2 * times, getDifferenceInMilliSeconds(initial,end));
 
 
-    close(sock_cli);
+    //close(sock_cli);
     return 0;
 }

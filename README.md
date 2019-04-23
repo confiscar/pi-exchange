@@ -16,6 +16,29 @@ Both **Python** 3, **C **(*has to be run on raspberry pi / Linux*) and **Java 10
 
 Then **run the run.sh script** to run all the bits of the project together. Take into account that the **setup** of the **ports and IP configurations** will have to be done manually for now. 
 
+**IF THE RUN SCRIPT DOES NOT WORK ON YOUR DEVICE DO:**
+FOR THE SERVER
+```
+gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c -o server -pthread
+```
+**RUN WITH**
+
+```
+./server
+```
+
+**RUN the gui with (edit IP address with ip address of server) 
+
+```
+python gui-v0.2.py
+```
+***Run the BOt with eclipse/inteli j
+
+
+For now only the Bot gets configured from the configuration file , the programs needs to be run in this order
+
+**SERVER** ---> **GUI** ---> **Bot** 
+
 ***Windows***: 
 
 A **powershell** script is availible to install the python dependencies. Open powershell as admin and use `Set-ExecutionPolicy Unrestricted` to be able to run the script. **Alternatively** use `pip install feedparser` and `pip install psutil`. *(Note that this will only work if you have a pip already or a version of Python that comes with it.)*
@@ -26,7 +49,8 @@ Then just compile and run the bot, server and GUI. Take into account that you ha
 
 Server
 ------
-#### 	Compile: gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c  -o server -pthread
+
+#### 	Compile: gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c -o server -pthread
 #### 	Run: ./server
 #### 	Connect to server using ip and port 8890
 *Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on*
@@ -108,8 +132,47 @@ Server
 
 
 ## Bot
+#### 	Connect to server using ip and port 8890
+*Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on (ip address and port can be reset in config.txt under the same Java directory*
 
+#### 	Running the BOT
 
+**1. Initilization:**
+
+After running, this BOT will automatically start with generating initial buy and sell orders (total amount of buy and sell orders to be generated can be reset by modifying the value of Initialization.number_stored).
+	
+
+**2. Providing market liquidity**
+
+The prices in this market is always changing when the BOT generate a new order. Initially: 
+
+	* best buy price == Gprice-Math.random()-Ggap
+	* best sell price == Gprice+Math.random()+Ggap
+
+By default, **Gprice == 100** and **Ggap == 1**, which means the initial gap between the best sell price and best buy price is about **2**. Due to the use of Math.random(), each order will likely to have a different price so that the price in the market is always changing. However, since the nature of trading is to "buy low, sell high", the buy price will be always reducing, and the sell price will be always increasing. Hence, a gap between the best sell price and the best buy price is maintained: when the gap between these two prices > **3**, this BOT will automatically cancel some orders and replace them with prices in the range of normal gaps.
+
+#### 	How the BOT works
+
+**1. Sending and receiving orders:**
+
+All the orders must be synchronized and maintained in both the BOT and the server, which involves receiving / sending information of orders from / to the server. Two classes called **Sender** and **Receiver** are used to do the job. They are running concurrently by extending **Thread**, a mutex(lock) is used to allow them running in parallel.
+
+#### 	Note:	
+- the string format of placing / cancelling orders is the same as mentioned above in the **server** part.
+- since the information of orders is received in the data type of String, a class called **Parse** is used to extract and change each order's **id, price, amount, exchangeID etc.** back to their original data type respectively (e.g. int) so that they can be stored in the BOT. The regular expression used is **"\\d+(\\.\\d+)?"** to parse the String
+
+**2. Storing the information of orders:**
+
+A class called **Store** is used to save the information in each order, in the form of:
+
+	* id: %d
+	* price: %f
+	* amount: %d
+	* exchangeId: %d
+	
+#### 	Note:	
+- the constructor is: store(int id,  float price,  int amount)
+- buy orders and sell orders are saved in 2 different Lists: buylist and selllist
 
 ## GUI
 
@@ -123,17 +186,17 @@ Python 3, Java SE 9 and C compiled with GCC.
 
 ## Authors
 
-- Vasilis Ieropolous
+- Vasilis Ieropolous (Group Leader / Gui)
 
-- Ke Chen
+- Ke Chen (Administrator / Server)
 
-- Francisco Caeiro
+- Francisco Caeiro ( GitMaster / Server)
 
-- Julian Henjes
+- Julian Henjes (Gui)
 
-- Guanghao Yang
+- Guanghao Yang (Bot)
 
-- Shen Huan 
+- Shen Huan (Bot) 
 
   -----
 

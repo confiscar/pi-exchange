@@ -26,10 +26,11 @@ Then just compile and run the bot, server and GUI. Take into account that you ha
 
 Server
 ------
-#### 	Compile: gcc tcp_server.c exchange.c orderBook.c order.c -o server
+#### 	Compile: gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c  -o server -pthread
 #### 	Run: ./server
 #### 	Connect to server using ip and port 8890
 *Note: the IP depends on whether server is running locally or remotely. For local: 127.0.0.1, remote: find the IP of device where server runs on*
+####	Dependency: uthash.h https://github.com/troydhanson/uthash (src folder)
 	
 
 #### 	Place an order with 5 parameters divided by the single character ",". 
@@ -67,6 +68,8 @@ Server
 
 1. Status of current order
 
+	* current order
+
 	* order ID: %d
   
 	* exchange ID: %d
@@ -79,7 +82,7 @@ Server
 
 2. Status of previous order
 
-	* user ID: %d
+	* previous order
 
 	* order ID : %d 
 
@@ -93,9 +96,9 @@ Server
 
 3. Best price
 
-	* Sell price : %f
+	* best buy : %f
 
-	* Buy price: %f
+	* best sell: %f
 
    
 #### 	Note:

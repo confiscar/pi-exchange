@@ -4,7 +4,7 @@
 
 This project is software developed for the Raspberry Pi 3 model B to try and emulate a low-latency exchange simulation that can handle a large quantity of buy/sell transactions. 
 
-![alt text](https://i.imgur.com/6HUZLYM.png "Program Screenshot 1")
+![alt text](https://media.discordapp.net/attachments/496679563443568655/570328107744100374/57541816_618414425341807_6546927281900617728_n.png?width=1047&height=567)
 
 Getting Started
 ------

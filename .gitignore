@@ -1,3 +1,4 @@
 server/bin/*
 server/obj/*
 src/BOT/bin
+*.class

@@ -8,13 +8,13 @@ This project is software developed for the Raspberry Pi 3 model B to try and emu
 
 Getting Started
 ------
-Both **Python** 3, **C **(*has to be run on raspberry pi / Linux*) and **Java 10** compilers will be needed to run each individual part.
+Both **Python** 3, **C** (has to be run on raspberry pi / Linux) and **Java 10** compilers will be needed to run each individual part.
 
 ***Linux***: 
 
 **Run** the **install.sh script** to install the dependencies for the project, mainly a few libraries for python and Java 10 JDK. 
 
-Then **run the run.sh script** to run all the bits of the project together. Take into account that the **setup** of the **ports and IP configurations** will have to be done manually for now. 
+Then **run the run.sh script** to run all the bits of the project together.
 
 **IF THE RUN SCRIPT DOES NOT WORK ON YOUR DEVICE DO:**
 FOR THE SERVER

@@ -26,16 +26,21 @@ gcc tcp_server.c exchange.c order.c orderBook.c requestHandlr.c notification.c -
 ```
 ./server
 ```
+**CONFIGURE THE GUI & BOT**
 
-**RUN the gui with (edit IP address with ip address of server) 
+When the server is running you will need the ip of the machine it is running on. 
+You will need to introduce this ip in the "config.txt" file so that the GUI and Bot know where the server us running on.
+
+
+**RUN GUI WITH**
 
 ```
 python gui-v0.2.py
 ```
-***Run the BOt with eclipse/inteli j
+**RUN THE BOT WITH Eclipse/IntelliJ or using other method to generate jar file**
 
-
-For now only the Bot gets configured from the configuration file , the programs needs to be run in this order
+Easiest way is to use an IDE and run it straight from there, but you can also build the jar file if needed. Jar file should be kept
+in the same directory its source.
 
 **SERVER** ---> **GUI** ---> **Bot** 
 

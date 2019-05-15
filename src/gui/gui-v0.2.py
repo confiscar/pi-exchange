@@ -2,10 +2,10 @@
 
 #Socket Settings
 #Set OVERRIDE_IP to None to read from config file
-OVERRIDE_IP = "100.65.195.9:43242"
+OVERRIDE_IP = None
 
 #Enable/disable automatic price inputs
-AUTO_PRICE = False
+AUTO_PRICE = True
 
 #Simulation Settings
 START_BALANCE = 10000
@@ -350,6 +350,13 @@ def updateOrderState(id_,newState):
         if myOrders[i]["id"] == id_:
             myOrders[i]["state"] = newState
 
+def getOrderState(id_):
+    """Get the state of the order with the provided id"""
+    for i in range(len(myOrders)):
+        if myOrders[i]["id"] == id_:
+            return myOrders[i]["state"]
+    return None
+
 def addExchangeID(id_,exID):
     """Add an exchange ID to the order - required for cancelling the order"""
     for i in range(len(myOrders)):
@@ -457,11 +464,11 @@ class Client():
                     #Update the price input to match the best price
                     updatePriceInput()
                 if "order ID" in data.keys() and "status" in data.keys():
+                    #If no longer waiting for a response, free the button
+                    if getOrderState(data["order ID"]) == -1:
+                        freeButton()
                     updateOrderState(data["order ID"],data["status"])
                     updateTable()
-                    #If it has been placed into the book
-                    if data["status"] == 0:
-                        freeButton()
                     #If it is matched
                     if data["status"] == 1:
                         for order in myOrders:

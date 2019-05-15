@@ -1,2 +1,2 @@
-IP-Address: 192.168.22.0
-Port: 8878
+IP-Address: 10.42.0.1
+Port: 8890
